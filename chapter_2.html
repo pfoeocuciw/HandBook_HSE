@@ -1,0 +1,1962 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="https://fonts.googleapis.com/css2?family=Hack&display=swap" rel="stylesheet">
+    <title>Глава 1</title>
+    <link rel="stylesheet" href="chapter_1.css">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/pyodide"></script>
+    <script src="libs/prism.js"></script>
+
+</head>
+<div class="horizontal-accordion-wrapper">
+    <div class="accordion-left">
+        <button id="toggleNav" class="accordion-button-left" style="color: white; border-color: white;">☰</button>
+    </div>
+    <div id="sideNav" class="accordion-panel-right_2">
+        <a href="#chapter2"><strong>Глава 2</strong></a>
+        <a href="#chapter2-1">2.1 Фильтрация в DataFrame</a>
+        <a href="#chapter2-2">2.2 Сортировку в DataFrame</a>
+        <a href="#chapter2-3">2.3 Разница между .loc[] и .iloc[]</a>
+        <a href="#chapter2-4">2.4 Фильтрация или сортировка в Series</a>
+    </div>
+    <div class="main-content">
+        <div class="logo-wrapper">
+            <img src="picture/logo.svg" class="logo-top-right" alt="Логотип">
+        </div>
+        <section>
+            <h1 style="font-size: 30px;" id="chapter2">Глава 2. Фильтрация и сортировка</h1>
+            <h2 id="chapter2-1">2.1 Как сделать фильтрацию в DataFrame?</h2>
+            <p>Часто при работе с большими наборами данных необходимо сконцентрировать внимание только на конкретных наблюдениях, обладающих определенными характеристиками. Такой инструмент анализа называется фильтрацией.</p>
+            <div class="definition-card">
+                <div class="definition-text">
+                    <strong>Фильтрация данных</strong> — это процесс выбора нужных данных из большего объема по каким-то установленным правилам или условиям.
+                </div>
+            </div>
+            <p>Рассмотрим, как работает фильтрация на данных по заказам пиццы в течение года <a href="https://edu.hse.ru/mod/resource/view.php?id=1610926">pizza.csv</a>:</p>
+            <div class="scrollable-table">
+            <table border="1" class="dataframe_new" style="width: 100%;">
+                <thead>
+                <tr>
+                    <th>Признак</th>
+                    <th>Описание</th>
+                    <th>Формат данных(.dtypes)</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th>order_date</th>
+                    <td>дата заказа (день/месяц)</td>
+                    <td>object</td>
+                </tr>
+                <tr>
+                    <th>order_hour</th>
+                    <td>час дня, в который сделан заказ</td>
+                    <td>int64</td>
+                </tr>
+                <tr>
+                    <th>pizza_name_id</th>
+                    <td>вид пиццы (hawaiian, pepperoni и т.д.)</td>
+                    <td>object</td>
+                </tr>
+                <tr>
+                    <th>pizza_size</th>
+                    <td>размер пиццы (S, M, L и т.д.)</td>
+                    <td>object</td>
+                </tr>
+                <tr>
+                    <th>pizza_category</th>
+                    <td>описание пиццы (Classic, Veggie и т.д.)</td>
+                    <td>object</td>
+                </tr>
+                <tr>
+                    <th>quantity</th>
+                    <td>количество пицц</td>
+                    <td>float64</td>
+                </tr>
+                <tr>
+                    <th>total_price</th>
+                    <td>стоимость заказа ($)</td>
+                    <td>float64</td>
+                </tr>                <tr>
+                    <th>pizza_ingredients</th>
+                    <td>ингридиенты</td>
+                    <td>object</td>
+                </tr>                <tr>
+                    <th>delivery_price</th>
+                    <td>стоимость доставки</td>
+                    <td>float64</td>
+                </tr>
+                </tbody>
+            </table>
+            </div>
+            <p>Одно <strong>наблюдение</strong> - это один <strong>заказ</strong>.</p>
+            <pre class="line-numbers"><code class="language-python">import pandas as pd
+df = pd.read_csv('pizza.csv')
+df.head()</code></pre>
+            <p>Результат работы программы:</p>
+            <div class="scrollable-table">
+            <table border="1" class="dataframe">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>order_date</th>
+                    <th>order_hour</th>
+                    <th>pizza_name_id</th>
+                    <th>pizza_size</th>
+                    <th>pizza_category</th>
+                    <th>quantity</th>
+                    <th>total_price</th>
+                    <th>pizza_ingredients</th>
+                    <th>delivery_price</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th>0</th>
+                    <td>30/03</td>
+                    <td>13</td>
+                    <td>big</td>
+                    <td>S</td>
+                    <td>Classic</td>
+                    <td>4.0</td>
+                    <td>48.00</td>
+                    <td>Bacon, Pepperoni, Italian Sausage, Chorizo Sau...</td>
+                    <td>30.86</td>
+                </tr>
+                <tr>
+                    <th>1</th>
+                    <td>19/09</td>
+                    <td>14</td>
+                    <td>cali</td>
+                    <td>L</td>
+                    <td>Chicken</td>
+                    <td>4.0</td>
+                    <td>83.00</td>
+                    <td>Chicken, Artichoke, Spinach, Garlic, Jalapeno ...</td>
+                    <td>9.33</td>
+                </tr>
+                <tr>
+                    <th>2</th>
+                    <td>19/09</td>
+                    <td>14</td>
+                    <td>cali</td>
+                    <td>L</td>
+                    <td>Chicken</td>
+                    <td>4.0</td>
+                    <td>83.00</td>
+                    <td>Chicken, Artichoke, Spinach, Garlic, Jalapeno ...</td>
+                    <td>9.33</td>
+                </tr>
+                <tr>
+                    <th>3</th>
+                    <td>19/09</td>
+                    <td>14</td>
+                    <td>cali</td>
+                    <td>L</td>
+                    <td>Chicken</td>
+                    <td>4.0</td>
+                    <td>83.00</td>
+                    <td>Chicken, Artichoke, Spinach, Garlic, Jalapeno ...</td>
+                    <td>9.33</td>
+                </tr>
+                <tr>
+                    <th>4</th>
+                    <td>19/09</td>
+                    <td>14</td>
+                    <td>cali</td>
+                    <td>L</td>
+                    <td>Chicken</td>
+                    <td>4.0</td>
+                    <td>83.00</td>
+                    <td>Chicken, Artichoke, Spinach, Garlic, Jalapeno ...</td>
+                    <td>9.33</td>
+                </tr>
+                </tbody>
+            </table>
+            </div>
+            <p style="font-size: 25px;"><strong>ФИЛЬТРАЦИЯ С ОДНИМ УСЛОВИЕМ</strong></p>
+            <p class="fake-code">
+<span class="code-line">датафрейм[условие фильтрации]</span>
+            </p>
+            <p>В датафрейме есть колонка <strong>pizza_name_id</strong>, в которой прописано, какую пиццу заказал клиент.
+                Если нам нужно найти заказы только с гавайской пиццей (<em>hawaiian</em>; <strong>pizza_name_id</strong>), сделаем следующую фильтрацию:</p>
+            <pre class="line-numbers"><code class="language-python">df[df['pizza_name_id'] == 'hawaiian']</code></pre>
+            <p><span class="code-chip">df</span>&nbsp;- это датафрейм фильтрации</p>
+            <p><span class="code-chip">df['pizza_name_id'] == 'hawaiian'</span>&nbsp;- это условие фильтрации:</p>
+            <ul>
+                <li>
+                    <span class="code-chip">df['pizza_name_id']</span>&nbsp;- обращение к признаку <strong>pizza_name_id</strong>;
+                </li>
+                <li>
+                    <span class="code-chip">== 'hawaiian'</span>&nbsp;-  соответствует гавайской пицце (<span class="code-chip">'hawaiian'</span>&nbsp; в кавычках, так как данные типа <span class="code-chip">object</span>&nbsp;)
+                </li>
+            </ul>
+            <pre class="line-numbers"><code class="language-python">df[df['pizza_name_id'] == 'hawaiian']</code></pre>
+            <div class="scrollable-table">
+                <table border="1" class="dataframe">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>order_date</th>
+                        <th>order_hour</th>
+                        <th>pizza_name_id</th>
+                        <th>pizza_size</th>
+                        <th>pizza_category</th>
+                        <th>quantity</th>
+                        <th>total_price</th>
+                        <th>pizza_ingredients</th>
+                        <th>delivery_price</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th>20</th>
+                        <td>03/10</td>
+                        <td>21</td>
+                        <td>hawaiian</td>
+                        <td>L</td>
+                        <td>Classic</td>
+                        <td>3.0</td>
+                        <td>49.50</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>30.31</td>
+                    </tr>
+                    <tr>
+                        <th>38</th>
+                        <td>07/07</td>
+                        <td>16</td>
+                        <td>hawaiian</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>2.0</td>
+                        <td>21.00</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>44.61</td>
+                    </tr>
+                    <tr>
+                        <th>46</th>
+                        <td>29/11</td>
+                        <td>12</td>
+                        <td>hawaiian</td>
+                        <td>L</td>
+                        <td>Classic</td>
+                        <td>2.0</td>
+                        <td>33.00</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>37.14</td>
+                    </tr>
+                    <tr>
+                        <th>48</th>
+                        <td>11/02</td>
+                        <td>11</td>
+                        <td>hawaiian</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>2.0</td>
+                        <td>21.00</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>46.42</td>
+                    </tr>
+                    <tr>
+                        <th>61</th>
+                        <td>20/04</td>
+                        <td>13</td>
+                        <td>hawaiian</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>2.0</td>
+                        <td>21.00</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>44.50</td>
+                    </tr>
+                    <tr>
+                        <th>...</th>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                    </tr>
+                    <tr>
+                        <th>48574</th>
+                        <td>01/05</td>
+                        <td>15</td>
+                        <td>hawaiian</td>
+                        <td>M</td>
+                        <td>Classic</td>
+                        <td>1.0</td>
+                        <td>13.25</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>49.21</td>
+                    </tr>
+                    <tr>
+                        <th>48588</th>
+                        <td>01/05</td>
+                        <td>16</td>
+                        <td>hawaiian</td>
+                        <td>M</td>
+                        <td>Classic</td>
+                        <td>1.0</td>
+                        <td>13.25</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>52.92</td>
+                    </tr>
+                    <tr>
+                        <th>48595</th>
+                        <td>01/05</td>
+                        <td>16</td>
+                        <td>hawaiian</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>1.0</td>
+                        <td>10.50</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>54.59</td>
+                    </tr>
+                    <tr>
+                        <th>48615</th>
+                        <td>01/05</td>
+                        <td>14</td>
+                        <td>hawaiian</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>1.0</td>
+                        <td>10.50</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>55.76</td>
+                    </tr>
+                    <tr>
+                        <th>48618</th>
+                        <td>01/05</td>
+                        <td>14</td>
+                        <td>hawaiian</td>
+                        <td>L</td>
+                        <td>Classic</td>
+                        <td>1.0</td>
+                        <td>16.50</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>51.78</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>Фильтрацию можно сделать по признакам типа
+                <span class="code-chip">int64</span>&nbsp; и <span class="code-chip">float64</span>&nbsp;. Например, мы хотим найти заказы с более чем одной пиццей (<strong>quantity</strong>):</p>
+
+            <pre class="line-numbers"><code class="language-python">df[df['quantity'] > 1]</code></pre>
+            <p><span class="code-chip">df</span>&nbsp;- это датафрейм фильтрации</p>
+            <p><span class="code-chip">df['quantity'] > 1</span>&nbsp;- это условие фильтрации:</p>
+            <ul>
+                <li>
+                    <span class="code-chip">df['quantity']</span>&nbsp;- обращение к признаку <strong>quantity</strong>;
+                </li>
+                <li>
+                    <span class="code-chip">> 1</span>&nbsp;- более чем одной (<span class="code-chip">1</span> без кавычек, так как данные типа <span class="code-chip">float64</span>)
+                </li>
+            </ul>
+            <pre class="line-numbers"><code class="language-python">df[df['quantity'] > 1]</code></pre>
+            <div class="scrollable-table">
+                <table border="1" class="dataframe">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>order_date</th>
+                        <th>order_hour</th>
+                        <th>pizza_name_id</th>
+                        <th>pizza_size</th>
+                        <th>pizza_category</th>
+                        <th>quantity</th>
+                        <th>total_price</th>
+                        <th>pizza_ingredients</th>
+                        <th>delivery_price</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th>0</th>
+                        <td>30/03</td>
+                        <td>13</td>
+                        <td>big</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>4.0</td>
+                        <td>48.00</td>
+                        <td>Bacon, Pepperoni, Italian Sausage, Chorizo Sau...</td>
+                        <td>30.86</td>
+                    </tr>
+                    <tr>
+                        <th>1</th>
+                        <td>19/09</td>
+                        <td>14</td>
+                        <td>cali</td>
+                        <td>L</td>
+                        <td>Chicken</td>
+                        <td>4.0</td>
+                        <td>83.00</td>
+                        <td>Chicken, Artichoke, Spinach, Garlic, Jalapeno ...</td>
+                        <td>9.33</td>
+                    </tr>
+                    <tr>
+                        <th>2</th>
+                        <td>19/05</td>
+                        <td>12</td>
+                        <td>big</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>4.0</td>
+                        <td>48.00</td>
+                        <td>Bacon, Pepperoni, Italian Sausage, Chorizo Sau...</td>
+                        <td>33.19</td>
+                    </tr>
+                    <tr>
+                        <th>3</th>
+                        <td>13/02</td>
+                        <td>13</td>
+                        <td>sicilian</td>
+                        <td>M</td>
+                        <td>Supreme</td>
+                        <td>3.0</td>
+                        <td>48.75</td>
+                        <td>Coarse Sicilian Salami, Tomatoes, Green Olives...</td>
+                        <td>31.06</td>
+                    </tr>
+                    <tr>
+                        <th>4</th>
+                        <td>01/06</td>
+                        <td>12</td>
+                        <td>spicy</td>
+                        <td>S</td>
+                        <td>Supreme</td>
+                        <td>3.0</td>
+                        <td>37.50</td>
+                        <td>Capocollo, Tomatoes, Goat Cheese, Artichokes, ...</td>
+                        <td>34.19</td>
+                    </tr>
+                    <tr>
+                        <th>...</th>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                    </tr>
+                    <tr>
+                        <th>922</th>
+                        <td>14/02</td>
+                        <td>14</td>
+                        <td>spinach</td>
+                        <td>M</td>
+                        <td>Supreme</td>
+                        <td>2.0</td>
+                        <td>33.00</td>
+                        <td>Spinach, Red Onions, Pepperoni, Tomatoes, Arti...</td>
+                        <td>38.94</td>
+                    </tr>
+                    <tr>
+                        <th>923</th>
+                        <td>08/06</td>
+                        <td>18</td>
+                        <td>southw</td>
+                        <td>M</td>
+                        <td>Chicken</td>
+                        <td>2.0</td>
+                        <td>33.50</td>
+                        <td>Chicken, Tomatoes, Red Peppers, Red Onions, Ja...</td>
+                        <td>38.40</td>
+                    </tr>
+                    <tr>
+                        <th>924</th>
+                        <td>31/12</td>
+                        <td>19</td>
+                        <td>bbq</td>
+                        <td>L</td>
+                        <td>Chicken</td>
+                        <td>2.0</td>
+                        <td>41.50</td>
+                        <td>Barbecued Chicken, Red Peppers, Green Peppers,...</td>
+                        <td>35.25</td>
+                    </tr>
+                    <tr>
+                        <th>925</th>
+                        <td>24/07</td>
+                        <td>14</td>
+                        <td>veggie</td>
+                        <td>S</td>
+                        <td>Veggie</td>
+                        <td>2.0</td>
+                        <td>24.00</td>
+                        <td>Mushrooms, Tomatoes, Red Peppers, Green Pepper...</td>
+                        <td>46.11</td>
+                    </tr>
+                    <tr>
+                        <th>926</th>
+                        <td>28/04</td>
+                        <td>12</td>
+                        <td>peppr</td>
+                        <td>S</td>
+                        <td>Supreme</td>
+                        <td>2.0</td>
+                        <td>25.00</td>
+                        <td>Genoa Salami, Capocollo, Pepperoni, Tomatoes, ...</td>
+                        <td>43.67</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>Чтобы написать условия, вам понадобятся операторы сравнения:</p>
+            <table border="1" class="dataframe_new" style="width: 100%;">
+                <thead>
+                <tr style="text-align: right; width: 100%">
+                    <th>Оператор</th>
+                    <th>Описание</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th><span class="code-chip">==</span>&nbsp;</th>
+                    <td>равно; соответствует</td>
+                </tr>
+                <tr>
+                    <th><span class="code-chip">!=</span>&nbsp;</th>
+                    <td>не равно</td>
+                </tr>
+                <tr>
+                    <th><span class="code-chip">></span>&nbsp;</th>
+                    <td>больше</td>
+                </tr>
+                <tr>
+                    <th><span class="code-chip">>=</span>&nbsp;</th>
+                    <td>больше или равно</td>
+                </tr>
+                <tr>
+                    <th><span class="code-chip"><</span>&nbsp;</th>
+                    <td>меньше</td>
+                </tr>
+                <tr>
+                    <th><span class="code-chip"><=</span>&nbsp;</th>
+                    <td>меньше или равно</td>
+                </tr>
+                </tbody>
+            </table>
+            <p style="font-size: 25px"><strong>ФИЛЬТРАЦИЯ ПО НЕСКОЛЬКИМ УСЛОВИЯМ</strong></p>
+            <p>Довольно часто фильтрацию нужно сделать по нескольким признакам. Тогда каждое из условий нужно прописывать в круглых скобках, а между круглыми скобками должен стоять оператор:</p>
+            <p class="fake-code">
+<span class="code-line">датафрейм[(условие 1) оператор (условие 2) оператор ...]</span>
+            <p>На месте <span class="code-chip">оператора</span>&nbsp; может стоять <span class="code-chip">&</span>&nbsp; или <span class="code-chip">|</span>&nbsp;:</p>
+            <ul>
+                <li>
+                    <span class="code-chip">&</span>&nbsp; - оператор "И". Используйте его, если нужно, чтобы все прописанные условия выполнялись одновременно:
+                    <p class="fake-code">
+<span class="code-line">датафрейм[(условие 1)  & (условие 2) & ...] # одновременное выполнение всех условий</span>
+                </li>
+                <li>
+                    <span class="code-chip">|</span>&nbsp; - оператор "ИЛИ". Его мы используем, когда хотим найти наблюдения, которые соответствуют хотя бы одному из прописанных условий.
+                    <p class="fake-code">
+<span class="code-line">датафрейм[(условие 1) | (условие 2) | ...] # выполняется хотя бы одно условие</span>
+                </li>
+            </ul>
+            <img src="picture/illustration3.svg" width="100%" alt="Рисунок 3">
+            <p>Предположим, нам нужно найти заказы только с гавайской пиццей (<em>hawaiian</em>; <strong>pizza_name_id</strong>) и при этом количество пицц в заказе (<strong>quantity</strong>) должно быть больше одной.</p>
+            <img src="picture/illustration4.svg" width="100%" alt="Рисунок 4">
+            <p>У нас два условия, которые должны выполняться одновременно, значит используем оператор <span class="code-chip">&</span>&nbsp;:</p>
+            <pre class="line-numbers"><code class="language-python">df[(df['pizza_name_id'] == 'hawaiian') & (df['quantity'] > 1)]</code></pre>
+            <p><span class="code-chip">df</span>&nbsp;- это датафрейм фильтрации</p>
+            <p><span class="code-chip">(df['pizza_name_id']=='hawaiian')&(df['quantity'] > 1)</span>- это условие фильтрации:</p>
+            <ul>
+                <li>
+                    <span class="code-chip">df['pizza_name_id'] == 'hawaiian']</span>&nbsp;- гавайские пиццы
+                </li>
+                <li>
+                    <span class="code-chip">&</span>&nbsp;- и
+                </li>
+                <li>
+                    <span class="code-chip">df['quantity'] > 1</span>&nbsp;- в заказе их больше 1
+                </li>
+            </ul>
+            <div class="scrollable-table">
+                <table border="1" class="dataframe">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>order_date</th>
+                        <th>order_hour</th>
+                        <th>pizza_name_id</th>
+                        <th>pizza_size</th>
+                        <th>pizza_category</th>
+                        <th>quantity</th>
+                        <th>total_price</th>
+                        <th>pizza_ingredients</th>
+                        <th>delivery_price</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th>0</th>
+                        <td>30/03</td>
+                        <td>13</td>
+                        <td>big</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>4.0</td>
+                        <td>48.00</td>
+                        <td>Bacon, Pepperoni, Italian Sausage, Chorizo Sau...</td>
+                        <td>30.86</td>
+                    </tr>
+                    <tr>
+                        <th>1</th>
+                        <td>19/09</td>
+                        <td>14</td>
+                        <td>cali</td>
+                        <td>L</td>
+                        <td>Chicken</td>
+                        <td>4.0</td>
+                        <td>83.00</td>
+                        <td>Chicken, Artichoke, Spinach, Garlic, Jalapeno ...</td>
+                        <td>9.33</td>
+                    </tr>
+                    <tr>
+                        <th>2</th>
+                        <td>19/05</td>
+                        <td>12</td>
+                        <td>big</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>4.0</td>
+                        <td>48.00</td>
+                        <td>Bacon, Pepperoni, Italian Sausage, Chorizo Sau...</td>
+                        <td>33.19</td>
+                    </tr>
+                    <tr>
+                        <th>3</th>
+                        <td>13/02</td>
+                        <td>13</td>
+                        <td>sicilian</td>
+                        <td>M</td>
+                        <td>Supreme</td>
+                        <td>3.0</td>
+                        <td>48.75</td>
+                        <td>Coarse Sicilian Salami, Tomatoes, Green Olives...</td>
+                        <td>31.06</td>
+                    </tr>
+                    <tr>
+                        <th>4</th>
+                        <td>01/06</td>
+                        <td>12</td>
+                        <td>spicy</td>
+                        <td>S</td>
+                        <td>Supreme</td>
+                        <td>3.0</td>
+                        <td>37.50</td>
+                        <td>Capocollo, Tomatoes, Goat Cheese, Artichokes, ...</td>
+                        <td>34.19</td>
+                    </tr>
+                    <tr>
+                        <th>...</th>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                    </tr>
+                    <tr>
+                        <th>48574</th>
+                        <td>01/05</td>
+                        <td>15</td>
+                        <td>hawaiian</td>
+                        <td>M</td>
+                        <td>Classic</td>
+                        <td>1.0</td>
+                        <td>13.25</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>49.21</td>
+                    </tr>
+                    <tr>
+                        <th>48588</th>
+                        <td>01/05</td>
+                        <td>16</td>
+                        <td>hawaiian</td>
+                        <td>M</td>
+                        <td>Classic</td>
+                        <td>1.0</td>
+                        <td>13.25</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>52.92</td>
+                    </tr>
+                    <tr>
+                        <th>48595</th>
+                        <td>01/05</td>
+                        <td>16</td>
+                        <td>hawaiian</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>1.0</td>
+                        <td>10.50</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>54.59</td>
+                    </tr>
+                    <tr>
+                        <th>48615</th>
+                        <td>01/05</td>
+                        <td>14</td>
+                        <td>hawaiian</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>1.0</td>
+                        <td>10.50</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>55.76</td>
+                    </tr>
+                    <tr>
+                        <th>48618</th>
+                        <td>01/05</td>
+                        <td>14</td>
+                        <td>hawaiian</td>
+                        <td>L</td>
+                        <td>Classic</td>
+                        <td>1.0</td>
+                        <td>16.50</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>51.78</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>Поменяв <span class="code-chip">&</span>&nbsp; на <span class="code-chip">|</span>&nbsp;, мы получим уже другую фильтрацию. Будут выведены все заказы с гавайской пиццей (<em>hawaiian</em>; <strong>pizza_name_id</strong>) и все заказы, где количество пицц (<strong>quantity</strong>) больше одной, не обязательно с гавайской:</p>
+            <img src="picture/illustration5.svg" width="100%" alt="Рисунок 5">
+            <pre class="line-numbers"><code class="language-python">df[(df['pizza_name_id'] == 'hawaiian') | (df['quantity'] > 1)]</code></pre>
+            <p><span class="code-chip">df</span>&nbsp;- это датафрейм фильтрации</p>
+            <p><span class="code-chip">(df['pizza_name_id'] == 'hawaiian')|(df['quantity']>1)</span>&nbsp;- это условие фильтрации:</p>
+            <ul>
+                <li>
+                    <span class="code-chip">df['pizza_name_id'] == 'hawaiian']</span>&nbsp;- гавайские пиццы
+                </li>
+                <li>
+                    <span class="code-chip">|</span>&nbsp;- или
+                </li>
+                <li>
+                    <span class="code-chip">df['quantity'] > 1</span>&nbsp;- заказы, где пицц больше 1
+                </li>
+            </ul>
+            <div class="scrollable-table">
+                <table border="1" class="dataframe">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>order_date</th>
+                        <th>order_hour</th>
+                        <th>pizza_name_id</th>
+                        <th>pizza_size</th>
+                        <th>pizza_category</th>
+                        <th>quantity</th>
+                        <th>total_price</th>
+                        <th>pizza_ingredients</th>
+                        <th>delivery_price</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th>0</th>
+                        <td>03/10</td>
+                        <td>21</td>
+                        <td>hawaiian</td>
+                        <td>L</td>
+                        <td>Classic</td>
+                        <td>3.0</td>
+                        <td>49.5</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>30.31</td>
+                    </tr>
+                    <tr>
+                        <th>38</th>
+                        <td>07/07</td>
+                        <td>16</td>
+                        <td>hawaiian</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>2.0</td>
+                        <td>21.0</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>44.61</td>
+                    </tr>
+                    <tr>
+                        <th>46</th>
+                        <td>29/11</td>
+                        <td>12</td>
+                        <td>hawaiian</td>
+                        <td>L</td>
+                        <td>Classic</td>
+                        <td>2.0</td>
+                        <td>33.0</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>37.14</td>
+                    </tr>
+                    <tr>
+                        <th>48</th>
+                        <td>11/02</td>
+                        <td>11</td>
+                        <td>hawaiian</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>2.0</td>
+                        <td>21.0</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>46.42</td>
+                    </tr>
+                    <tr>
+                        <th>61</th>
+                        <td>20/04</td>
+                        <td>13</td>
+                        <td>hawaiian</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>2.0</td>
+                        <td>21.0</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>44.50</td>
+                    </tr>
+                    <tr>
+                        <th>...</th>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                    </tr>
+                    <tr>
+                        <th>835</th>
+                        <td>17/11</td>
+                        <td>12</td>
+                        <td>hawaiian</td>
+                        <td>M</td>
+                        <td>Classic</td>
+                        <td>2.0</td>
+                        <td>26.5</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>44.90</td>
+                    </tr>
+                    <tr>
+                        <th>841</th>
+                        <td>30/03</td>
+                        <td>13</td>
+                        <td>hawaiian</td>
+                        <td>L</td>
+                        <td>Classic</td>
+                        <td>2.0</td>
+                        <td>33.0</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>39.14</td>
+                    </tr>
+                    <tr>
+                        <th>846</th>
+                        <td>02/01</td>
+                        <td>18</td>
+                        <td>hawaiian</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>2.0</td>
+                        <td>21.0</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>49.39</td>
+                    </tr>
+                    <tr>
+                        <th>888</th>
+                        <td>11/11</td>
+                        <td>19</td>
+                        <td>hawaiian</td>
+                        <td>L</td>
+                        <td>Classic</td>
+                        <td>2.0</td>
+                        <td>33.0</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>39.97</td>
+                    </tr>
+                    <tr>
+                        <th>914</th>
+                        <td>25/10</td>
+                        <td>17</td>
+                        <td>hawaiian</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>2.0</td>
+                        <td>21.0</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>46.77</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>Для того чтобы сделать фильтрацию по нескольким значениям одного признака, удобно воспользоваться методом <span class="code-chip">.isin()</span>&nbsp;, внутрь которого можно передать <strong>список</strong> искомых категорий:</p>
+            <p class="fake-code">
+<span class="code-line">датафрейм[датафрейм['признак'].isin([значение 1, значение 2, ...])]</span>
+            <p>Например, мы хотим найти <em>заказы</em> с гавайской пиццей (<em>hawaiian</em>; <strong>pizza_name_id</strong>) и пиццей пепперони (<em>pepperoni</em>; <strong>pizza_name_id</strong>):</p>
+            <pre class="line-numbers"><code class="language-python">df[df['pizza_name_id'].isin(['hawaiian', 'pepperoni'])]</code></pre>
+            <p><span class="code-chip">df</span>&nbsp;- это датафрейм фильтрации</p>
+            <p><span class="code-chip">df['pizza_name_id'].isin(['hawaiian', 'pepperoni'])</span>&nbsp;- это условие фильтрации:</p>
+            <ul>
+                <li>
+                    <span class="code-chip">df['pizza_name_id']</span>&nbsp;- обращаемся к признаку <strong>pizza_name_id</strong>
+                </li>
+                <li>
+                    <span class="code-chip">.isin(['hawaiian', 'pepperoni'])</span>&nbsp;- берем из него только заказы с гавайской пиццей и пиццей пепперони
+                </li>
+            </ul>
+            <div class="scrollable-table">
+                <table border="1" class="dataframe">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>order_date</th>
+                        <th>order_hour</th>
+                        <th>pizza_name_id</th>
+                        <th>pizza_size</th>
+                        <th>pizza_category</th>
+                        <th>quantity</th>
+                        <th>total_price</th>
+                        <th>pizza_ingredients</th>
+                        <th>delivery_price</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th>18</th>
+                        <td>07/01</td>
+                        <td>14</td>
+                        <td>pepperoni</td>
+                        <td>M</td>
+                        <td>Classic</td>
+                        <td>3.0</td>
+                        <td>37.50</td>
+                        <td>Mozzarella Cheese, Pepperoni</td>
+                        <td>37.23</td>
+                    </tr>
+                    <tr>
+                        <th>20</th>
+                        <td>03/10</td>
+                        <td>21</td>
+                        <td>hawaiian</td>
+                        <td>L</td>
+                        <td>Classic</td>
+                        <td>3.0</td>
+                        <td>49.50</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>30.31</td>
+                    </tr>
+                    <tr>
+                        <th>34</th>
+                        <td>29/10</td>
+                        <td>11</td>
+                        <td>pepperoni</td>
+                        <td>M</td>
+                        <td>Classic</td>
+                        <td>2.0</td>
+                        <td>25.00</td>
+                        <td>Mozzarella Cheese, Pepperoni</td>
+                        <td>46.23</td>
+                    </tr>
+                    <tr>
+                        <th>38</th>
+                        <td>07/07</td>
+                        <td>16</td>
+                        <td>hawaiian</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>2.0</td>
+                        <td>21.00</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>44.61</td>
+                    </tr>
+                    <tr>
+                        <th>46</th>
+                        <td>29/11</td>
+                        <td>12</td>
+                        <td>hawaiian</td>
+                        <td>L</td>
+                        <td>Classic</td>
+                        <td>2.0</td>
+                        <td>33.00</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>37.14</td>
+                    </tr>
+                    <tr>
+                        <th>...</th>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                    </tr>
+                    <tr>
+                        <th>48588</th>
+                        <td>01/05</td>
+                        <td>16</td>
+                        <td>hawaiian</td>
+                        <td>M</td>
+                        <td>Classic</td>
+                        <td>1.0</td>
+                        <td>13.25</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>52.92</td>
+                    </tr>
+                    <tr>
+                        <th>48594</th>
+                        <td>01/05</td>
+                        <td>17</td>
+                        <td>pepperoni</td>
+                        <td>L</td>
+                        <td>Classic</td>
+                        <td>1.0</td>
+                        <td>15.25</td>
+                        <td>Mozzarella Cheese, Pepperoni</td>
+                        <td>50.38</td>
+                    </tr>
+                    <tr>
+                        <th>48595</th>
+                        <td>01/05</td>
+                        <td>16</td>
+                        <td>hawaiian</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>1.0</td>
+                        <td>10.50</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>54.59</td>
+                    </tr>
+                    <tr>
+                        <th>48615</th>
+                        <td>01/05</td>
+                        <td>14</td>
+                        <td>hawaiian</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>1.0</td>
+                        <td>10.50</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>55.76</td>
+                    </tr>
+                    <tr>
+                        <th>48618</th>
+                        <td>01/05</td>
+                        <td>14</td>
+                        <td>hawaiian</td>
+                        <td>L</td>
+                        <td>Classic</td>
+                        <td>1.0</td>
+                        <td>16.50</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>51.78</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p style="font-size: 25px"><strong>ПОДСЧЕТ КОЛИЧЕСТВА НАБЛЮДЕНИЙ ПОСЛЕ ФИЛЬТРАЦИИ</strong></p>
+            <p>Если мы хотим узнать, сколько строк соответсвует нашему условию
+                фильтрации, можно воспользоваться свойством <span class="code-chip">.shape</span>&nbsp;, которое
+                мы рассмотрели в прошлой главе. Свойство возвращает кортеж,
+                первый элемент которого - количество строк, второй - количество
+                столбцов. Добавляя <span class="code-chip">[0]</span>&nbsp;, мы извлекаем количество строк из
+                отфильтрованных данных:</p>
+
+            <p class="fake-code">
+<span class="code-line">датафрейм[условие/я фильтрации].shape[0]</span>
+            <p>Если мы хотим посчитать количество заказов с гавайской пиццей (hawaiian; pizza_name_id), то напишем:</p>
+            <pre class="line-numbers"><code class="language-python">df[df['pizza_name_id'] == 'hawaiian'].shape[0]</code></pre>
+            <div class="print_result">2370</div>
+            <p>Получается, таких заказов было 2370.</p>
+            <h2 id="chapter2-2">2.2 Как сделать сортировку в DataFrame?</h2>
+            <p>Еще один полезный инструмент анализа - это сортировка.</p>
+            <div class="definition-card">
+                <div class="definition-text">
+                    <strong>Сортировка данных</strong> — это процедура, позволяющая упорядочить информацию по возрастанию или убыванию какого-либо параметра.
+                </div>
+            </div>
+            <p>Для сортировки в библиотеке Pandas используется метод <span class="code-chip">.sort_values()</span>&nbsp;:</p>
+            <p class="fake-code">
+<span class="code-line">датафрейм.sort_values('признак') # по возрастанию</span>
+            <p>или</p>
+            <p class="fake-code">
+<span class="code-line">датафрейм.sort_values('признак', ascending=False) # по убыванию</span>
+            <p>Если мы хотим отсортировать строки нашего датафрейма по возрастанию цены заказа (<strong>total_price</strong>):</p>
+            <pre class="line-numbers"><code class="language-python">df.sort_values('total_price')</code></pre>
+            <div class="scrollable-table">
+                <table border="1" class="dataframe">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>order_date</th>
+                        <th>order_hour</th>
+                        <th>pizza_name_id</th>
+                        <th>pizza_size</th>
+                        <th>pizza_category</th>
+                        <th>quantity</th>
+                        <th>total_price</th>
+                        <th>pizza_ingredients</th>
+                        <th>delivery_price</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th>48468</th>
+                        <td>29/12</td>
+                        <td>22</td>
+                        <td>pepperoni</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>1.0</td>
+                        <td>9.75</td>
+                        <td>Mozzarella Cheese, Pepperoni</td>
+                        <td>55.12</td>
+                    </tr>
+                    <tr>
+                        <th>16337</th>
+                        <td>31/12</td>
+                        <td>16</td>
+                        <td>pepperoni</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>1.0</td>
+                        <td>9.75</td>
+                        <td>Mozzarella Cheese, Pepperoni</td>
+                        <td>57.07</td>
+                    </tr>
+                    <tr>
+                        <th>16610</th>
+                        <td>31/12</td>
+                        <td>14</td>
+                        <td>pepperoni</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>1.0</td>
+                        <td>9.75</td>
+                        <td>Mozzarella Cheese, Pepperoni</td>
+                        <td>54.55</td>
+                    </tr>
+                    <tr>
+                        <th>16621</th>
+                        <td>28/12</td>
+                        <td>12</td>
+                        <td>pepperoni</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>1.0</td>
+                        <td>9.75</td>
+                        <td>Mozzarella Cheese, Pepperoni</td>
+                        <td>54.07</td>
+                    </tr>
+                    <tr>
+                        <th>16385</th>
+                        <td>28/12</td>
+                        <td>12</td>
+                        <td>pepperoni</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>1.0</td>
+                        <td>9.75</td>
+                        <td>Mozzarella Cheese, Pepperoni</td>
+                        <td>54.07</td>
+                    </tr>
+                    <tr>
+                        <th>...</th>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                    </tr>
+                    <tr>
+                        <th>9</th>
+                        <td>02/01</td>
+                        <td>12</td>
+                        <td>hspicy</td>
+                        <td>L</td>
+                        <td>Supreme</td>
+                        <td>1.0</td>
+                        <td>62.25</td>
+                        <td>Capocollo, Tomatoes, Goat Cheese, Artichokes, ...</td>
+                        <td>24.38</td>
+                    </tr>
+                    <tr>
+                        <th>17</th>
+                        <td>17/10</td>
+                        <td>12</td>
+                        <td>bbq</td>
+                        <td>L</td>
+                        <td>Chicken</td>
+                        <td>3.0</td>
+                        <td>62.25</td>
+                        <td>Barbecued Chicken, Red Peppers, Green Peppers,...</td>
+                        <td>21.06</td>
+                    </tr>
+                    <tr>
+                        <th>16</th>
+                        <td>15/05</td>
+                        <td>14</td>
+                        <td>thai</td>
+                        <td>L</td>
+                        <td>Chicken</td>
+                        <td>3.0</td>
+                        <td>62.25</td>
+                        <td>Chicken, Pineapple, Tomatoes, Red Peppers, Tha...</td>
+                        <td>23.09</td>
+                    </tr>
+                    <tr>
+                        <th>13</th>
+                        <td>08/10</td>
+                        <td>12</td>
+                        <td>prsc</td>
+                        <td>L</td>
+                        <td>Supreme</td>
+                        <td>3.0</td>
+                        <td>62.25</td>
+                        <td>Prosciutto di San Daniele, Arugula, Mozzarella...</td>
+                        <td>25.16</td>
+                    </tr>
+                    <tr>
+                        <th>1</th>
+                        <td>19/09</td>
+                        <td>14</td>
+                        <td>cali</td>
+                        <td>L</td>
+                        <td>Chicken</td>
+                        <td>4.0</td>
+                        <td>83.00</td>
+                        <td>SChicken, Artichoke, Spinach, Garlic, Jalapeno ...</td>
+                        <td>9.33</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>Первыми вывелись самые дешевые заказы, а в конце самые дорогие.</p>
+            <p>Для сортировки в обратном порядке (от самых дорогих заказов к дешевым) нужно добавить параметр <span class="code-chip">ascending=False</span>&nbsp;:</p>
+            <pre class="line-numbers"><code class="language-python">df.sort_values('total_price', ascending=False)</code></pre>
+            <div class="scrollable-table">
+                <table border="1" class="dataframe">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>order_date</th>
+                        <th>order_hour</th>
+                        <th>pizza_name_id</th>
+                        <th>pizza_size</th>
+                        <th>pizza_category</th>
+                        <th>quantity</th>
+                        <th>total_price</th>
+                        <th>pizza_ingredients</th>
+                        <th>delivery_price</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th>1</th>
+                        <td>19/09</td>
+                        <td>14</td>
+                        <td>cali</td>
+                        <td>L</td>
+                        <td>Chicken</td>
+                        <td>4.0</td>
+                        <td>83.00</td>
+                        <td>Chicken, Artichoke, Spinach, Garlic, Jalapeno ...</td>
+                        <td>9.33</td>
+                    </tr>
+                    <tr>
+                        <th>9</th>
+                        <td>02/01</td>
+                        <td>12</td>
+                        <td>spicy</td>
+                        <td>L</td>
+                        <td>Supreme</td>
+                        <td>3.0</td>
+                        <td>62.25</td>
+                        <td>Capocollo, Tomatoes, Goat Cheese, Artichokes, ...</td>
+                        <td>24.38</td>
+                    </tr>
+                    <tr>
+                        <th>16</th>
+                        <td>15/05</td>
+                        <td>14</td>
+                        <td>thai</td>
+                        <td>L</td>
+                        <td>Chicken</td>
+                        <td>3.0</td>
+                        <td>62.25</td>
+                        <td>Chicken, Pineapple, Tomatoes, Red Peppers, Tha...</td>
+                        <td>23.09</td>
+                    </tr>
+                    <tr>
+                        <th>17</th>
+                        <td>17/10</td>
+                        <td>12</td>
+                        <td>bbq</td>
+                        <td>L</td>
+                        <td>Chicken</td>
+                        <td>3.0</td>
+                        <td>62.25</td>
+                        <td>Barbecued Chicken, Red Peppers, Green Peppers,...</td>
+                        <td>21.06</td>
+                    </tr>
+                    <tr>
+                        <th>13</th>
+                        <td>08/10</td>
+                        <td>12</td>
+                        <td>prsc</td>
+                        <td>L</td>
+                        <td>Supreme</td>
+                        <td>3.0</td>
+                        <td>62.25</td>
+                        <td>Prosciutto di San Daniele, Arugula, Mozzarella...</td>
+                        <td>25.16</td>
+                    </tr>
+                    <tr>
+                        <th>36861</th>
+                        <td>01/06</td>
+                        <td>17</td>
+                        <td>pepperoni</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>1.0</td>
+                        <td>9.75</td>
+                        <td>Mozzarella Cheese, Pepperoni</td>
+                        <td>54.05</td>
+                    </tr>
+                    <tr>
+                        <th>21892</th>
+                        <td>08/11</td>
+                        <td>14</td>
+                        <td>pepperoni</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>1.0</td>
+                        <td>9.75</td>
+                        <td>Mozzarella Cheese, Pepperoni</td>
+                        <td>54.96</td>
+                    </tr>
+                    <tr>
+                        <th>3515</th>
+                        <td>18/09</td>
+                        <td>12</td>
+                        <td>pepperoni</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>1.0</td>
+                        <td>9.75</td>
+                        <td>Mozzarella Cheese, Pepperoni</td>
+                        <td>56.73</td>
+                    </tr>
+                    <tr>
+                        <th>46244</th>
+                        <td>07/05</td>
+                        <td>19</td>
+                        <td>pepperoni</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>1.0</td>
+                        <td>9.75</td>
+                        <td>Mozzarella Cheese, Pepperoni</td>
+                        <td>56.01</td>
+                    </tr>
+                    <tr>
+                        <th>3551</th>
+                        <td>18/09</td>
+                        <td>13</td>
+                        <td>pepperoni</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>1.0</td>
+                        <td>9.75</td>
+                        <td>Mozzarella Cheese, Pepperoni</td>
+                        <td>53.61</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p style="font-size: 25px"><strong>ФИЛЬТРАЦИЯ И СОРТИРОВКА</strong></p>
+            <p>Сортировать можно и отфильтрованные данные:</p>
+            <p class="fake-code">
+<span class="code-line">датафрейм[условие/ия фильтрации].sort_values('признак') # по возрастанию</span>
+            <p>или</p>
+            <p class="fake-code">
+<span class="code-line">датафрейм[условие/ия фильтрации].sort_values('признак', ascending=False) # по убыванию</span>
+            <p>Если нам нужны только заказы с гавайской пиццей (<em>hawaiian</em>; <strong>pizza_name_id</strong>), отсортированные по возрастанию их стоимости (<strong>total_price</strong>), напишем следующий код:</p>
+            <pre class="line-numbers"><code class="language-python">df[df['pizza_name_id'] == 'hawaiian'].sort_values('total_price')</code></pre>
+            <p><span class="code-chip">df[df['pizza_name_id'] == 'hawaiian']</span>&nbsp; - берем заказы только с гавайской пиццей</p>
+            <p><span class="code-chip">.sort_values('total_price')</span>&nbsp; - сортируем их по возрастанию стоимости</p>
+            <div class="scrollable-table">
+                <table border="1" class="dataframe">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>order_date</th>
+                        <th>order_hour</th>
+                        <th>pizza_name_id</th>
+                        <th>pizza_size</th>
+                        <th>pizza_category</th>
+                        <th>quantity</th>
+                        <th>total_price</th>
+                        <th>pizza_ingredients</th>
+                        <th>delivery_price</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th>48615</th>
+                        <td>01/05</td>
+                        <td>14</td>
+                        <td>hawaiian</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>1.0</td>
+                        <td>10.5</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>55.76</td>
+                    </tr>
+                    <tr>
+                        <th>19599</th>
+                        <td>21/10</td>
+                        <td>13</td>
+                        <td>hawaiian</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>1.0</td>
+                        <td>10.5</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>55.57</td>
+                    </tr>
+                    <tr>
+                        <th>19595</th>
+                        <td>21/10</td>
+                        <td>13</td>
+                        <td>hawaiian</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>1.0</td>
+                        <td>10.5</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>52.79</td>
+                    </tr>
+                    <tr>
+                        <th>19493</th>
+                        <td>21/10</td>
+                        <td>21</td>
+                        <td>hawaiian</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>1.0</td>
+                        <td>10.5</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>53.16</td>
+                    </tr>
+                    <tr>
+                        <th>19427</th>
+                        <td>20/10</td>
+                        <td>16</td>
+                        <td>hawaiian</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>1.0</td>
+                        <td>10.5</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>51.92</td>
+                    </tr>
+                    <tr>
+                        <th>694</th>
+                        <td>25/10</td>
+                        <td>13</td>
+                        <td>hawaiian</td>
+                        <td>L</td>
+                        <td>Classic</td>
+                        <td>2.0</td>
+                        <td>33.0</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>37.47</td>
+                    </tr>
+                    <tr>
+                        <th>725</th>
+                        <td>12/08</td>
+                        <td>12</td>
+                        <td>hawaiian</td>
+                        <td>L</td>
+                        <td>Classic</td>
+                        <td>2.0</td>
+                        <td>33.0</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>38.30</td>
+                    </tr>
+                    <tr>
+                        <th>594</th>
+                        <td>24/05</td>
+                        <td>17</td>
+                        <td>hawaiian</td>
+                        <td>L</td>
+                        <td>Classic</td>
+                        <td>2.0</td>
+                        <td>33.0</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>35.29</td>
+                    </tr>
+                    <tr>
+                        <th>764</th>
+                        <td>03/04</td>
+                        <td>20</td>
+                        <td>hawaiian</td>
+                        <td>L</td>
+                        <td>Classic</td>
+                        <td>2.0</td>
+                        <td>33.0</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>38.96</td>
+                    </tr>
+                    <tr>
+                        <th>20</th>
+                        <td>03/10</td>
+                        <td>21</td>
+                        <td>hawaiian</td>
+                        <td>L</td>
+                        <td>Classic</td>
+                        <td>3.0</td>
+                        <td>49.5</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>30.31</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>Если нужна сортировка по убыванию:</p>
+            <pre class="line-numbers"><code class="language-python">df[df['pizza_name_id'] == 'hawaiian'].sort_values('total_price', ascending=False)</code></pre>
+            <p><span class="code-chip">df[df['pizza_name_id'] == 'hawaiian']</span>&nbsp; - берем заказы только с гавайской пиццей</p>
+            <p><span class="code-chip">.sort_values('total_price', ascending=False)</span>&nbsp; - сортируем их по убыванию стоимости</p>
+            <div class="scrollable-table">
+                <table border="1" class="dataframe">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>order_date</th>
+                        <th>order_hour</th>
+                        <th>pizza_name_id</th>
+                        <th>pizza_size</th>
+                        <th>pizza_category</th>
+                        <th>quantity</th>
+                        <th>total_price</th>
+                        <th>pizza_ingredients</th>
+                        <th>delivery_price</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th>20</th>
+                        <td>03/10</td>
+                        <td>21</td>
+                        <td>hawaiian</td>
+                        <td>L</td>
+                        <td>Classic</td>
+                        <td>3.0</td>
+                        <td>49.5</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>30.31</td>
+                    </tr>
+                    <tr>
+                        <th>458</th>
+                        <td>26/05</td>
+                        <td>14</td>
+                        <td>hawaiian</td>
+                        <td>L</td>
+                        <td>Classic</td>
+                        <td>2.0</td>
+                        <td>33.0</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>42.15</td>
+                    </tr>
+                    <tr>
+                        <th>409</th>
+                        <td>13/12</td>
+                        <td>16</td>
+                        <td>hawaiian</td>
+                        <td>L</td>
+                        <td>Classic</td>
+                        <td>2.0</td>
+                        <td>33.0</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>40.26</td>
+                    </tr>
+                    <tr>
+                        <th>490</th>
+                        <td>26/02</td>
+                        <td>13</td>
+                        <td>hawaiian</td>
+                        <td>L</td>
+                        <td>Classic</td>
+                        <td>2.0</td>
+                        <td>33.0</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>37.93</td>
+                    </tr>
+                    <tr>
+                        <th>78</th>
+                        <td>07/07</td>
+                        <td>12</td>
+                        <td>hawaiian</td>
+                        <td>L</td>
+                        <td>Classic</td>
+                        <td>2.0</td>
+                        <td>33.0</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>39.25</td>
+                    </tr>
+                    <tr>
+                        <th>1632</th>
+                        <td>31/08</td>
+                        <td>20</td>
+                        <td>hawaiian</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>1.0</td>
+                        <td>10.5</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>55.58</td>
+                    </tr>
+                    <tr>
+                        <th>1652</th>
+                        <td>01/09</td>
+                        <td>12</td>
+                        <td>hawaiian</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>1.0</td>
+                        <td>10.5</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>53.96</td>
+                    </tr>
+                    <tr>
+                        <th>47732</th>
+                        <td>26/04</td>
+                        <td>12</td>
+                        <td>hawaiian</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>1.0</td>
+                        <td>10.5</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>53.55</td>
+                    </tr>
+                    <tr>
+                        <th>47788</th>
+                        <td>24/04</td>
+                        <td>22</td>
+                        <td>hawaiian</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>1.0</td>
+                        <td>10.5</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>50.96</td>
+                    </tr>
+                    <tr>
+                        <th>47793</th>
+                        <td>25/04</td>
+                        <td>12</td>
+                        <td>hawaiian</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>1.0</td>
+                        <td>10.5</td>
+                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>52.50</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h2 id="chapter2-3">2.3 В чем разница между <span class="code-chip">.loc[]</span>&nbsp; и <span class="code-chip">.iloc[]</span>&nbsp;?</h2>
+            <p>В прошлой главе мы с вами рассмотрели метод <span class="code-chip">.loc[]</span>&nbsp;, с помощью которого можно обращаться к строке по индексу:</p>
+            <p class="fake-code">
+<span class="code-line">датафрейм.loc[индекс] # обращение к строке по индексу</span>
+            <p>Например, мы хотим извлечь заказ под индексом 0:</p>
+            <pre class="line-numbers"><code class="language-python">df.iloc[0]</code></pre>
+            <div class="scrollable-table">
+                <table border="1" class="dataframe">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>0</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th>order_date</th>
+                        <td>30/03</td>
+                    </tr>
+                    <tr>
+                        <th>order_hour</th>
+                        <td>13</td>
+                    </tr>
+                    <tr>
+                        <th>pizza_name_id</th>
+                        <td>big</td>
+                    </tr>
+                    <tr>
+                        <th>pizza_size</th>
+                        <td>S</td>
+                    </tr>
+                    <tr>
+                        <th>pizza_category</th>
+                        <td>Classic</td>
+                    </tr>
+                    <tr>
+                        <th>quantity</th>
+                        <td>4.0</td>
+                    </tr>
+                    <tr>
+                        <th>total_price</th>
+                        <td>48.0</td>
+                    </tr>
+                    <tr>
+                        <th>pizza_ingredients</th>
+                        <td>Bacon, Pepperoni, Italian Sausage, Chorizo Sausage</td>
+                    </tr>
+                    <tr>
+                        <th>delivery_price</th>
+                        <td>30.31</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>Если нужно конретное значение из датафрейма, к нему можно обратиться по <em>индексу</em> и <em>признаку</em>:</p>
+            <p class="fake-code">
+<span class="code-line">датафрейм.loc[индекс]['признак'] # обращение к значению по индексу и признаку</span>
+            <p>Например мы хотим узнать какие ингредиенты (<strong>pizza_ingredients</strong>) были использованы для пиццы в заказе под индексом 0:</p>
+            <pre class="line-numbers"><code class="language-python">df.iloc[0]['pizza_ingredients']</code></pre>
+            <div class="print_result">Bacon, Pepperoni, Italian Sausage, Chorizo Sausage</div>
+            <p>Но иногда возникает необходимость обратиться к данным не по их индексу, а по их положению в таблице. Особенно это актуально, когда мы выполняем операции сортировки или изменения порядка строк – ведь при сортировке меняется именно местоположение строк, а не их индекс.</p>
+            <p>Здесь нам и пригодится метод <span class="code-chip">.iloc[]</span>&nbsp;, который даёт возможность обращаться
+                к данным по их <em>положению</em> в датафрейме:</p>
+            <p class="fake-code">
+<span class="code-line">датафрейм.iloc[положение]  # обращение к строке по положению</span>
+            </p>
+            <p>или</p>
+            <p class="fake-code">
+<span class="code-line">датафрейм.iloc[положение]['признак']  # обращение к значению по положению и признаку</span>
+            </p>
+            <p>
+                <span class="code-chip">положение</span>&nbsp; показывает место строки в датафрейме: к первой строке можно обратиться через 0, ко второй через 1, и т.д. Также существует обратная нумерация положения строк: у последней строки положение -1, у предпоследней -2 и т.д.
+            </p>
+            <p>Чтобы найти, из каких ингредиентов (<strong>pizza_ingredients</strong>) состоит пицца в самом дешевом заказе (<strong>total price</strong>), нужно написать следующий код:</p>
+            <pre class="line-numbers"><code class="language-python">df.sort_values('total_price').iloc[0]['pizza_ingredients']</code></pre>
+            <div class="print_result">Mozzarella Cheese, Pepperoni</div>
+            <p><span class="code-chip">df.sort_values('total_price')</span>&nbsp; - сортируем заказы по возрастанию цены</p>
+            <p><span class="code-chip">.iloc[0]</span>&nbsp; - извлекаем первую строку после сортировки (положение 0)</p>
+            <p><span class="code-chip">['pizza_ingredients']</span>&nbsp; - извлекаем ингредиенты пиццы в самом дешевом заказе</p>
+            <p>Если бы мы применили метод <span class="code-chip">.loс[0]</span>&nbsp; в коде выше, мы бы не получили необходимый результат. Код бы вернул ингредиенты в заказе под иском индексом 0, а не первом заказе после сортировки по возрастанию цены:</p>
+            <pre class="line-numbers"><code class="language-python">df.sort_values('total_price').loc[0]['pizza_ingredients']</code></pre>
+            <div class="print_result">Bacon, Pepperoni, Italian Sausage, Chorizo Sausage</div>
+            <a href="https://edu.hse.ru/mod/quiz/view.php?id=1574901" target="_blank" rel="noopener noreferrer"><button class="check_yourself">Самоопроверка</button></a>&nbsp;<a href="https://edu.hse.ru/mod/quiz/view.php?id=1574898" target="_blank" rel="noopener noreferrer"><button class="check">Практика</button></a>&nbsp;<a href="https://edu.hse.ru/course/view.php?id=236211)" target="_blank" rel="noopener noreferrer"><button class="back_to_course">Вернуться к курсу</button></a>
+            <div style="height: 50px;"></div>
+            <h2 id="chapter2-4">2.4 Как сделать фильтрацию или сортировку в Series?</h2>
+            <p>В предыдущих разделах мы изучили, как выполнять фильтрацию и сортировку данных в объектах типа <span class="code-chip">DataFrame</span>&nbsp;. Но аналогичные операции нередко нужны и для одиночных столбцов (<span class="code-chip">Series</span>&nbsp;). Хотя в целом подходы идентичны, имеются небольшие различия в синтаксисе.</p>
+            <p>Представьте, что у вас есть серия <span class="code-chip">pizza</span>&nbsp;, которая содержит названия пицц (индексы) и их цену в долларах (значения):</p>
+            <pre class="line-numbers"><code class="language-python">import pandas as pd
+pizza = pd.Series (data=[10, 15, 13, 12],
+                   index=['margherita', 'capricciosa', 'hawaiian', 'four cheese'])
+pizza</code></pre>
+            <div class="scrollable-table">
+                <table border="1" class="dataframe">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>0</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th>margherita</th>
+                        <td>10</td>
+                    </tr>
+                    <tr>
+                        <th>capricciosa</th>
+                        <td>15</td>
+                    </tr>
+                    <tr>
+                        <th>hawaiian</th>
+                        <td>13</td>
+                    </tr>
+                    <tr>
+                        <th>four cheese</th>
+                        <td>12</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p style="font-size: 25px;"><strong>ФИЛЬТРАЦИЯ СЕРИИ</strong></p>
+            <p class="fake-code">
+<span class="code-line">серия[условие фильтрации]</span>
+            </p>
+            <p>Если мы хотим найти все пиццы, цена которых больше 10 долларов:</p>
+            <pre class="line-numbers"><code class="language-python">pizza[pizza>10]</code></pre>
+            <div class="scrollable-table">
+                <table border="1" class="dataframe">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>0</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th>capricciosa</th>
+                        <td>15</td>
+                    </tr>
+                    <tr>
+                        <th>hawaiian</th>
+                        <td>13</td>
+                    </tr>
+                    <tr>
+                        <th>four cheese</th>
+                        <td>12</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>При фильтрации серии (<span class="code-chip">Series</span>&nbsp;) не нужно обращаться к столбцу, как это делалось в <span class="code-chip">DataFrame</span>&nbsp;. Просто повторяем имя самой серии в условии.</p>
+            <p style="font-size: 25px;"><strong>СОРТИРОВКА</strong></p>
+            <p>Для сортировки значений серии также используется метод <span class="code-chip">.sort_values()</span>&nbsp;, но внутри него мы не указываем название признака:</p>
+            <p class="fake-code">
+<span class="code-line">серия.sort_values()  # по возрастанию значений</span>
+            </p>
+            <p>или</p>
+            <p class="fake-code">
+<span class="code-line">серия.sort_values(ascending=False)  # по убыванию значений</span>
+            </p>
+            <p>Если мы хотим расставить пиццы по возрастанию цены:</p>
+            <pre class="line-numbers"><code class="language-python">pizza.sort_values()</code></pre>
+            <div class="scrollable-table">
+                <table border="1" class="dataframe">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>0</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th>margherita</th>
+                        <td>10</td>
+                    </tr>
+                    <tr>
+                        <th>four cheese</th>
+                        <td>12</td>
+                    </tr>
+                    <tr>
+                        <th>hawaiian</th>
+                        <td>13</td>
+                    </tr>
+                    <tr>
+                        <th>capricciosa</th>
+                        <td>15</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>Если нужна сортировка по убыванию цены, нужно добавить параметр <span class="code-chip">ascending=False</span>&nbsp;:</p>
+            <pre class="line-numbers"><code class="language-python">pizza.sort_values(ascending=False)</code></pre>
+            <div class="scrollable-table">
+                <table border="1" class="dataframe">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>0</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th>capricciosa</th>
+                        <td>15</td>
+                    </tr>
+                    <tr>
+                        <th>hawaiian</th>
+                        <td>13</td>
+                    </tr>
+                    <tr>
+                        <th>four cheese</th>
+                        <td>12</td>
+                    </tr>
+                    <tr>
+                        <th>margherita</th>
+                        <td>10</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>В серии еще есть столбец индексов – в нашем случае это название пиццы. По нему также можно сделать сортировку, но для этого нужно воспользоваться методом <span class="code-chip">.sort_index()</span>&nbsp;:</p>
+            <p class="fake-code">
+<span class="code-line">серия.sort_index()  # по возрастанию индексов</span>
+            </p>
+            <p>или</p>
+            <p class="fake-code">
+<span class="code-line">серия.sort_index(ascending=False)  # по убыванию индексов</span>
+            </p>
+            <p>Чтобы отсортировать серию по названию пиццы (индексам):</p>
+            <pre class="line-numbers"><code class="language-python">pizza.sort_index()</code></pre>
+            <div class="scrollable-table">
+                <table border="1" class="dataframe">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>0</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th>capricciosa</th>
+                        <td>15</td>
+                    </tr>
+                    <tr>
+                        <th>four cheese</th>
+                        <td>12</td>
+                    </tr>
+                    <tr>
+                        <th>hawaiian</th>
+                        <td>13</td>
+                    </tr>
+                    <tr>
+                        <th>margherita</th>
+                        <td>10</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <a href="https://edu.hse.ru/mod/quiz/view.php?id=1575209" target="_blank" rel="noopener noreferrer"><button class="check_yourself">Самоопроверка</button></a>&nbsp;<a href="https://edu.hse.ru/mod/quiz/view.php?id=1574898" target="_blank" rel="noopener noreferrer"><button class="check">Практика</button></a>&nbsp;<a href="https://edu.hse.ru/course/view.php?id=236211)" target="_blank" rel="noopener noreferrer"><button class="back_to_course">Вернуться к курсу</button></a>
+            <div style="height: 50px;"></div>
+        </section>
+    </div>
+</div>
+<script>
+    const toggleNav = document.getElementById('toggleNav');
+    const sideNav = document.getElementById('sideNav');
+
+    toggleNav.addEventListener('click', () => {
+        sideNav.classList.toggle('open');
+    });
+</script>

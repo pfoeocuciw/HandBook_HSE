@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="https://fonts.googleapis.com/css2?family=Hack&display=swap" rel="stylesheet">
+    <title>Глава 1</title>
+    <link rel="stylesheet" href="chapter_1.css">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/pyodide"></script>
+    <script src="libs/prism.js"></script>
+
+</head>
+<div class="horizontal-accordion-wrapper">
+    <div class="accordion-left">
+        <button id="toggleNav" class="accordion-button-left" style="color: white; border-color: white;">☰</button>
+    </div>
+    <div id="sideNav" class="accordion-panel-right">
+        <a href="#chapter1"><strong>Глава 1</strong></a>
+        <a href="#chapter1-1">1.1 Знакомство с Pandas</a>
+        <a href="#chapter1-2">1.2 Структуры данных</a>
+        <a href="#chapter1-3">1.3 Элементы DataFrame</a>
+        <a href="#chapter1-4">1.4 Открытие таблиц</a>
+        <a href="#chapter1-5">1.5 Информация о DataFrame</a>
+        <a href="#chapter1-6">1.6 Типы данных в анализе</a>
+    </div>
+
+    <div class="main-content">
+<div class="logo-wrapper">
+    <img src="picture/logo.svg" class="logo-top-right" alt="Логотип">
+</div>
+
+<section>
+    <h1 style="font-size: 30px;" id="chapter1">Глава 1. Знакомство с библиотекой Pandas. Типы данных в анализе.</h1>
+    <div style="height: 10px;"></div>
+    <h2 id="chapter1-1">1.1 Что такое библиотека Pandas?</h2>
+    <p>Представьте себе большую коробку с инструментами: там есть молоток, отвертка,
+        пила и другие полезные вещи. Когда мы строим дом, нам не нужно изобретать эти
+        инструменты заново — мы просто берем их из коробки и используем. Так и с
+        библиотеками: когда программисту нужно сделать что-то сложное, например, обработать
+        данные или нарисовать график, он берет готовую библиотеку, подключает её к своему
+        проекту и пользуется уже написанным кодом.</p>
+    <div class="definition-card">
+        <div class="definition-text">
+            <strong>Библиотека</strong> — это набор готовых функций и инструментов, который программисты могут использовать в своих проектах, чтобы не писать код с нуля каждый раз.
+        </div>
+    </div>
+
+</section>
+
+
+<section>
+    <p>Готовые инструменты для работы с табличными данными хранятся в библиотеке Pandas.
+        Эта библиотека позволяет быстро загружать, сортировать, фильтровать и анализировать
+        большие объемы данных, как если бы мы работали с электронными таблицами, такими как Excel.
+        Однако Pandas имеет ряд объективных преимуществ перед Excel:</p>
+    <ul>
+        <li>
+            <strong>Excel ограничен количеством строк (~1 млн строк максимум).</strong> Библиотека Pandas
+            способна эффективно обрабатывать миллионы и даже миллиарды строк благодаря
+            оптимизации вычислительных процессов внутри Python.
+        </li>
+        <li>
+            <strong>Производительность Excel резко падает при увеличении объема обрабатываемых данных.</strong>
+            Формулы, сводные таблицы и фильтры начинают тормозить, особенно если файл занимает
+            много места в оперативной памяти. Библиотека Pandas способна намного эффективнее
+            справляться со сложными операциями и расчетами на больших объемах.
+        </li>
+        <li>
+            <strong>Работа в Excel зачастую связана с ручным редактированием формул и визуальным
+            управлением данными, что делает процесс более трудоемким.</strong> В Python можно написать
+            программу один раз, а потом многократно запускать её снова и снова, каждый раз получая
+            стабильный и точный результат
+        </li>
+        <li>
+            <strong>Эффективное использование Excel для анализа больших данных требует знания VBA-макросов,
+            настройки Power Query и понимания тонкостей работы со сводными таблицами.</strong> Для решения
+            аналогичных задач на Python достаточно базовых навыков программирования и умения пользоваться
+            библиотеками Pandas.
+        </li>
+    </ul>
+
+    <p>
+        Excel отлично подходит для небольших отчетов и простого анализа. Когда дело доходит до
+        крупных проектов и регулярного обновления данных, профессиональные инструменты, такие как
+        библиотека Pandas, становятся незаменимыми.
+    </p>
+    <p>
+        Чтобы начать использовать инструменты библиотеки Pandas, необходимо сделать импорт
+        библиотеки в среду выполнения:
+    </p>
+    <pre class="line-numbers"><code class="language-python">import pandas as pd</code></pre>
+</section>
+
+<section>
+     <ul>
+         <li>
+             <span class="code-chip">import</span>&nbsp;– оператор, который подключает библиотеку в среду выполнения
+         </li>
+         <li>
+             <span class="code-chip">pandas</span>&nbsp; - название импортируемой библиотеки
+         </li>
+         <li>
+             <span class="code-chip">as</span>&nbsp; - оператор, с помощью которого задается псевдоним библиотеки
+         </li>
+         <li>
+             <span class="code-chip">pd</span>&nbsp; - псевдоним, который позволяет обращаться к функциям библиотеки Pandas через сокращение pd. Это делается для удобства и сокращения кода.
+         </li>
+     </ul>
+        <div class="accordion-container">
+            <div class="accordion-item">
+                <button class="accordion-button" style="width: 800px;">Ошибка <span class="code-chip" style="color: black;">ModuleNotFoundError: No module named 'pandas'</span>&nbsp;</button>
+                <div class="accordion-content">
+                    <p>Если при запуске кода вышла такая ошибка, это значит, что модуль
+                        Pandas еще не установлен на вашем компьютере. Чтобы его установить,
+                        нужно перед импортом добавить строку:
+                    </p>
+                    <pre class="line-numbers"><code class="language-python">!pip install pandas</code></pre>
+                </div>
+            </div>
+        </div>
+
+
+</section>
+
+<section>
+    <div style="height: 10px;"></div>
+    <h2 id="chapter1-2">
+        1.2 Какие существуют структуры данных Pandas?
+    </h2>
+    <p>
+        В библиотеке Pandas есть два основных способа хранения табличных данных: датафрейм <span class="code-chip">DataFrame</span>&nbsp; и серия <span class="code-chip">Series</span>.&nbsp;
+    </p>
+    <p style="font-size: 25px;"><strong>DataFrame</strong></p>
+    <p>Представьте себе электронную таблицу, такую как Excel. У неё есть строки и столбцы, и в каждой
+        ячейке хранится информация. Датафрейм в Pandas — это такая же таблица, только для программирования.
+        Он состоит из строк и столбцов, и каждая ячейка содержит данные.
+    </p>
+    <p>
+        Чтобы создать датафрейм, необходимо воспользоваться функцией <span class="code-chip">pd.DataFrame()</span>&nbsp; из библиотеки <span class="code-chip">Pandas</span>&nbsp;:
+    </p>
+    <p class="fake-code">
+<span class="code-line">переменная = pd.DataFrame()</span>
+    </p>
+
+    <p>Для добавления столбцов мы указываем название <span class="code-chip">переменной</span>&nbsp;, в которой лежит датафрейм,
+        затем в квадратных скобках указываем <span class="code-chip">'название столбца'</span>&nbsp; и в него передаем список значений:
+    </p>
+    <p class="fake-code">
+<span class="code-line">переменная['название столбца'] = [значение 1, значение 2, ...]</span>
+    </p>
+    <p>Столбцы могут иметь разные типы данных: числа, тексты, даты и т.д.</p>
+    <p>Предположим, мы хотим создать датафрейм с информацией про трех студентов.
+        Чтобы его создать, нужно написать следующий код:
+    </p>
+    <pre class="line-numbers"><code class="language-python">students = pd.DataFrame()  # cоздаем пустой датафрейм
+students['Имя'] = ['Иван', 'Ольга', 'Сергей']  # добавляем столбец с именами
+students['Возраст'] = [20, 22, 21]  # добавляем столбец с возрастом
+students['Город'] = ['Москва', 'Казань', 'Новосибирск']  # добавляем столбец с городом
+students  # выводим датафрейм на экран    </code></pre>
+    <p>Результат работы программы:</p>
+
+    <table border="1" class="dataframe">
+        <thead>
+        <tr style="text-align: right;">
+            <th></th>
+            <th>Имя</th>
+            <th>Возраст</th>
+            <th>Город</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>0</th>
+            <td>Иван</td>
+            <td>20</td>
+            <td>Москва</td>
+        </tr>
+        <tr>
+            <th>1</th>
+            <td>Ольга</td>
+            <td>22</td>
+            <td>Казань</td>
+        </tr>
+        <tr>
+            <th>2</th>
+            <td>Сергей</td>
+            <td>21</td>
+            <td>Новосибирск</td>
+        </tr>
+        </tbody>
+    </table>
+    <p>Первая колонка, выделенная жирным, — это <span class="code-chip">индексы</span>&nbsp; строк. Они служат уникальными
+        номерами для каждой строки в датафрейме и позволяют быстро обращаться к нужной.
+        Индексы создаются автоматически и начинаются с нуля.
+    </p>
+    <p>
+        <span class="code-chip">Строку</span>&nbsp; также называют <span class="code-chip">наблюдением</span>&nbsp;. Наблюдением в наших данных является <em>студент.
+        Например, мы видим, что Ольге 22 года и она из Казани.</em> Это одно наблюдение.
+    </p>
+    <p><span class="code-chip">Столбцы</span>&nbsp; — это <span class="code-chip">признаки</span>&nbsp;, которые описывают наши наблюдения. Мы описываем наблюдения
+        тремя характеристиками – <em>именем, возрастом и городом.</em></p>
+</section>
+
+
+
+<!--&lt;!&ndash; ДАЛЕЕ ШАБЛОНЫ ПО СПИСКУ &ndash;&gt;-->
+<!--&lt;!&ndash; Гиперссылки &ndash;&gt;-->
+<!--<section><a href=" https://edu.hse.ru/mod/resource/view.php?id=1610897">https://edu.hse.ru/mod/resource/view.php?id=1610897 </a>-->
+<!--</section>-->
+
+<!--&lt;!&ndash; Картинка &ndash;&gt;-->
+<!--<section><img src="picture/graph_1.png" alt="Описание картинки"></section>-->
+
+
+<!--<section><button class="check">Практика</button> <button class="check_yourself">Самоопроверка</button> <button class="back_to_course">Вернуться к курсу</button></section>-->
+
+<section>
+    <p style="font-size: 25px;"><strong>Series</strong></p>
+    <p>Каждый отдельный столбец датафрейма имеет формат серии (Series).
+        <strong>Серия</strong> — это набор <strong>значений</strong> с уникальными метками (<strong>индексами</strong>). По сути,
+        датафрейм состоит из множества серий, каждая из которых представляет собой
+        колонку с индексами и колонку со значениями:</p>
+
+    <img src="picture/illustration1_4х.png" width="100%" alt="Рисунок 0">
+
+    <p>
+        Помимо этого, мы можем создать собственную серию, которая не будет частью датафрейма.
+        Чтобы это сделать, нужно воспользоваться функцией <span class="code-chip">pd.Series()</span>&nbsp; из библиотеки Pandas,
+        а внутрь функции передать параметр <span class="code-chip">data</span>&nbsp; со списком значений:
+    </p>
+    <p class="fake-code">
+<span class="code-line">переменная = pd.Series(data=[значение 1, значение 2, ...])</span>
+    </p>
+    <p>Предположим, у нас есть <em>средний балл</em> трех студентов. Чтобы сохранить эту информацию в серию,
+        нужно написать следующий код:</p>
+    <pre class="line-numbers"><code class="language-python">gpa = pd.Series(data=[3.55, 8.24, 7.65])  # создаем серию
+gpa  # выводим серию на экран</code></pre>
+    <p>Результат работы программы:</p>
+
+    <table border="1" class="dataframe" style="width: 150px;">
+        <thead>
+        <tr>
+            <th></th>
+            <th>0</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>0</th>
+            <td>3.55</td>
+        </tr>
+        <tr>
+            <th>1</th>
+            <td>8.24</td>
+        </tr>
+        <tr>
+            <th>2</th>
+            <td>7.65</td>
+        </tr>
+        </tbody>
+    </table>
+    <p>Первый столбец, выделенный жирным, — <strong>индексы</strong>. Так же как и в датафрейме,
+        они создаются автоматически и начинаются с нуля. С их помощью можно обратиться
+        к любому значению в серии. Второй столбец — <strong>значения</strong>. В нашем случае это средний
+        балл студентов.</p>
+    <p>Можно задать свои кастомные индексы для строк серии – для этого при создании нужно передать
+        второй список с индексами в параметре <span class="code-chip">index:</span>&nbsp;</p>
+    <p class="fake-code">
+<span class="code-line" style="color: black;">переменная = pd.Series(data=[значение 1, значения 2, ...],<br>
+                       index=[индекс 1, индекс 2, ...])</span>
+    </p>
+    <p>Например, мы хотим создать серию, в которой <strong>значением</strong> останется <em>средний балл</em>, а <strong>индексами</strong> будут <em>имена студентов</em>:</p>
+    <pre class="line-numbers"><code class="language-python">names_gpa = pd.Series(data=[3.55, 8.24, 7.65],           # значения
+                     index=['Иван', 'Ольга', 'Сергей'])  # индексы
+names_gpa  # выводим серию на экран</code></pre>
+    <p>Результат работы программы:</p>
+    <table border="1" class="dataframe" style="width: 150px;">
+        <thead>
+        <tr>
+            <th></th>
+            <th>0</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>Иван</th>
+            <td>3.55</td>
+        </tr>
+        <tr>
+            <th>Ольга</th>
+            <td>8.24</td>
+        </tr>
+        <tr>
+            <th>Сергей</th>
+            <td>7.65</td>
+        </tr>
+        </tbody>
+    </table>
+    <p>Имена здесь не полноценная колонка, они лишь уникальные идентификаторы среднего балла.</p>
+    <div class="important-card">
+        <div class="important-text">
+            Cтолбец со значениями в серии может быть только один, а вот в датафрейме их может быть больше одного
+        </div>
+    </div>
+</section>
+
+
+
+<section>
+    <div style="height: 50px;"></div>
+    <h2 id="chapter1-3">1.3 Как извлекать основные элементы DataFrame?</h2>
+    <p>В прошлом разделе мы создали датафрейм <span class="code-chip">students</span>&nbsp;. Сейчас мы научимся обращаться к его основным элементам:
+        <strong>столбцам</strong>, <strong>строкам</strong> и конкретным <strong>значениям</strong>.</p>
+    <pre class="line-numbers"><code class="language-python">students  # выводим датафрейм на экран</code></pre>
+    <p>Результат работы программы:</p>
+    <table border="1" class="dataframe">
+        <thead>
+        <tr style="text-align: right;">
+            <th></th>
+            <th>Имя</th>
+            <th>Возраст</th>
+            <th>Город</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>0</th>
+            <td>Иван</td>
+            <td>20</td>
+            <td>Москва</td>
+        </tr>
+        <tr>
+            <th>1</th>
+            <td>Ольга</td>
+            <td>22</td>
+            <td>Казань</td>
+        </tr>
+        <tr>
+            <th>2</th>
+            <td>Сергей</td>
+            <td>21</td>
+            <td>Новосибирск</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p style="font-size: 25px;"><strong>ОБРАЩЕНИЕ К СТОЛБЦУ</strong></p>
+    <p>Если мы хотим извлечь столбец из данных, нужно указать сначала
+        название переменной, в которой лежит <span class="code-chip">датафрейм</span>&nbsp;, а затем в квадартных
+        скобках и кавычках указать <span class="code-chip">название столбца</span>&nbsp;, который требуется извлечь:</p>
+    <p class="fake-code">
+<span class="code-line" style="color: black;">датафрейм['название столбца']</span>
+    <p>Например, мы хотим извлечь столбец Возраст – для этого пишем следующий код:</p>
+    <pre class="line-numbers"><code class="language-python">students['Возраст']</code></pre>
+
+    <table border="1" class="dataframe" style="width: 150px;">
+        <thead>
+        <tr style="text-align: right;">
+            <th></th>
+            <th>Возраст</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>0</th>
+            <td>20</td>
+        </tr>
+        <tr>
+            <th>1</th>
+            <td>22</td>
+        </tr>
+        <tr>
+            <th>2</th>
+            <td>21</td>
+        </tr>
+        </tbody>
+    </table>
+    <p>Как мы уже говорили, каждый отдельный столбец датафрейма имеет формат серии <strong>(Series)</strong>.</p>
+
+    <p style="font-size: 25px;"><strong>ОБРАЩЕНИЕ К СТРОКЕ</strong></p>
+    <p>Для обращения к строке используется атрибут <span class="code-chip">.loc[]</span>&nbsp;:</p>
+    <p class="fake-code">
+<span class="code-line" style="color: black;">датафрейм.loc[индекс]</span>
+    </p>
+    <p>Если нам нужно извлечь информацию про <em>Ольгу</em> (информация про нее записана в строке под индексом <em>1</em>) — пишем следующий код:</p>
+    <pre class="line-numbers"><code class="language-python">students.loc[1]</code></pre>
+    <table border="1" class="dataframe" style="width: 150px;">
+        <thead>
+        <tr style="text-align: right;">
+            <th></th>
+            <th>1</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>Имя</th>
+            <td>Ольга</td>
+        </tr>
+        <tr>
+            <th>Возраст</th>
+            <td>22</td>
+        </tr>
+        <tr>
+            <th>Город</th>
+            <td>Казань</td>
+        </tr>
+        </tbody>
+    </table>
+    <p style="font-size: 25px;"><strong>ОБРАЩЕНИЕ К ЗНАЧЕНИЮ</strong></p>
+    <p>К значению мы обращаемся по <strong>индексу</strong> строки и <strong>названию</strong> столбца одновременно:</p>
+    <p class="fake-code">
+<span class="code-line" style="color: black;">датафрейм.loc[индекс]['название столбца']</span>
+    </p>
+    <p>или</p>
+    <p class="fake-code">
+<span class="code-line" style="color: black;">датафрейм.loc[индекс, 'название столбца']</span>
+    </p>
+    <p>Если нам нужен <strong>Возраст</strong> <em>Ольги</em> (у нее индекс 1):</p>
+    <pre class="line-numbers"><code class="language-python">students.loc[1]['Возраст']</code></pre>
+    <p>Результат работы программы:</p>
+    <p class="print_result">22</p>
+    <p>или</p>
+    <pre class="line-numbers"><code class="language-python">students.loc[1, 'Возраст']</code></pre>
+    <p>Результат работы программы:</p>
+    <p class="print_result">22</p>
+    <div style="height: 50px;"></div>
+
+    <h2 id="chapter1-4">1.4 Как открывать уже готовые таблицы?</h2>
+    <p>Библиотека Pandas позволяет открывать уже готовые файлы с различными расширениями.
+        Одним из наиболее распространенных форматов является <strong>.csv</strong> (Comma Separated Values),
+        который широко используется для хранения табличных данных. Если вам необходимо открыть файл с расширением <strong>.csv:</strong></p>
+    <p class="fake-code">
+<span class="code-line" style="color: black;">переменная = pd.read_csv('путь к файлу')</span>
+    </p>
+    <p>Другой популярный формат — это <strong>.xlsx</strong>, применяемый в Microsoft Excel. Если вам необходимо открыть файл с расширением <strong>.xlsx</strong>:</p>
+    <p class="fake-code">
+<span class="code-line" style="color: black;">переменная = pd.read_excel('путь к файлу')</span>
+    </p>
+    <p>Еще одно расширение, удобное для хранения табличных данных - это <strong>.pkl</strong> (Pickle). Чтобы открыть такой файл, используйте следующий код:</p>
+    <p class="fake-code">
+<span class="code-line" style="color: black;">переменная = pd.read_pickle('путь к файлу')</span>
+    </p>
+    <div class="important-card">
+        <div class="important-text">
+            Когда вы открываете файл с данными в Pandas, он автоматически сохраняется в формате DataFrame
+        </div>
+    </div>
+</section>
+
+<section>
+    <p>
+        Давайте попробуем открыть файл <a href=" https://edu.hse.ru/mod/resource/view.php?id=1610897" target="_blank" rel="noopener noreferrer">oscar.pkl</a>. Скачайте его, а затем введите следующий код:
+    </p>
+    <pre class="line-numbers"><code class="language-python">import pandas as pd
+df = pd.read_pickle('путь к файлу/oscar.pkl')  # открываем файл oscar.pkl
+df  # выводим датафрейм на экран</code></pre>
+    <p>Вместо <span class="code-chip">путь к файлу</span>&nbsp; укажите путь к файлу oscra.pkl на вашем компьютере.</p>
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <button class="accordion-button" style="width: 800px;">КАК НАЙТИ ПУТЬ К ФАЙЛУ?</button>
+            <div class="accordion-content" style="padding-left: 20px;">
+                <p><strong>macOS</strong></p>
+                <ul style="list-style-type: none; padding-left: 0;">
+                    <li>
+                        1. Найдите файл на компьютере
+                    </li>
+                    <li>
+                        2. Нажмите на него правой кнопкой мыши -> Свойства -> Основные -> Где: путь к файлу
+                    </li>
+                    <li>
+                        3. Нажмите на путь к файлу правой кнопкой мыши -> Скопировать как путь
+                    </li>
+                    <li>
+                        4. Указывая путь в функции, не забудьте дописать название файла с расширением: /название.расширение
+                    </li>
+                </ul>
+                <p><strong>Windows</strong></p>
+                <ul style="list-style-type: none; padding-left: 0;">
+                    <li>
+                        1. Найдите файл на компьютере
+                    </li>
+                    <li>
+                        2. Нажмите на него правой кнопкой мыши -> Свойства -> Расположение: путь к файлу
+                    </li>
+                    <li>
+                        3. Скопируйте путь к файлу
+                    </li>
+                    <li>
+                        4. Указывая путь в функции, не забудьте дописать название файла с расширением: /название.расширение
+                    </li>
+                </ul>
+                <p><strong>Windows 10 и позднее</strong></p>
+                <ul style="list-style-type: none; padding-left: 0;">
+                    <li>
+                        1. Найдите файл на компьютере
+                    </li>
+                    <li>
+                        2. Нажмите на него правой кнопкой мыши -> Копировать как путь
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <button class="accordion-button" style="width: 800px;">ОШИБКИ ПРИ ОТКРЫТИЕ ФАЙЛА</button>
+            <div class="accordion-content" style="padding-left: 20px;">
+                <p><span class="code-chip">FileNotFoundError</span>&nbsp;</p>
+                <p>Вы неправильно указали путь к файлу. Попробуйте еще раз проделать все шаги
+                    в инструкции <strong>КАК НАЙТИ ПУТЬ К ФАЙЛУ?</strong></p>
+                <p><span class="code-chip">SyntaxError: invalid syntax</span>&nbsp;</p>
+                <p>Вы допустили синтаксическую ошибку: например, забыли закрыть
+                    скобку или кавычку, или сделали лишний отступ. Проверьте код еще раз.</p>
+                <p><span class="code-chip">SyntaxError: (unicode error) 'unicodeescape' codec can't decode bytes in position 2-3: truncated \UXXXXXXXX escape</span></p>
+                <p>Такая ошибка возникает, когда Python пытается интерпретировать строку, содержащую обратный слеш, как экранированную последовательность Unicode. Эта ошибка часто
+                    встречается при попытке использовать пути к файлам в Windows. Её можно легко исправить, добавив r перед путем к файлу:</p>
+                <pre class="line-numbers"><code class="language-python">df = pd.read_pickle(r'путь к файлу/oscar.pkl')</code></pre>
+            </div>
+        </div>
+    </div>
+    <p>Если вы все сделали верно, откроется следующая таблица:</p>
+    <table border="1" class="dataframe" style="width: 100%;">
+        <thead>
+        <tr style="text-align: right;">
+            <th></th>
+            <th>Film</th>
+            <th>Award</th>
+            <th>Rating</th>
+            <th>Votes</th>
+            <th>Content Rating</th>
+            <th>Release Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>0</th>
+            <td>Wings</td>
+            <td>True</td>
+            <td>7.5</td>
+            <td>12221</td>
+            <td>PG-13</td>
+            <td>1927-08-12</td>
+        </tr>
+        <tr>
+            <th>1</th>
+            <td>7th Heaven</td>
+            <td>False</td>
+            <td>7.7</td>
+            <td>3439</td>
+            <td>NaN</td>
+            <td>NaT</td>
+        </tr>
+        <tr>
+            <th>2</th>
+            <td>The Racket</td>
+            <td>False</td>
+            <td>6.7</td>
+            <td>1257</td>
+            <td>NaN</td>
+            <td>NaT</td>
+        </tr>
+        <tr>
+            <th>3</th>
+            <td>The Broadway Melody</td>
+            <td>True</td>
+            <td>5.7</td>
+            <td>6890</td>
+            <td>NaN</td>
+            <td>1929-02-01</td>
+        </tr>
+        <tr>
+            <th>4</th>
+            <td>Alibi</td>
+            <td>False</td>
+            <td>5.8</td>
+            <td>765</td>
+            <td>NaN</td>
+            <td>NaT</td>
+        </tr>
+        <tr>
+            <th>...</th>
+            <td>...</td>
+            <td>...</td>
+            <td>...</td>
+            <td>...</td>
+            <td>...</td>
+            <td>...</td>
+        </tr>
+        <tr>
+            <th>566</th>
+            <td>Mank</td>
+            <td>False</td>
+            <td>6.9</td>
+            <td>65380</td>
+            <td>NaN</td>
+            <td>NaT</td>
+        </tr>
+        <tr>
+            <th>567</th>
+            <td>Minari</td>
+            <td>False</td>
+            <td>7.5</td>
+            <td>57976</td>
+            <td>NaN</td>
+            <td>NaT</td>
+        </tr>
+        <tr>
+            <th>568</th>
+            <td>Promising Young Woman</td>
+            <td>False</td>
+            <td>7.5</td>
+            <td>122269</td>
+            <td>NaN</td>
+            <td>NaT</td>
+        </tr>
+        <tr>
+            <th>569</th>
+            <td>Sound of Metal</td>
+            <td>False</td>
+            <td>7.8</td>
+            <td>102807</td>
+            <td>NaN</td>
+            <td>NaT</td>
+        </tr>
+        <tr>
+            <th>570</th>
+            <td>The Trial of the Chicago 7</td>
+            <td>False</td>
+            <td>7.8</td>
+            <td>156283</td>
+            <td>NaN</td>
+            <td>NaT</td>
+        </tr>
+        </tbody>
+    </table>
+    <p style="font-size: 25px;"><strong>ПРОСМОТР ДАННЫХ</strong></p>
+    <p>У нас есть три основных способа посмотреть на наши данные.</p>
+    <p>Первый – написать название переменной, в которой лежит датафрейм (как мы сделали в коде выше):</p>
+
+    <pre class="line-numbers"><code class="language-python">df</code></pre>
+    <p>В этом случае выводится все содержимое датафрейма. Если данных очень много, выведутся первые и последние 5 строчек таблицы – это как раз наш случай.</p>
+    <p>Второй варинт — это метод <span class="code-chip">.head()</span>&nbsp;, который выводит первые 5 строчек таблицы:</p>
+    <pre class="line-numbers"><code class="language-python">df.head()</code></pre>
+    <table border="1" class="dataframe" style="width: 100%;">
+        <thead>
+        <tr style="text-align: right;">
+            <th></th>
+            <th>Film</th>
+            <th>Award</th>
+            <th>Rating</th>
+            <th>Votes</th>
+            <th>Content Rating</th>
+            <th>Release Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>0</th>
+            <td>Wings</td>
+            <td>True</td>
+            <td>7.5</td>
+            <td>12221</td>
+            <td>PG-13</td>
+            <td>1927-08-12</td>
+        </tr>
+        <tr>
+            <th>1</th>
+            <td>7th Heaven</td>
+            <td>False</td>
+            <td>7.7</td>
+            <td>3439</td>
+            <td>NaN</td>
+            <td>NaT</td>
+        </tr>
+        <tr>
+            <th>2</th>
+            <td>The Racket</td>
+            <td>False</td>
+            <td>6.7</td>
+            <td>1257</td>
+            <td>NaN</td>
+            <td>NaT</td>
+        </tr>
+        <tr>
+            <th>3</th>
+            <td>The Broadway Melody</td>
+            <td>True</td>
+            <td>5.7</td>
+            <td>6890</td>
+            <td>NaN</td>
+            <td>1929-02-01</td>
+        </tr>
+        <tr>
+            <th>4</th>
+            <td>Alibi</td>
+            <td>False</td>
+            <td>5.8</td>
+            <td>765</td>
+            <td>NaN</td>
+            <td>NaT</td>
+        </tr>
+        </tbody>
+    </table>
+    <p>На самом деле, с помощью него можно вывести любое количество первых строк; достаточно указать
+        это количество в круглых скобках. Например, если хочется вывести 7 первых строк, нужно написать следующий код:</p>
+    <pre class="line-numbers"><code class="language-python">df.head(7)</code></pre>
+    <table border="1" class="dataframe" style="width: 100%;">
+        <thead>
+        <tr style="text-align: right;">
+            <th></th>
+            <th>Film</th>
+            <th>Award</th>
+            <th>Rating</th>
+            <th>Votes</th>
+            <th>Content Rating</th>
+            <th>Release Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>0</th>
+            <td>Wings</td>
+            <td>True</td>
+            <td>7.5</td>
+            <td>12221</td>
+            <td>PG-13</td>
+            <td>1927-08-12</td>
+        </tr>
+        <tr>
+            <th>1</th>
+            <td>7th Heaven</td>
+            <td>False</td>
+            <td>7.7</td>
+            <td>3439</td>
+            <td>NaN</td>
+            <td>NaT</td>
+        </tr>
+        <tr>
+            <th>2</th>
+            <td>The Racket</td>
+            <td>False</td>
+            <td>6.7</td>
+            <td>1257</td>
+            <td>NaN</td>
+            <td>NaT</td>
+        </tr>
+        <tr>
+            <th>3</th>
+            <td>The Broadway Melody</td>
+            <td>True</td>
+            <td>5.7</td>
+            <td>6890</td>
+            <td>NaN</td>
+            <td>1929-02-01</td>
+        </tr>
+        <tr>
+            <th>4</th>
+            <td>Alibi</td>
+            <td>False</td>
+            <td>5.8</td>
+            <td>765</td>
+            <td>NaN</td>
+            <td>NaT</td>
+        </tr>
+        <tr>
+            <th>5</th>
+            <td>Hollywood Revue</td>
+            <td>False</td>
+            <td>5.7</td>
+            <td>2004</td>
+            <td>NaN</td>
+            <td>NaT</td>
+        </tr>
+        <tr>
+            <th>6</th>
+            <td>In Old Arizona</td>
+            <td>False</td>
+            <td>5.6</td>
+            <td>1019</td>
+            <td>NaN</td>
+            <td>1928-12-25</td>
+        </tr>
+        </tbody>
+    </table>
+    <p>Если нужно вывести последние 5 строчек таблицы, можно воспользоваться методом <span class="code-chip">.tail()</span>&nbsp;:</p>
+    <pre class="line-numbers"><code class="language-python">df.tail()</code></pre>
+    <table border="1" class="dataframe" style="width: 100%;">
+        <thead>
+        <tr style="text-align: right;">
+            <th></th>
+            <th>Film</th>
+            <th>Award</th>
+            <th>Rating</th>
+            <th>Votes</th>
+            <th>Content Rating</th>
+            <th>Release Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>566</th>
+            <td>Mank</td>
+            <td>False</td>
+            <td>6.9</td>
+            <td>65380</td>
+            <td>NaN</td>
+            <td>NaT</td>
+        </tr>
+        <tr>
+            <th>567</th>
+            <td>Minari</td>
+            <td>False</td>
+            <td>7.5</td>
+            <td>57976</td>
+            <td>NaN</td>
+            <td>NaT</td>
+        </tr>
+        <tr>
+            <th>568</th>
+            <td>Promising Young Woman</td>
+            <td>False</td>
+            <td>7.5</td>
+            <td>122269</td>
+            <td>NaN</td>
+            <td>NaT</td>
+        </tr>
+        <tr>
+            <th>569</th>
+            <td>Sound of Metal</td>
+            <td>False</td>
+            <td>7.8</td>
+            <td>102807</td>
+            <td>NaN</td>
+            <td>NaT</td>
+        </tr>
+        <tr>
+            <th>570</th>
+            <td>The Trial of the Chicago 7</td>
+            <td>False</td>
+            <td>7.8</td>
+            <td>156283</td>
+            <td>NaN</td>
+            <td>NaT</td>
+        </tr>
+        </tbody>
+    </table>
+    <p>Аналогично методу <span class="code-chip">.head()</span>&nbsp;, <span class="code-chip">.tail()</span>&nbsp; может вывести любое количество последних строк;
+        достаточно указать это количество в круглых скобках. Например, если требуется вывести
+        3 последние строки, нужно написать следующий код:</p>
+    <pre class="line-numbers"><code class="language-python">df.tail(3)</code></pre>
+    <table border="1" class="dataframe" style="width: 100%;">
+        <thead>
+        <tr style="text-align: right;">
+            <th></th>
+            <th>Film</th>
+            <th>Award</th>
+            <th>Rating</th>
+            <th>Votes</th>
+            <th>Content Rating</th>
+            <th>Release Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>568</th>
+            <td>Promising Young Woman</td>
+            <td>False</td>
+            <td>7.5</td>
+            <td>122269</td>
+            <td>NaN</td>
+            <td>NaT</td>
+        </tr>
+        <tr>
+            <th>569</th>
+            <td>Sound of Metal</td>
+            <td>False</td>
+            <td>7.8</td>
+            <td>102807</td>
+            <td>NaN</td>
+            <td>NaT</td>
+        </tr>
+        <tr>
+            <th>570</th>
+            <td>The Trial of the Chicago 7</td>
+            <td>False</td>
+            <td>7.8</td>
+            <td>156283</td>
+            <td>NaN</td>
+            <td>NaT</td>
+        </tr>
+        </tbody>
+    </table>
+    <div style="height: 50px;"></div>
+    <h2 id="chapter1-5">1.5 Как получить основную информацию про DataFrame?</h2>
+    <p>Пришло время познакомиться с нашими данными (<a href=" https://edu.hse.ru/mod/resource/view.php?id=1610897" target="_blank" rel="noopener noreferrer">oscar.pkl</a>).
+        Этот датасет содержит информацию о фильмах, номинированных на Оскар, и
+        про каждый фильм нам известны следующие характеристики:</p>
+    <table border="1" class="dataframe_new" style="width: 100%;">
+        <thead>
+        <tr style="text-align: right; width: 100%">
+            <th>Признак</th>
+            <th>Описание</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>Film</th>
+            <td>название фильма</td>
+        </tr>
+        <tr>
+            <th>Award</th>
+            <td>получил ли фильм Оскар (True — получил, False — не получил)</td>
+        </tr>
+        <tr>
+            <th>Rating</th>
+            <td>средний рейтинг фильма на портале IMDB</td>
+        </tr>
+        <tr>
+            <th>Votes</th>
+            <td>количество пользователей, поставивших оценку фильму на портале IMDB</td>
+        </tr>
+        <tr>
+            <th>Content Rating</th>
+            <td>возрастные ограничения:<br>
+                G — для всех возрастных категорий<br>
+                PG — для детей в сопровождении родителей<br>
+                PG-13 — для детей старше 13 лет<br>
+                R — лица, не достигшие 17-летнего возраста, допускаются на фильм только в сопровождении взрослых<br>
+                NC-17 — для лиц старше 17 лет</td>
+        </tr>
+        <tr>
+            <th>Release Date</th>
+            <td>дата выхода фильма</td>
+        </tr>
+        </tbody>
+    </table>
+    <p style="font-size: 25px;"><strong>РАЗМЕР ДАТАФРЕЙМА</strong></p>
+    <p>Чтобы узнать количество строк и столбцов в датафрейме, можно воспользоваться свойством <span class="code-chip">.shape</span>&nbsp;:</p>
+    <pre class="line-numbers"><code class="language-python">df.shape</code></pre>
+    <p>Результат работы программы:</p>
+    <p class="print_result">(571, 6)</p>
+    <p>Эта команда возвращает кортеж (tuple). Первое число - это количество строк (571 фильм), второе - количество столбцов (6 признаков, описывающих фильм).</p>
+    <div class="important-card">
+        <div class="important-text" >
+            К элементам кортежа можно обращаться по индексу. Если требуется извлечь только количество строк, нужно написать <span class="code-chip">датафрейм.shape[0]</span>&nbsp;, а если мы хотим узнать количество колонок, то <span class="code-chip">датафрейм.shape[1]</span>&nbsp;
+        </div>
+    </div>
+</section>
+
+<section>
+    <p style="font-size: 25px;"><strong>ТИП ДАННЫХ СТОЛБЦОВ</strong></p>
+    <p>Чтобы узнать, какие форматы данных лежат в каждой из колонок, воспользуйтесь свойством <span class="code-chip">.dtypes</span>&nbsp;:</p>
+
+    <pre class="line-numbers"><code class="language-python">df.dtypes</code></pre>
+    <p>Результат работы программы:</p>
+    <table border="1" class="dataframe" style="width: 100%;">
+        <thead>
+        <tr style="text-align: right; width: 100%">
+            <th></th>
+            <th>0</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>Film</th>
+            <td>object</td>
+        </tr>
+        <tr>
+            <th>Award</th>
+            <td>bool</td>
+        </tr>
+        <tr>
+            <th>Rating</th>
+            <td>float64</td>
+        </tr>
+        <tr>
+            <th>Votes</th>
+            <td>int64</td>
+        </tr>
+        <tr>
+            <th>Content Rating</th>
+            <td>object</td>
+        </tr>
+        <tr>
+            <th>Release Date</th>
+            <td>datetime64[ns]</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p>Разберемся, что представляет из себя каждый из форматов.</p>
+    <ul>
+        <li>
+            <strong>bool</strong> (признак <strong>Award</strong>): логический тип данных, значит в признаке может быть только два варианта значений (<span class="code-chip">True</span>&nbsp; или <span class="code-chip">False</span>&nbsp;).
+        </li>
+        <li>
+            <strong>int64</strong> (признак <strong>Votes</strong>): признак содержит только целые числа. 64 - это количество битов, которое отводится под хранение одного числа.
+        </li>
+        <li>
+            <strong>float64</strong> (признак <strong>Rating</strong>): в столбце такого формата хранятся числа с плавающей точкой. У них есть дробная часть. Она может быть равна 0 (например 5.0), но тем не менее она есть.
+        </li>
+        <li>
+            <strong>datetime64[ns</strong>] (признак <strong>Release Data</strong>): специальный формат данных в библиотеке Pandas, предназначенный для хранения даты и времени. Дата, в целом, может храниться в формате object, а признак с информацией о годе – в формате int64
+        </li>
+        <li>
+            <strong>object</strong> (признак <strong>Film</strong> , <strong>Content Rating</strong> ): как правило, хранит текстовую информация (строки (str)), но может хранить и смешанные типы данных.
+        </li>
+    </ul>
+    <p style="font-size: 25px;"><strong>ОСНОВНАЯ ИНФОРМАЦИЯ</strong></p>
+    <p>Для вывода сводной информации о структуре датафрейма используется метод
+        <span class="code-chip">.info()</span>&nbsp;. Этот метод покажет количество строк и столбцов, типы данных для каждого столбца, наличие пропущенных значений и другие сведения.</p>
+
+    <pre class="line-numbers"><code class="language-python">df.info()</code></pre>
+    <img src="picture/illustration1_4х.png" width="100%" alt="Рисунок 1">
+    <p>Давайте обратим внимание на столбец <span class="code-chip">Non-Null Count</span>&nbsp;.
+        Он показывает количество не пропущенных значений в каждом из признаков.
+        Всего в датафрейме 571 фильм. По таблице <span class="code-chip">.info()</span>&nbsp; мы видим, что в признаках <strong>Film</strong>,
+            <strong>Award</strong>, <strong>Rating</strong>, <strong>Votes</strong> - 571 не пропущенное значение (то есть в этих столбцах нет пропусков).
+        Однако в столбце <strong>Content Rating</strong> и <strong>Release Date</strong> пропуски есть. Информацию про возрастные ограничения
+        (<strong>Content Rating</strong>) имеют только 332 фильма, а про остальные 239 нам ничего не известно.
+        Дата выхода фильма (<strong>Release Date</strong>) отсутствует у 132 фильмов.</p>
+    <p>Пропуски в данных могут обозначаться как <em>NaN</em> или <em>NaT</em> (в столбцах формата <span class="code-chip">datetime64[ns]</span>&nbsp;). Можно увидеть пропуски в наших данных, даже выведя первые пять строк:</p>
+    <pre class="line-numbers"><code class="language-python">df.head()</code></pre>
+    <table border="1" class="dataframe" style="width: 100%;">
+        <thead>
+        <tr style="text-align: right;">
+            <th></th>
+            <th>Film</th>
+            <th>Award</th>
+            <th>Rating</th>
+            <th>Votes</th>
+            <th>Content Rating</th>
+            <th>Release Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>0</th>
+            <td>Wings</td>
+            <td>True</td>
+            <td>7.5</td>
+            <td>12221</td>
+            <td>PG-13</td>
+            <td>1927-08-12</td>
+        </tr>
+        <tr>
+            <th>1</th>
+            <td>7th Heaven</td>
+            <td>False</td>
+            <td>7.7</td>
+            <td>3439</td>
+            <td>NaN</td>
+            <td>NaT</td>
+        </tr>
+        <tr>
+            <th>2</th>
+            <td>The Racket</td>
+            <td>False</td>
+            <td>6.7</td>
+            <td>1257</td>
+            <td>NaN</td>
+            <td>NaT</td>
+        </tr>
+        <tr>
+            <th>3</th>
+            <td>The Broadway Melody</td>
+            <td>True</td>
+            <td>5.7</td>
+            <td>6890</td>
+            <td>NaN</td>
+            <td>1929-02-01</td>
+        </tr>
+        <tr>
+            <th>4</th>
+            <td>Alibi</td>
+            <td>False</td>
+            <td>5.8</td>
+            <td>765</td>
+            <td>NaN</td>
+            <td>NaT</td>
+        </tr>
+        </tbody>
+    </table>
+    <div style="height: 50px;"></div>
+    <h2 id="chapter1-6">1.6 Какие бывают типы данных в анализе?</h2>
+    <p>В предыдущем разделе мы подробно разобрали технические типы данных в библиотеке Pandas (int64, float64, object и другие). Помимо технической стороны вопроса, важно понимать, какую именно информацию несут наши данные. Здесь технический взгляд уже не поможет — нужно обладать опытом и знаниями. Разделение признаков на виды позволит правильно выбрать для них подходящие методы анализа и способы визуализации.</p>
+    <p>Все признаки с точки зрения анализа данных можно разделить на две группы:</p>
+    <ul>
+        <li>
+            Количественные (числовые)
+        </li>
+        <li>
+            Категориальные (качественные)
+        </li>
+    </ul>
+    <p>Давайте теперь разберемся с каждым видом признака детальнее, включая их разновидности.</p>
+    <p>РИС 1</p>
+    <p style="font-size: 25px;"><strong>КОЛИЧЕСТВЕННЫЕ ДАННЫЕ</strong></p>
+    <div class="definition-card">
+        <div class="definition-text">
+            <strong>Количественные признаки </strong>- это численные измерения, которые характеризуют величину или количество некоторого объекта.<br>
+
+            <strong>Примеры</strong>: количество детей в семье, рост<br>
+
+            <strong>Контрольный вопрос для проверки:</strong> Признак измеряется численно? Да
+        </div>
+    </div>
+</section>
+
+<section>
+    <p>Количественные данные делятся на два подтипа:</p>
+    <ul>
+        <li>
+            Дискретные признаки
+        </li>
+    </ul>
+    <p>Такие признаки могут принимают только целые значения. Например, если в данных есть столбец количество детей в семье. Такой признак может быть только дискретным, потому что в семье не может быть 1.5 ребенка: либо 1, либо 2.</p>
+
+    <p><strong>Примеры</strong>: количество детей в семье, количество книг в библиотеке, количество посадочных мест в кинозале</p>
+    <p><strong>Контрольный вопрос для проверки</strong>: Признак может быть только целым числом? Да</p>
+    <ul>
+        <li>
+            Непрерывные признаки
+        </li>
+    </ul>
+    <p>В отличии от дискретных данных, непрерывные признаки могут принимать дробные значения. Рост может быть посчитан с точностью до миллиметров (Например: Рост Кати 165.3 см).</p>
+    <p><strong>Примеры</strong>: рост, вес, зарплата</p>
+    <p><strong>Контрольный вопрос для проверки</strong>: Признак может быть дробным числом? Да</p>
+    <p style="font-size: 25px"><strong>КАТЕГОРИАЛЬНЫЕ ДАННЫЕ</strong></p>
+    <div class="definition-card">
+        <div class="definition-text">
+            <strong>Категориальные признаки</strong>- отражают принадлежность объектов к определенным категориям.<br>
+
+            <strong>Примеры</strong>: уровень образования, пол<br>
+
+            <strong>Контрольный вопрос для проверки:</strong> ризнак измеряется численно? Нет
+        </div>
+    </div>
+</section>
+
+<section>
+    <p>Категориальные данные выражаются через названия, классы или состояния.
+        Такие признаки нельзя упорядочить естественным образом или выразить числами,
+        хотя <strong>их можно перекодировать числами</strong>. Например, если у нас есть признак уровень
+        образования, который содержит следующие категории: начальное, среднее и высшее,
+        мы можем перекодировать их следующим образом: <em>начальное - 1, среднее - 2 и высшее - 3</em>.
+        От того, что мы их перекодировали, смысл признака не изменился, это все еще принадлежность
+        объекта к группе людей с определенным уровнем образования. Только теперь они называются 1, 2 или 3,
+        а не начальное, среднее, высшее.</p>
+    <p>Категориальные данные делятся на два подтипа:</p>
+    <ul>
+        <li>
+            Порядковые (ранговые) признаки
+        </li>
+    </ul>
+    <p>У категорий такого признака <strong>есть порядок</strong>, но расстояния между ними не определены.
+        То есть мы можем сказать, что одна категория больше/лучше/сильнее другой, но не знаем,
+        насколько. Уровень образования, о котором мы говорили выше, это порядковый признак.
+        Мы можем расставить уровни образования от самого высокого к самому низкому, то есть у них есть шкала.</p>
+    <p><strong>Примеры</strong>: <em>уровень образования (начальное/среднее/высшее), оценка успеваемости (неудовлетворительно/удовлетворительно/хорошо/отлично)</em></p>
+    <p><strong>Контрольный вопрос для проверки</strong>: <em>Категории в признаке можно упорядочить? Да</em></p>
+    <ul>
+        <li>
+            Номинальные признаки
+        </li>
+    </ul>
+    <p>Номинальный признак описывает <strong>различия</strong> между объектами <strong>без какого-либо порядка</strong>. Каждое значение
+        номиналального признака относится к отдельной категории, которую невозможно упорядочить. Если мы
+        работаем с данными по автомобилям, там может быть признак, описывающий их цвет. Автомобили могут
+        быть красными, черными, зелеными и т.д. Мы не можем сказать, что один цвет лучше чем другой (только субъективно);
+        такие категории нельзя упорядочить, значит признак является номинальным.</p>
+    <p><strong>Примеры</strong> : <em>цвет автомобиля (красный/черный/зеленый и т.д.), имя человека (Таня/Саша/Коля и т.д.)</em></p>
+    <p><strong> Контрольный вопрос для проверки</strong> : <em>Категории в признаке можно упорядочить? Нет</em></p>
+    <ul>
+        <li>
+            Бинарные признаки
+        </li>
+    </ul>
+    <p>Это подтип номинальных данных. Бинарные признаки могут содержать только две категории, например 1/0, True/False, да/нет и т.д.</p>
+    <p><strong>Примеры</strong> : <em>наличие социальных сетей (да/нет), семейное положение (женат/не женат)</em></p>
+    <p><strong> Контрольный вопрос для проверки</strong> : <em>У признака две категории? Да</em></p>
+    <div class="important-card">
+        <div class="important-text">
+            Представление признака в данных влияет на его интерпретацию. Вернемся к <em>уровню образования</em> . Если он представлен категориями
+            <em>начальное/среднее/высшее</em> , то такой признак будет <strong>категориальным порядковым.</strong>
+            А если в данных будет только два уровня образования (<em>среднее/высшее</em>) – <strong>категориальным номинальным бинарным</strong>.
+            Уровень образования может представлен и количеством лет: 9, 12, 20 и т.д. лет.,
+            тогда это <strong>количественный дискретный признак</strong>.
+        </div>
+    </div>
+</section>
+
+<section><a href="https://edu.hse.ru/mod/quiz/view.php?id=1574422)" target="_blank" rel="noopener noreferrer"><button class="check_yourself">Самоопроверка</button></a>&nbsp;<a href="https://edu.hse.ru/mod/quiz/view.php?id=1574583)" target="_blank" rel="noopener noreferrer"><button class="check">Практика</button></a>&nbsp;<a href="https://edu.hse.ru/course/view.php?id=236211)" target="_blank" rel="noopener noreferrer"><button class="back_to_course">Вернуться к курсу</button></a>
+    <div style="height: 50px;"></div>
+</section>
+    </div>
+</div>
+<script>
+    const toggleNav = document.getElementById('toggleNav');
+    const sideNav = document.getElementById('sideNav');
+
+    toggleNav.addEventListener('click', () => {
+        sideNav.classList.toggle('open');
+    });
+</script>
+
+<script>
+    document.querySelectorAll('.accordion-button').forEach(button => {
+        button.addEventListener('click', () => {
+            button.classList.toggle('active');
+            const content = button.nextElementSibling;
+
+            if (button.classList.contains('active')) {
+                content.style.maxHeight = content.scrollHeight + 'px';
+            } else {
+                content.style.maxHeight = '0';
+            }
+        });
+    });
+</script>

@@ -1,0 +1,114 @@
+@font-face {
+    font-family: 'Neutral_Face';
+    src: url('fonts/NeutralFace.otf') format('truetype');
+
+}
+h1 {
+    font-family: 'Neutral_Face', sans-serif;
+}
+
+h2 {
+    font-family: 'Neutral_Face', sans-serif;
+}
+
+p {
+    font-family: 'Manrope', sans-serif;
+}
+
+.definition, .important {
+    border-left: 5px solid #3498db;
+    background-color: #ecf0f1;
+    padding: 10px;
+    margin: 15px 0;
+}
+
+.definition {
+    border-color: #2ecc71;
+}
+
+.important {
+    border-color: #e74c3c;
+}
+
+pre {
+    background-color: #f4f4f4;
+    padding: 10px;
+    border-radius: 5px;
+    overflow: auto;
+}
+
+.code {
+    color: #e74c3c;
+}
+
+.accordion {
+    background-color: #f1f1f1;
+    color: #444;
+    cursor: pointer;
+    padding: 10px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+    margin: 5px 0;
+}
+
+.active, .accordion:hover {
+    background-color: #ccc;
+}
+
+.panel {
+    padding: 0 18px;
+    display: none;
+    background-color: #f9f9f9;
+    overflow: hidden;
+}
+
+table {
+    width: 100%;
+    margin: 20px 0;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+.button {
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin: 10px 5px;
+    border-radius: 5px;
+}
+
+.button:hover {
+    background-color: #2980b9;
+}
+
+#output {
+    margin-top: 20px;
+}
+
+table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
