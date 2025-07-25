@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Hack&display=swap" rel="stylesheet">
+    <title>Глава 4</title>
+    <link rel="stylesheet" href="chapter_1.css">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/pyodide"></script>
+    <script src="libs/prism.js"></script>
+
+</head>
+
+<div class="logo-wrapper">
+    <img src="picture/logo.svg" class="logo-top-right" alt="Логотип">
+</div>
+<div class="horizontal-accordion-wrapper">
+    <div class="accordion-left">
+        <button id="toggleNav" class="accordion-button-left" style="color: white; border-color: white;">☰</button>
+    </div>
+    <div id="sideNav" class="accordion-panel-right">
+        <a href="#chapter4"><strong>Глава 4</strong></a>
+        <a href="#chapter4-1">4.1 Частотная таблица</a>
+        <a href="#chapter4-2">4.2 Визуализация</a>
+    </div>
+
+    <div class="main-content">
+
+
+<section>
+    <h1 style="font-size: 30px;" id="chapter4">Глава 4. Частотная таблица. Визуализация</h1>
+    <div style="height: 10px;"></div>
+    <h2 id="chapter4-1">4.1 Что такое частотная таблица?</h2>
+</section>
+
+<section>
+    <p style="display:inline">
+        Представьте, что мы управляем пиццерией и хотим понять, какие пиццы пользуются наибольшей популярностью у клиентов. Данные о заказах в течение года записаны в файле в </p><a style="display:inline" href="https://edu.hse.ru/mod/resource/view.php?id=1610926"><p style="display:inline">pizza.csv:</p></a>
+            <div class="scrollable-table">
+            <table border="1" class="dataframe_new" style="width: 100%;">
+                <thead>
+                <tr>
+                    <th>Признак</th>
+                    <th>Описание</th>
+                    <th>Формат данных(.dtypes)</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th>order_date</th>
+                    <td>дата заказа (день/месяц)</td>
+                    <td>object</td>
+                </tr>
+                <tr>
+                    <th>order_hour</th>
+                    <td>час дня, в который сделан заказ</td>
+                    <td>int64</td>
+                </tr>
+                <tr>
+                    <th>pizza_name_id</th>
+                    <td>вид пиццы (hawaiian, pepperoni и т.д.)</td>
+                    <td>object</td>
+                </tr>
+                <tr>
+                    <th>pizza_size</th>
+                    <td>размер пиццы (S, M, L и т.д.)</td>
+                    <td>object</td>
+                </tr>
+                <tr>
+                    <th>pizza_category</th>
+                    <td>описание пиццы (Classic, Veggie и т.д.)</td>
+                    <td>object</td>
+                </tr>
+                <tr>
+                    <th>quantity</th>
+                    <td>количество пицц</td>
+                    <td>float64</td>
+                </tr>
+                <tr>
+                    <th>total_price</th>
+                    <td>стоимость заказа ($)</td>
+                    <td>float64</td>
+                </tr>                <tr>
+                    <th>pizza_ingredients</th>
+                    <td>ингридиенты</td>
+                    <td>object</td>
+                </tr>                <tr>
+                    <th>delivery_price</th>
+                    <td>стоимость доставки</td>
+                    <td>float64</td>
+                </tr>
+                </tbody>
+            </table>
+            </div>
+    <p>Одно <strong>наблюдение</strong> - это один <strong>заказ</strong>.</p>
+
+    <pre class="line-numbers"><code class="language-python">import pandas as pd
+
+df = pd.read_csv('pizza.csv')
+df.head()</code></pre>
+<div class="scrollable-table">
+        <table border="1" class="dataframe">
+        <thead>
+        <tr style="text-align: right;">
+            <th></th>
+            <th>order_date</th>
+            <th>order_hour</th>
+            <th>pizza_name_id</th>
+            <th>pizza_size</th>
+            <th>pizza_category</th>
+            <th>quantity</th>
+            <th>total_price</th>
+            <th>pizza_ingredients</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr>
+            <th>0</th>
+            <td>30/03</td>
+            <td>13</td>
+            <td>big</td>
+            <td>S</td>
+            <td>Classic</td>
+            <td>4.0</td>
+            <td>48.00</td>
+            <td>Bacon, Pepperoni, ...</td>
+        </tr>
+        <tr>
+            <th>1</th>
+            <td>19/09</td>
+            <td>14</td>
+            <td>cali</td>
+            <td>L</td>
+            <td>Chicken</td>
+            <td>4.0</td>
+            <td>83.00</td>
+            <td>Chicken, Artichoke, ...</td>
+        </tr>
+        <tr>
+            <th>2</th>
+            <td>19/05</td>
+            <td>12</td>
+            <td>big</td>
+            <td>S</td>
+            <td>Classic</td>
+            <td>4.0</td>
+            <td>48.00</td>
+            <td>Bacon, Pepperoni, ...</td>
+        </tr>
+        <tr>
+            <th>3</th>
+            <td>13/02</td>
+            <td>13</td>
+            <td>sicilian</td>
+            <td>M</td>
+            <td>Supreme</td>
+            <td>3.0</td>
+            <td>48.75</td>
+            <td>Coarse Sicilian Salami, ...</td>
+        </tr>
+        <tr>
+            <th>4</th>
+            <td>01/06</td>
+            <td>12</td>
+            <td>spicy</td>
+            <td>S</td>
+            <td>Supreme</td>
+            <td>3.0</td>
+            <td>37.50</td>
+            <td>Capocollo, Tomatoes, ...</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<p>Чтобы понять, какие пиццы (<strong>pizza_name_id</strong>) заказывают чаще, нужно построить <strong>частотную таблицу</strong>, которая отразит количество (частоту) случаев появления каждой пиццы в наших данных. Для построения частотной таблицы используется метод <span class="code-chip">.value_counts()</span>:</p>
+<div style="height: 10px;"></div>
+    <p class="fake-code">
+<span class="code-line">датафрейм['признак'].value_counts()</span>
+    </p>
+<pre class="line-numbers"><code class="language-python">df['pizza_name_id'].value_counts()</code></pre>
+<div class="scrollable-table">
+    <table border="1" class="dataframe">
+        <thead>
+        <tr style="text-align: right;">
+            <th>pizza_name_id</th>
+            <th>count</th>
+        </tr>
+        </thead>
+        <tbody>
+<tr><td><strong>ital</strong></td><td>4238</td></tr>
+<tr><td><strong>classic</strong></td><td>2416</td></tr>
+<tr><td><strong>bbq</strong></td><td>2372</td></tr>
+<tr><td><strong>spinach</strong></td><td>2372</td></tr>
+<tr><td><strong>hawaiian</strong></td><td>2370</td></tr>
+<tr><td><strong>pepperoni</strong></td><td>2369</td></tr>
+<tr><td><strong>thai</strong></td><td>2315</td></tr>
+<tr><td><strong>cali</strong></td><td>2302</td></tr>
+<tr><td><strong>ckn</strong></td><td>1941</td></tr>
+<tr><td><strong>sicilian</strong></td><td>1887</td></tr>
+<tr><td><strong>spicy</strong></td><td>1887</td></tr>
+<tr><td><strong>southw</strong></td><td>1885</td></tr>
+<tr><td><strong>four</strong></td><td>1850</td></tr>
+<tr><td><strong>big</strong></td><td>1811</td></tr>
+<tr><td><strong>veggie</strong></td><td>1510</td></tr>
+<tr><td><strong>mexicana</strong></td><td>1456</td></tr>
+<tr><td><strong>napolitana</strong></td><td>1451</td></tr>
+<tr><td><strong>prsc</strong></td><txd>1428</td></tr>
+<tr><td><strong>peppr</strong></td><td>1422</td></tr>
+<tr><td><strong>the</strong></td><td>1406</td></tr>
+<tr><td><strong>five</strong></td><td>1359</td></tr>
+<tr><td><strong>pep</strong></td><td>1342</td></tr>
+<tr><td><strong>green</strong></td><td>987</td></tr>
+<tr><td><strong>spin</strong></td><td>957</td></tr>
+<tr><td><strong>soppressata</strong></td><td>957</td></tr>
+<tr><td><strong>calabrese</strong></td><td>927</td></tr>
+<tr><td><strong>mediterraneo</strong></td><td>923</td></tr>
+<tr><td><strong>brie</strong></td><td>480</td></tr>
+</tbody>
+    </table>
+</div>
+</section>
+
+<section>
+    <div class="important-card">
+        <div class="important-text">
+            <strong>Частотная таблица</strong> - таблица, которая показывает, как часто встречаются разные значения или категории в исследуемом признаке. Чаще всего используется для анализа категориальных или дискретных количественных данных.
+        </div>
+    </div>
+</section>
+
+<section>
+    <p>Любая сводная таблица, построенная с помощью метода <span class="code-chip">.value_counts()</span> имеет следующие свойства:</p>
+        <ul>
+            <li>
+<p><strong>Формат серии (Series).</strong> В нашем случае <em>индексы</em> - это уникальные названия пицц (<strong>pizza_name_id</strong>), <em>значения</em> - это число заказов (строк), в которых встретилась каждая пицца. Например, неаполитанская пицца (<em>napolitana</em>; <strong>pizza_name_id</strong>) встретилась 1451 раз.</p>
+            </li>
+            <li>
+<p><strong>Отсортирована по убыванию частоты значений.</strong> Первым будет идти значение, которое встретилось больше всего раз. В нашем случае это итальянская пицца (<em>ital</em>; <strong>pizza_name_id</strong>), она была в 4238 заказах. А последней будет идти категория, которая встречается реже всего. По нашим данным, это пицца с сыром бри (<em>brie</em>; <strong>pizza_name_id</strong>), она была в 480 заказах.</p>
+            </li>
+        </ul>
+        <div style="height: 10px;"></div>
+    <h2>СОРТИРОВКА ЧАСТОТНОЙ ТАБЛИЦЫ</h2>
+    <p>Стандартную сортировку можно поменять. Если нужна сортировка по возрастанию частотности, то есть первой должна выводиться пицца, которая была в наименьшем количестве заказов, обратимся к методу <span class="code-chip">.sort_values()</span>:</p>
+
+    <p class="fake-code">
+<span class="code-line">датафрейм['признак'].value_counts().sort_values() # по возрастанию частотности</span>
+    </p>
+
+    <pre class="line-numbers"><code class="language-python">df['pizza_name_id'].value_counts().sort_values()</code></pre>
+
+    <div class="scrollable-table">
+    <table border="1" class="dataframe">
+        <thead>
+        <tr style="text-align: right;">
+            <th>pizza_name_id</th>
+            <th>count</th>
+        </tr>
+        </thead>
+        <tbody>
+<tr><td><strong>brie</strong></td><td>480</td></tr>
+<tr><td><strong>mediterraneo</strong></td><td>923</td></tr>
+<tr><td><strong>calabrese</strong></td><td>927</td></tr>
+<tr><td><strong>spin</strong></td><td>957</td></tr>
+<tr><td><strong>soppressata</strong></td><td>957</td></tr>
+<tr><td><strong>green</strong></td><td>987</td></tr>
+<tr><td><strong>pep</strong></td><td>1342</td></tr>
+<tr><td><strong>five</strong></td><td>1359</td></tr>
+<tr><td><strong>the</strong></td><td>1406</td></tr>
+<tr><td><strong>peppr</strong></td><td>1422</td></tr>
+<tr><td><strong>prsc</strong></td><td>1428</td></tr>
+<tr><td><strong>napolitana</strong></td><td>1451</td></tr>
+<tr><td><strong>mexicana</strong></td><td>1456</td></tr>
+<tr><td><strong>veggie</strong></td><td>1510</td></tr>
+<tr><td><strong>big</strong></td><td>1811</td></tr>
+<tr><td><strong>four</strong></td><td>1850</td></tr>
+<tr><td><strong>southw</strong></td><td>1885</td></tr>
+<tr><td><strong>sicilian</strong></td><td>1887</td></tr>
+<tr><td><strong>spicy</strong></td><td>1887</td></tr>
+<tr><td><strong>ckn</strong></td><td>1941</td></tr>
+<tr><td><strong>cali</strong></td><td>2302</td></tr>
+<tr><td><strong>thai</strong></td><td>2315</td></tr>
+<tr><td><strong>pepperoni</strong></td><td>2369</td></tr>
+<tr><td><strong>hawaiian</strong></td><td>2370</td></tr>
+<tr><td><strong>bbq</strong></td><td>2372</td></tr>
+<tr><td><strong>spinach</strong></td><td>2372</td></tr>
+<tr><td><strong>classic</strong></td><td>2416</td></tr>
+<tr><td><strong>ital</strong></td><td>4238</td></tr>
+</tbody>
+    </table>
+    </div>
+</section>
+
+<section>
+    <p>Если нужна сортировка по возрастанию индексов (отсортировать название пицц по алфавиту), используем метод <span class="code-chip">.sort_index()</span>:</p>
+    <p class="fake-code">
+<span class="code-line">датафрейм['признак'].value_counts().sort_index() # по возрастанию индексов</span>
+    </p>
+
+    <pre class="line-numbers"><code class="language-python">df['pizza_name_id'].value_counts().sort_index()</code></pre>
+
+<div class="scrollable-table">
+        <table border="1" class="dataframe">
+        <thead>
+        <tr style="text-align: right;">
+            <th>pizza_name_id</th>
+            <th>count</th>
+        </tr>
+        </thead>
+        <tbody>
+<tr><td><strong>bbq</strong></td><td>2372</td></tr>
+<tr><td><strong>big</strong></td><td>1811</td></tr>
+<tr><td><strong>brie</strong></td><td>480</td></tr>
+<tr><td><strong>calabrese</strong></td><td>927</td></tr>
+<tr><td><strong>cali</strong></td><td>2302</td></tr>
+<tr><td><strong>ckn</strong></td><td>1941</td></tr>
+<tr><td><strong>classic</strong></td><td>2416</td></tr>
+<tr><td><strong>five</strong></td><td>1359</td></tr>
+<tr><td><strong>four</strong></td><td>1850</td></tr>
+<tr><td><strong>green</strong></td><td>987</td></tr>
+<tr><td><strong>hawaiian</strong></td><td>2370</td></tr>
+<tr><td><strong>ital</strong></td><td>4238</td></tr>
+<tr><td><strong>mediterraneo</strong></td><td>923</td></tr>
+<tr><td><strong>mexicana</strong></td><td>1456</td></tr>
+<tr><td><strong>napolitana</strong></td><td>1451</td></tr>
+<tr><td><strong>pep</strong></td><td>1342</td></tr>
+<tr><td><strong>pepperoni</strong></td><td>2369</td></tr>
+<tr><td><strong>peppr</strong></td><td>1422</td></tr>
+<tr><td><strong>prsc</strong></td><td>1428</td></tr>
+<tr><td><strong>sicilian</strong></td><td>1887</td></tr>
+<tr><td><strong>soppressata</strong></td><td>957</td></tr>
+<tr><td><strong>southw</strong></td><td>1885</td></tr>
+<tr><td><strong>spicy</strong></td><td>1887</td></tr>
+<tr><td><strong>spin</strong></td><td>957</td></tr>
+<tr><td><strong>spinach</strong></td><td>2372</td></tr>
+<tr><td><strong>thai</strong></td><td>2315</td></tr>
+<tr><td><strong>the</strong></td><td>1406</td></tr>
+<tr><td><strong>veggie</strong></td><td>1510</td></tr>
+</tbody>
+    </table>
+    </div>
+</section>
+
+<section>
+    <p>Для сортировки по убыванию индексов (отсортировать названия пицц в обратном алфавитном порядке) метод <span class="code-chip">.sort_index()</span> нужно использовать с параметром <span class="code-chip">ascending=False</span>:</p>
+    <p class="fake-code">
+<span class="code-line">датафрейм['признак'].value_counts().sort_index(ascending=False) # по убыванию индексов</span>
+    </p>
+
+    <pre class="line-numbers"><code class="language-python">df['pizza_name_id'].value_counts().sort_index(ascending=False)</code></pre>
+    <div class="scrollable-table">    
+    <table border="1" class="dataframe">
+        <thead>
+        <tr style="text-align: right;">
+            <th>pizza_name_id</th>
+            <th>count</th>
+        </tr>
+        </thead>
+        <tbody>
+<tr><td><strong>veggie</strong></td><td>1510</td></tr>
+<tr><td><strong>the</strong></td><td>1406</td></tr>
+<tr><td><strong>thai</strong></td><td>2315</td></tr>
+<tr><td><strong>spinach</strong></td><td>2372</td></tr>
+<tr><td><strong>spin</strong></td><td>957</td></tr>
+<tr><td><strong>spicy</strong></td><td>1887</td></tr>
+<tr><td><strong>southw</strong></td><td>1885</td></tr>
+<tr><td><strong>soppressata</strong></td><td>957</td></tr>
+<tr><td><strong>sicilian</strong></td><td>1887</td></tr>
+<tr><td><strong>prsc</strong></td><td>1428</td></tr>
+<tr><td><strong>peppr</strong></td><td>1422</td></tr>
+<tr><td><strong>pepperoni</strong></td><td>2369</td></tr>
+<tr><td><strong>pep</strong></td><td>1342</td></tr>
+<tr><td><strong>napolitana</strong></td><td>1451</td></tr>
+<tr><td><strong>mexicana</strong></td><td>1456</td></tr>
+<tr><td><strong>mediterraneo</strong></td><td>923</td></tr>
+<tr><td><strong>ital</strong></td><td>4238</td></tr>
+<tr><td><strong>hawaiian</strong></td><td>2370</td></tr>
+<tr><td><strong>green</strong></td><td>987</td></tr>
+<tr><td><strong>four</strong></td><td>1850</td></tr>
+<tr><td><strong>five</strong></td><td>1359</td></tr>
+<tr><td><strong>classic</strong></td><td>2416</td></tr>
+<tr><td><strong>ckn</strong></td><td>1941</td></tr>
+<tr><td><strong>cali</strong></td><td>2302</td></tr>
+<tr><td><strong>calabrese</strong></td><td>927</td></tr>
+<tr><td><strong>brie</strong></td><td>480</td></tr>
+<tr><td><strong>big</strong></td><td>1811</td></tr>
+<tr><td><strong>bbq</strong></td><td>2372</td></tr>
+</tbody>
+    </table>
+    </div>
+<div style="height: 10px;"></div>
+    <h2>НОРМАЛИЗАЦИЯ ДАННЫХ ЧАСТОТНОЙ ТАБЛИЦЫ</h2>
+    <p>Если мы хотим получить не абсолютные значени частотности (количество строк), а относительные, то есть долю каждой категории в данных, внутрь <span class="code-chip">.value_counts()</span>, нужно добавить параметр <span class="code-chip">normalize=True</span>:</p>
+    <p class="fake-code">
+<span class="code-line">датафрейм['признак'].value_counts(normalize=True) # доля каждой категории в данных</span>
+    </p>
+
+    <pre class="line-numbers"><code class="language-python">df['pizza_name_id'].value_counts(normalize=True)</code></pre>
+    <div class="scrollable-table">
+    <table border="1" class="dataframe">
+        <thead>
+        <tr style="text-align: right;">
+            <th>pizza_name_id</th>
+            <th>proportion</th>
+        </tr>
+        </thead>
+        <tbody>
+<tr><td><strong>ital</strong></td><td>0.087166</td></tr>
+<tr><td><strong>classic</strong></td><td>0.049691</td></tr>
+<tr><td><strong>bbq</strong></td><td>0.048787</td></tr>
+<tr><td><strong>spinach</strong></td><td>0.048787</td></tr>
+<tr><td><strong>hawaiian</strong></td><td>0.048745</td></tr>
+<tr><td><strong>pepperoni</strong></td><td>0.048725</td></tr>
+<tr><td><strong>thai</strong></td><td>0.047614</td></tr>
+<tr><td><strong>cali</strong></td><td>0.047347</td></tr>
+<tr><td><strong>ckn</strong></td><td>0.039922</td></tr>
+<tr><td><strong>sicilian</strong></td><td>0.038811</td></tr>
+<tr><td><strong>spicy</strong></td><td>0.038811</td></tr>
+<tr><td><strong>southw</strong></td><td>0.038770</td></tr>
+<tr><td><strong>four</strong></td><td>0.038050</td></tr>
+<tr><td><strong>big</strong></td><td>0.037248</td></tr>
+<tr><td><strong>veggie</strong></td><td>0.031057</td></tr>
+<tr><td><strong>mexicana</strong></td><td>0.029947</td></tr>
+<tr><td><strong>napolitana</strong></td><td>0.029844</td></tr>
+<tr><td><strong>prsc</strong></td><td>0.029371</td></tr>
+<tr><td><strong>peppr</strong></td><td>0.029247</td></tr>
+<tr><td><strong>the</strong></td><td>0.028918</td></tr>
+<tr><td><strong>five</strong></td><td>0.027951</td></tr>
+<tr><td><strong>pep</strong></td><td>0.027602</td></tr>
+<tr><td><strong>green</strong></td><td>0.020300</td></tr>
+<tr><td><strong>spin</strong></td><td>0.019683</td></tr>
+<tr><td><strong>soppressata</strong></td><td>0.019683</td></tr>
+<tr><td><strong>calabrese</strong></td><td>0.019066</td></tr>
+<tr><td><strong>mediterraneo</strong></td><td>0.018984</td></tr>
+<tr><td><strong>brie</strong></td><td>0.009872</td></tr>
+</tbody>
+    </table>
+</div>
+</section>
+
+
+<section>
+    <p>Доли не очень удобны для интерпретации, так как они меняются в диапазоне от 0 до 1. Но их несложно перевести в проценты, просто умножив на 100 нашу частотную таблицу:</p>
+    <p class="fake-code">
+<span class="code-line">датафрейм['признак'].value_counts(normalize=True) * 100  # процент каждой категории в данных</span>
+    </p>
+
+    <pre class="line-numbers"><code class="language-python">df['pizza_name_id'].value_counts(normalize=True) * 100</code></pre>
+    <div class="scrollable-table">
+    <table border="1" class="dataframe">
+        <thead>
+        <tr style="text-align: right;">
+            <th>pizza_name_id</th>
+            <th>proportion</th>
+        </tr>
+        </thead>
+        <tbody>
+<tr><td><strong>ital</strong></td><td>8.716578</td></tr>
+<tr><td><strong>classic</strong></td><td>4.969148</td></tr>
+<tr><td><strong>bbq</strong></td><td>4.878651</td></tr>
+<tr><td><strong>spinach</strong></td><td>4.878651</td></tr>
+<tr><td><strong>hawaiian</strong></td><td>4.874537</td></tr>
+<tr><td><strong>pepperoni</strong></td><td>4.872480</td></tr>
+<tr><td><strong>thai</strong></td><td>4.761415</td></tr>
+<tr><td><strong>cali</strong></td><td>4.734677</td></tr>
+<tr><td><strong>ckn</strong></td><td>3.992184</td></tr>
+<tr><td><strong>sicilian</strong></td><td>3.881119</td></tr>
+<tr><td><strong>spicy</strong></td><td>3.881119</td></tr>
+<tr><td><strong>southw</strong></td><td>3.877005</td></tr>
+<tr><td><strong>four</strong></td><td>3.805019</td></tr>
+<tr><td><strong>big</strong></td><td>3.724805</td></tr>
+<tr><td><strong>veggie</strong></td><td>3.105718</td></tr>
+<tr><td><strong>mexicana</strong></td><td>2.994652</td></tr>
+<tr><td><strong>napolitana</strong></td><td>2.984369</td></tr>
+<tr><td><strong>prsc</strong></td><td>2.937063</td></tr>
+<tr><td><strong>peppr</strong></td><td>2.924722</td></tr>
+<tr><td><strong>the</strong></td><td>2.891814</td></tr>
+<tr><td><strong>five</strong></td><td>2.795146</td></tr>
+<tr><td><strong>pep</strong></td><td>2.760181</td></tr>
+<tr><td><strong>green</strong></td><td>2.030029</td></tr>
+<tr><td><strong>spin</strong></td><td>1.968326</td></tr>
+<tr><td><strong>soppressata</strong></td><td>1.968326</td></tr>
+<tr><td><strong>calabrese</strong></td><td>1.906623</td></tr>
+<tr><td><strong>mediterraneo</strong></td><td>1.898396</td></tr>
+<tr><td><strong>brie</strong></td><td>0.987248</td></tr>
+</tbody>
+    </table>
+</div>
+    <p>Теперь сразу понятно, что итальянская пицца (<em>ital</em>; <strong>pizza_name_id</strong>) встретилась в 8.72% заказов, а пицца с сыром бри (<em>brie</em>; <strong>pizza_name_id</strong>) менее чем в 1%.</p>
+</section>
+
+<section>
+    <div style="height: 50px;"></div>
+    <h2 id="chapter4-2">4.2 Как визуализировать признаки в Pandas?</h2>
+    <p>Визуализация - важнейший инструмент в анализе данных, помогающий наглядно увидеть ответы на свои вопросы и принять решения. Чтобы понять, как визуализировать тот или иной признак, нужно определить его тип (количественный или категориальный), и только после этого переходить к созданию визуализации. Для построения графиков мы будем использовать метод <span class="code-chip">.plot()</span>.</p>
+
+    <h2>КОЛИЧЕСТВЕННЫЕ ПРИЗНАКИ</h2>
+    <p>Одним из количественных признаков в наших данных является стоимость заказа (<strong>total_price</strong>). Чтобы его визуализировать, можно использовать два графика: <strong>гистограмма</strong> и <strong>ящик с усами</strong>.</p>
+    <h3>Гистограмма</h3>
+    <p>Это график, который представляет распределение данных в виде прямоугольников (интервалов) разной высоты. <strong>По горизонтальной оси (X)</strong> – диапазон значений количественного признака, разбитый на интервалы. <strong>По вертикальной оси (Y)</strong> – частота каждого интервала (Frequency).</p>
+    <p>Чтобы построить гистограмму, нужно написать следуюший код:</p>
+    <p class="fake-code">
+<span class="code-line">датафрейм['признак'].plot(kind='hist')</span>
+    </p>
+    <p><span class="code-chip">kind='hist'</span> - тип графика (гистограмма)</p>
+
+    <pre class="line-numbers"><code class="language-python">df['total_price'].plot(kind='hist')</code></pre>
+
+    <img src="picture/4.2.1.png" width="70%" alt="Рисунок 1">
+
+    <p>Какие выводы мы можем сделать на основе этого графика?</p>
+    <ul>
+        <li>
+            <p>Стоимость заказов варьируется в диапазоне примерно от 10 до 80 долларов (<strong>горизонтальная ось (X)</strong>)</p>
+        </li>
+        <li>
+            <p>Стоимость большинства заказов не превышает 20 долларов. Таких заказов около 30 тыс. (<strong>самый длинный прямоугольник</strong>)</p>
+        </li>
+    </ul>
+
+    <p>При таком построении гистограммы данные автоматически разбиваются на 10 интервалов (прямоугольников), но если мы хотим рассмотреть распределение признака более подробно, можно увеличить количество интервалов, например, до 20 – это регулируется параметром <span class="code-chip">bins</span>:</p>
+    <p class="fake-code">
+<span class="code-line">датафрейм['признак'].plot(kind='hist', bins=количество интервалов)</span>
+    </p>
+
+    <pre class="line-numbers"><code class="language-python">df['total_price'].plot(kind='hist', bins=20)</code></pre>
+    <img src="picture/4.2.2.png" width="70%" alt="Рисунок 2">
+
+<h3>Ящик с усами</h3>
+<p>График, который визуализирует основные описательные статистики количественного признака. <strong>По горизонтальной оси (X)</strong> – диапазон значений количественного признака.</p>
+<p>Для его построения используем следуюший код:</p>
+    <p class="fake-code">
+<span class="code-line">датафрейм['признак'].plot(kind='box', vert=False)</span>
+    </p>
+    <p><span class="code-chip">kind = 'box'</span> - тип графика (ящик с усами)</p>
+    <p><span class="code-chip">vert = False</span> - ящик с усами будет лежать горизонтально</p>
+
+    <pre class="line-numbers"><code class="language-python">df['total_price'].plot(kind='box', vert=False)</code></pre>
+    <img src="picture/4.2.3.png" width="70%" alt="Рисунок 3">
+    <p>Какие выводы мы можем сделать на основе этого графика?</p>
+    <ul>
+        <li>
+<p>Стоимость заказов варьируется в диапазоне, примерно, от 10 до 80 долларов (<strong>горизонтальная ось (X)</strong>)</p>
+        </li>
+    </ul>
+    <p>На самом деле этот график несет гараздо больше информации, мы еще вернемся к нему в Главе 6 "Описательные статистики", а пока нам просто нужно научиться его строить и смотреть на диапазон значений количественного признака по горизонтальной оси.</p>
+    <h3>Диаграмма рассеяния</h3>
+    <p>Гистограмма и ящик с усами показывают <em>распределение одного</em> количественного признака, но если мы хотим посмотреть на <strong>зависимость двух количественных признаков</strong>, используется <strong>диаграмма рассеяния</strong>. Например, мы хотим посмотреть, как стоимость доставки (<strong>delivery_price</strong>) зависит от стоимости заказа (<strong>total_price</strong>) – тогда для построения диаграммы рассеяния применяем следующий синтаксис:</p>
+
+    <p class="fake-code">
+<span class="code-line">датафрейм.plot('признак по оси X', 'признак по оси Y', kind='scatter')</span>
+    </p>
+
+    <p><span class="code-chip">kind = 'scatter'</span>- тип графика (диаграмма рассеяния)</p>
+    <pre class="line-numbers"><code class="language-python">df.plot('total_price', 'delivery_price', kind='scatter')</code></pre>
+
+    <img src="picture/4.2.4.png" width="70%" alt="Рисунок 4">
+
+    <p>Какие выводы мы можем сделать на основе этого графика?</p>
+    <ul>
+        <li>
+            <p>С увеличением стоимости заказа (<strong>горизонтальная ось (X)</strong>) снижается стоимость доставки (<strong>вертикальная ось (Y)</strong>)</p>
+        </li>
+    </ul>
+    <h3>Линейный график</h3>
+    <p>Довольно часто в анализе возникает необходимость посмотреть динамику какого-нибудь количественного показателя на определенном временном отрезке. Сделать это можно с помощью линейного графика.</p>
+    <p>В линейном графике <strong>по горизонтальной оси (X)</strong>, как правило, расположена временная шкала (даты, годы, месяцы и т.п.), а <strong>вертикальная ось (Y)</strong> отражает количественные значения (цены, численность, показатели производительности и т.д.).</p>
+    <p>Мы хотим узнать, как меняется динамика количества заказов пиццы в течение дня (<strong>order_hour</strong>). Чтобы построить такой график, нужно сначала построить частотную таблицу с помощью метода <span class="code-chip">.value_counts()</span>, а уже к полученной частотной таблице применить метод <span class="code-chip">.plot()</span>, без каких либо параметров:</p>
+
+    <p class="fake-code">
+<span class="code-line">датафрейм['признак'].value_counts().plot()</span>
+    </p>
+
+    <p><span class="code-chip">датафрейм['признак'].value_counts()</span> - частотная таблица</p>
+    <p><span class="code-chip">.plot()</span> - линейный график</p>
+
+    <p>Сначала рассмотрим, как выглядит частотная таблица по часам заказа (<strong>order_hour</strong>):</p>
+
+    <pre class="line-numbers"><code class="language-python">df['order_hour'].value_counts()</code></pre>
+
+<div class="scrollable-table">
+        <table border="1" class="dataframe">
+        <thead>
+        <tr style="text-align: right;">
+            <th>order_hour</th>
+            <th>count</th>
+        </tr>
+        </thead>
+        <tbody>
+<tr><td><strong>12</strong></td><td>6543</td></tr>
+<tr><td><strong>13</strong></td><td>6203</td></tr>
+<tr><td><strong>18</strong></td><td>5359</td></tr>
+<tr><td><strong>17</strong></td><td>5143</td></tr>
+<tr><td><strong>19</strong></td><td>4350</td></tr>
+<tr><td><strong>16</strong></td><td>4185</td></tr>
+<tr><td><strong>14</strong></td><td>3521</td></tr>
+<tr><td><strong>20</strong></td><td>3487</td></tr>
+<tr><td><strong>15</strong></td><td>3170</td></tr>
+<tr><td><strong>11</strong></td><td>2672</td></tr>
+<tr><td><strong>21</strong></td><td>2528</td></tr>
+<tr><td><strong>22</strong></td><td>1370</td></tr>
+<tr><td><strong>23</strong></td><td>68</td></tr>
+<tr><td><strong>10</strong></td><td>17</td></tr>
+<tr><td><strong>9</strong></td><td>4</td></tr>
+</tbody>
+    </table>
+    </div>
+</section>
+
+<section>
+    <p>В прошлом разделе мы обсудили, что метод <span class="code-chip">.value_counts()</span> автоматически сортирует таблицу по убыванию частотности – поэтому часы идут не по порядку, а по количеству заказов, совершенных в это время. Для построения графика часы нужно упорядочить, то есть отсортировать частотную таблицу по индексам с помощью метода <span class="code-chip">.sort_index()</span>:</p>
+
+    <pre class="line-numbers"><code class="language-python">df['order_hour'].value_counts().sort_index()</code></pre>
+<div class="scrollable-table">
+            <table border="1" class="dataframe">
+        <thead>
+        <tr style="text-align: right;">
+            <th>order_hour</th>
+            <th>count</th>
+        </tr>
+        </thead>
+        <tbody>
+<tr><td><strong>9</strong></td><td>4</td></tr>
+<tr><td><strong>10</strong></td><td>17</td></tr>
+<tr><td><strong>11</strong></td><td>2672</td></tr>
+<tr><td><strong>12</strong></td><td>6543</td></tr>
+<tr><td><strong>13</strong></td><td>6203</td></tr>
+<tr><td><strong>14</strong></td><td>3521</td></tr>
+<tr><td><strong>15</strong></td><td>3170</td></tr>
+<tr><td><strong>16</strong></td><td>4185</td></tr>
+<tr><td><strong>17</strong></td><td>5143</td></tr>
+<tr><td><strong>18</strong></td><td>5359</td></tr>
+<tr><td><strong>19</strong></td><td>4350</td></tr>
+<tr><td><strong>20</strong></td><td>3487</td></tr>
+<tr><td><strong>21</strong></td><td>2528</td></tr>
+<tr><td><strong>22</strong></td><td>1370</td></tr>
+<tr><td><strong>23</strong></td><td>68</td></tr>
+</tbody>
+    </table>
+</div>
+
+    <p>Теперь мы можем построить <strong>линейный график</strong>, применив к отсортированной частотной таблице метод <span class="code-chip">.plot()</span>:</p>
+
+    <pre class="line-numbers"><code class="language-python">df['order_hour'].value_counts().sort_index().plot()</code></pre>
+
+    <img src="picture/4.2.5.png" width="70%" alt="Рисунок 5">
+
+    <p>Какие выводы мы можем сделать на основе этого графика?</p>
+    <ul>
+        <li>
+            <p>Большинство заказов делают в 12:00 и 18:00 часов (<strong>пики на графике</strong>)</p>
+        </li>
+        <li>
+            <p>До 10:00 заказов практически нет</p>
+        </li>
+    </ul>
+
+    <h2>КАТЕГОРИАЛЬНЫЕ ПРИЗНАКИ</h2>
+
+    <p>Для визуализации категориальных данных используется два графика: <strong>круговая</strong> и <strong>столбчатая диаграмма</strong>. Рассмотрим их подробнее:</p>
+    <h3>Круговая диаграмма</h3>
+    <p>В таком графике данные представлены в виде круга, разделенного на секторы разного размера. Каждый сектор представляет собой долю от общего объема данных.</p>
+    <p>Мы хотим узнать, как распределено количество заказов по категориям пиццы (<strong>pizza_category</strong>).Чтобы построить круговую диаграмму, как и в случае с линейным графиком, нужно сначала построить частотную таблицу, а уже к ней применить метод <span class="code-chip">.plot()</span>:</p>
+
+    <p class="fake-code">
+<span class="code-line">датафрейм['признак'].value_counts().plot(kind='pie')</span>
+    </p>
+
+    <p><span class="code-chip">датафрейм['признак'].value_counts()</span> - частотная таблица</p>
+    <p><span class="code-chip">kind = 'pie'</span> - тип графика (круговая диаграмма)</p>
+
+    <pre class="line-numbers"><code class="language-python">df['pizza_category'].value_counts().plot(kind='pie')</code></pre>
+
+
+    <img src="picture/4.2.6.png" width="70%" alt="Рисунок 6">
+
+    <p>Если категорий в признаке достаточно много, круговая диаграмма будет не лучшим вариантом для его представления. Однако в нашем случае категорий пицц всего четыре, и такой тип графика будет уместен.</p>
+
+    <p>Столбчатая диаграмма</p>
+    <p>Она отображается в виде вертикальных (горизонтальных) полос разной высоты (ширины), каждая из которых соответствует отдельной категории или группе данных.</p>
+    <p>Перед нами та же самая задача: визуализировать распределение числа заказов по категориям пиццы (<strong>pizza_category</strong>). Для этого мы в первую очередь вновь строим частотную таблицу, а только после этого строим график:</p>
+
+    <p class="fake-code">
+<span class="code-line">датафрейм['признак'].value_counts().plot(kind='bar')  # вертикальная</span>
+    </p>
+    <p>или</p>
+    <p class="fake-code">
+<span class="code-line">датафрейм['признак'].value_counts().plot(kind='barh')  # горизонтальная</span>
+    </p>
+
+    <p><span class="code-chip">датафрейм['признак'].value_counts()</span> - частотная таблица</p>
+    <p><span class="code-chip">kind = 'bar'</span> / <span class="code-chip">kind = 'barh'</span> - тип графика (столбчатая диаграмма)</p>
+
+
+    <p>Чтобы построить столбчатую диаграмму с вертикальными столбцами, нужно указать в методе <span class="code-chip">.plot()</span> параметр <span class="code-chip">kind='bar'</span>:</p>
+
+
+    <img src="picture/4.2.7.png" width="70%" alt="Рисунок 7">
+
+
+    <p>Если нужна столбчатая диаграмма с горизонтальными столбцами, нужно указать параметр <span class="code-chip">kind='barh'</span>. <span class="code-chip">h</span> в <span class="code-chip">barh</span> означает <em>horizontal</em> (горизонтальный):</p>
+
+
+    <pre class="line-numbers"><code class="language-python">df['pizza_category'].value_counts().plot(kind='barh')</code></pre>
+
+    <img src="picture/4.2.8.png" width="70%" alt="Рисунок 8">
+
+</section>
+
+
+
+<section><a href="https://edu.hse.ru/mod/quiz/view.php?id=1610931" target="_blank" rel="noopener noreferrer"><button class="check_yourself">Самоопроверка</button></a>&nbsp;<a href="https://edu.hse.ru/mod/quiz/view.php?id=1610932" target="_blank" rel="noopener noreferrer"><button class="check">Практика</button></a>&nbsp;<a href="https://edu.hse.ru/course/view.php?id=236211" target="_blank" rel="noopener noreferrer"><button class="back_to_course">Вернуться к курсу</button></a>
+    <div style="height: 50px;"></div>
+</section>
+    </div>
+
+<!--
+
+    <p><span class="code-chip"></span></p>
+
+-->
+
+<script>
+    const toggleNav = document.getElementById('toggleNav');
+    const sideNav = document.getElementById('sideNav');
+
+    toggleNav.addEventListener('click', () => {
+        sideNav.classList.toggle('open');
+    });
+</script>
+
+
+<script>
+    document.querySelectorAll('.accordion-button').forEach(button => {
+        button.addEventListener('click', () => {
+            button.classList.toggle('active');
+            const content = button.nextElementSibling;
+
+            if (button.classList.contains('active')) {
+                content.style.maxHeight = content.scrollHeight + 'px';
+            } else {
+                content.style.maxHeight = '0';
+            }
+        });
+    });
+</script>

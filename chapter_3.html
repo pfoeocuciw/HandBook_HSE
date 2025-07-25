@@ -1,0 +1,1661 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Hack&display=swap" rel="stylesheet">
+    <title>Глава 3</title>
+    <link rel="stylesheet" href="chapter_1.css">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/pyodide"></script>
+    <script src="libs/prism.js"></script>
+
+</head>
+
+<div class="horizontal-accordion-wrapper">
+    <div class="accordion-left">
+        <button id="toggleNav" class="accordion-button-left" style="color: white; border-color: white;">☰</button>
+    </div>
+    <div id="sideNav" class="accordion-panel-right">
+        <a href="#chapter3"><strong>Глава 3</strong></a>
+        <a href="#chapter3-1">3.1 Создание признака</a>
+        <a href="#chapter3-2">3.2 Именованная функция</a>
+        <a href="#chapter3-3">3.3 Анонимная функция</a>
+    </div>
+
+    <div class="main-content">
+
+<div class="logo-wrapper">
+    <img src="picture/logo.svg" class="logo-top-right" alt="Логотип">
+</div>
+
+<section>
+    <h1 style="font-size: 30px;" id="chapter3">Глава 3. Новые признаки</h1>
+    <div style="height: 10px;"></div>
+    <h2 id="chapter3-1">3.1 Как создать новый признак в данных?</h2>
+    <p>В этой главе мы изучим, как создавать новые столбцы в датафрейме. Создавая признаки, мы можем получить из уже имеющихся данных новую полезную информацию, которая может нам пригодиться для анализа и принятия решений.</p>
+    <p style="display:inline">Давайте снова обратимся к данным по заказам пиццы </p><a style="display:inline" href="https://edu.hse.ru/mod/resource/view.php?id=1610926"><p style="display:inline">pizza.csv:</p></a>
+            <div class="scrollable-table">
+            <table border="1" class="dataframe_new" style="width: 100%;">
+                <thead>
+                <tr>
+                    <th>Признак</th>
+                    <th>Описание</th>
+                    <th>Формат данных(.dtypes)</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th>order_date</th>
+                    <td>дата заказа (день/месяц)</td>
+                    <td>object</td>
+                </tr>
+                <tr>
+                    <th>order_hour</th>
+                    <td>час дня, в который сделан заказ</td>
+                    <td>int64</td>
+                </tr>
+                <tr>
+                    <th>pizza_name_id</th>
+                    <td>вид пиццы (hawaiian, pepperoni и т.д.)</td>
+                    <td>object</td>
+                </tr>
+                <tr>
+                    <th>pizza_size</th>
+                    <td>размер пиццы (S, M, L и т.д.)</td>
+                    <td>object</td>
+                </tr>
+                <tr>
+                    <th>pizza_category</th>
+                    <td>описание пиццы (Classic, Veggie и т.д.)</td>
+                    <td>object</td>
+                </tr>
+                <tr>
+                    <th>quantity</th>
+                    <td>количество пицц</td>
+                    <td>float64</td>
+                </tr>
+                <tr>
+                    <th>total_price</th>
+                    <td>стоимость заказа ($)</td>
+                    <td>float64</td>
+                </tr>                <tr>
+                    <th>pizza_ingredients</th>
+                    <td>ингредиенты</td>
+                    <td>object</td>
+                </tr>                <tr>
+                    <th>delivery_price</th>
+                    <td>стоимость доставки</td>
+                    <td>float64</td>
+                </tr>
+                </tbody>
+            </table>
+            </div>
+<p>Одно <strong>наблюдение</strong> - это один <strong>заказ</strong>.</p>
+        </section>
+
+<section>
+        <pre class="line-numbers"><code class="language-python">import pandas as pd
+
+df = pd.read_csv('pizza.csv')
+df.head()</code></pre>
+
+            <p>Результат работы программы:</p>
+<div class="scrollable-table">
+        <table border="1" class="dataframe">
+        <thead>
+        <tr style="text-align: right;">
+            <th></th>
+            <th>order_date</th>
+            <th>order_hour</th>
+            <th>pizza_name_id</th>
+            <th>pizza_size</th>
+            <th>pizza_category</th>
+            <th>quantity</th>
+            <th>total_price</th>
+            <th>pizza_ingredients</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr>
+            <th>0</th>
+            <td>30/03</td>
+            <td>13</td>
+            <td>big</td>
+            <td>S</td>
+            <td>Classic</td>
+            <td>4.0</td>
+            <td>48.00</td>
+            <td>Bacon, Pepperoni, ...</td>
+        </tr>
+        <tr>
+            <th>1</th>
+            <td>19/09</td>
+            <td>14</td>
+            <td>cali</td>
+            <td>L</td>
+            <td>Chicken</td>
+            <td>4.0</td>
+            <td>83.00</td>
+            <td>Chicken, Artichoke, ...</td>
+        </tr>
+        <tr>
+            <th>2</th>
+            <td>19/05</td>
+            <td>12</td>
+            <td>big</td>
+            <td>S</td>
+            <td>Classic</td>
+            <td>4.0</td>
+            <td>48.00</td>
+            <td>Bacon, Pepperoni, ...</td>
+        </tr>
+        <tr>
+            <th>3</th>
+            <td>13/02</td>
+            <td>13</td>
+            <td>sicilian</td>
+            <td>M</td>
+            <td>Supreme</td>
+            <td>3.0</td>
+            <td>48.75</td>
+            <td>Coarse Sicilian Salami, ...</td>
+        </tr>
+        <tr>
+            <th>4</th>
+            <td>01/06</td>
+            <td>12</td>
+            <td>spicy</td>
+            <td>S</td>
+            <td>Supreme</td>
+            <td>3.0</td>
+            <td>37.50</td>
+            <td>Capocollo, Tomatoes, ...</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</section>
+
+<section>
+    <p>Самый простой способ создать новый признак – это выполнить арифметические операции уже с существующими столбцами. Например, у нас есть колонка <em>количество пицц в заказе</em> (<strong>quantity</strong>) и <em>стоимость заказа</em> (<strong>total_price</strong>), на их основе мы можем посчитать, сколько стоит одна пицца, разделив <strong>total_price</strong> на <strong>quantity</strong>. Назовем этот новый столбец со стоимостью одной пиццы <strong>unit_price:</strong></p>
+            <pre class="line-numbers"><code class="language-python">df['unit_price'] = df['total_price']/df['quantity']  # создаем новый признак unit_price
+df  # выводим датафрейм</code></pre>
+<div class="scrollable-table">
+        <table border="1" class="dataframe">
+        <thead>
+        <tr style="text-align: right;">
+            <th></th>
+            <th>order_date</th>
+            <th>order_hour</th>
+            <th>pizza_name_id</th>
+            <th>pizza_size</th>
+            <th>pizza_category</th>
+            <th>quantity</th>
+            <th>total_price</th>
+            <th>pizza_ingredients</th>
+            <th>unit_price</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+<th>0</th>
+<td>30/03</td>
+<td>13</td>
+<td>big</td>
+<td>S</td>
+<td>Classic</td>
+<td>4.0</td>
+<td>48.00</td>
+<td>Bacon, Pepperoni, ...</td>
+<td>12.00</td>
+</tr>
+<tr>
+<th>1</th>
+<td>19/09</td>
+<td>14</td>
+<td>cali</td>
+<td>L</td>
+<td>Chicken</td>
+<td>4.0</td>
+<td>83.00</td>
+<td>Chicken, Artichoke, ...</td>
+<td>20.75</td>
+</tr>
+<tr>
+<th>2</th>
+<td>19/05</td>
+<td>12</td>
+<td>big</td>
+<td>S</td>
+<td>Classic</td>
+<td>4.0</td>
+<td>48.00</td>
+<td>Bacon, Pepperoni, ...</td>
+<td>12.00</td>
+</tr>
+<tr>
+<th>3</th>
+<td>13/02</td>
+<td>13</td>
+<td>sicilian</td>
+<td>M</td>
+<td>Supreme</td>
+<td>3.0</td>
+<td>48.75</td>
+<td>Coarse Sicilian Salami, ...</td>
+<td>16.25</td>
+</tr>
+<tr>
+<th>4</th>
+<td>01/06</td>
+<td>12</td>
+<td>spicy</td>
+<td>S</td>
+<td>Supreme</td>
+<td>3.0</td>
+<td>37.50</td>
+<td>Capocollo, Tomatoes, ...</td>
+<td>12.50</td>
+</tr>
+<tr>
+<th>...</th>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<th>48615</th>
+<td>01/05</td>
+<td>14</td>
+<td>hawaiian</td>
+<td>S</td>
+<td>Classic</td>
+<td>1.0</td>
+<td>10.50</td>
+<td>Sliced Ham, Pineapple, ...</td>
+<td>10.50</td>
+</tr>
+<tr>
+<th>48616</th>
+<td>01/05</td>
+<td>14</td>
+<td>spicy</td>
+<td>S</td>
+<td>Supreme</td>
+<td>1.0</td>
+<td>12.50</td>
+<td>Capocollo, Tomatoes, ...</td>
+<td>12.50</td>
+</tr>
+<tr>
+<th>48617</th>
+<td>01/05</td>
+<td>14</td>
+<td>veggie</td>
+<td>S</td>
+<td>Veggie</td>
+<td>1.0</td>
+<td>12.00</td>
+<td>Mushrooms, Tomatoes, ...</td>
+<td>12.00</td>
+</tr>
+<tr>
+<th>48618</th>
+<td>01/05</td>
+<td>14</td>
+<td>hawaiian</td>
+<td>L</td>
+<td>Classic</td>
+<td>1.0</td>
+<td>16.50</td>
+<td>Sliced Ham, Pineapple, ...</td>
+<td>16.50</td>
+</tr>
+<tr>
+<th>48619</th>
+<td>01/05</td>
+<td>13</td>
+<td>five</td>
+<td>L</td>
+<td>Veggie</td>
+<td>1.0</td>
+<td>18.50</td>
+<td>Mozzarella Cheese, ...</td>
+<td>18.50</td>
+</tr>
+
+        </tbody>
+    </table>
+    </div>
+
+    <p>В конец таблицы добавился новый признак <strong>unit_price</strong>, показывающий, сколько стоила одна пицца в каждом заказе.</p>
+</section>
+
+<section>
+<div class="important-card">
+    <div class="important-text">
+        Названия столбцов датафрейма не могут повторяться. Создавая новый признак, убедитесь, что столбца с таким названием в данных еще нет.
+    </div>
+</div>
+</section>
+<div style="height: 50px;"></div>
+<section><h2 id="chapter3-2">3.2 Что такое именованная функция?</h2></section>
+
+<section>
+    <p>
+        Довольно часто в анализе приходится перекодировать какие-то признаки – тогда на помощь приходят функции. Один из вариантов функции – <em>именованная функция</em>, которая <strong>создается</strong> с помощью оператора <span class="code-chip">def</span>:
+    </p>
+    <p class="fake-code">
+<span class="code-line">def название функции(аргумент):</span>
+<span class="code-line">&emsp;if условие 1:</span>
+<span class="code-line">&emsp;&emsp;return результат 1</span>
+<span class="code-line">&emsp;elif условие 2:</span>
+<span class="code-line">&emsp;&emsp;return результат 2</span>
+<span class="code-line">&emsp;...</span>
+<span class="code-line">&emsp;else:</span>
+<span class="code-line">&emsp;&emsp;return результат N</span>
+    </p>
+
+    <p>
+        Чтобы применить функцию и получить новый признак в датафрейме, нужно воспользоваться методом <span class="code-chip">.apply()</span>:
+    </p>
+    <p class="fake-code">
+<span class="code-line">датафрейм['новый признак'] = датафрейм['признак'].apply(название функции)</span>
+    </p>
+</section>
+
+<section>
+    <p>
+        В данных есть признак <strong>order_hour</strong>, который показывает, в каком часу был сделан заказ. Из него мы хотим создать новый признак, который будет показывать время заказа: <em>morning</em> до 12 часов, <em>day</em> до 17 часов, <em>evening</em> от 17 и позже. Для начала <strong>создадим</strong> функцию, в которой будет прописан этот алгоритм перекодирования:
+    </p>
+    <pre class="line-numbers"><code class="language-python">def recode(x):        # создаем функцию recode с аргументом x
+  if x < 12:          # если заказ был сделан до 12
+    return 'morning'  # вернуть morning
+  elif x < 17:        # если заказ был сделан до 17
+    return 'day'      # вернуть day
+  else:               # во всех остальных случаях
+    return 'evening'  # вернуть evening
+</code></pre>
+    <p>
+        Аргумент <span class="code-chip">x</span> будет принимать значения того признака, к которому мы применим функцию <span class="code-chip">recode</span>.
+    </p>
+    <p>
+        Теперь <strong>применим</strong> функцию <span class="code-chip">recode</span> к признаку <strong>order_hour</strong> c помощью метода <span class="code-chip">.apply()</span>, а результат работы запишем в новый столбец <strong>order_timeofday</strong>:
+    </p>
+    <pre class="line-numbers"><code class="language-python">df['order_timeofday'] = df['order_hour'].apply(recode)  # применяем функцию recode
+df  # выводим датафрейм</code></pre>
+<div class="scrollable-table">
+        <table border="1" class="dataframe">
+        <thead>
+        <tr style="text-align: right;">
+            <th></th>
+            <th>order_date</th>
+            <th>order_hour</th>
+            <th>pizza_name_id</th>
+            <th>pizza_size</th>
+            <th>pizza_category</th>
+            <th>quantity</th>
+            <th>total_price</th>
+            <th>pizza_ingredients</th>
+            <th>unit_price</th>
+            <th>order_timeofday</th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr>
+<th>0</th>
+<td>30/03</td>
+<td>13</td>
+<td>big</td>
+<td>S</td>
+<td>Classic</td>
+<td>4.0</td>
+<td>48.00</td>
+<td>Bacon, Pepperoni, ...</td>
+<td>12.00</td>
+<td>day</td>
+</tr>
+<tr>
+<th>1</th>
+<td>19/09</td>
+<td>14</td>
+<td>cali</td>
+<td>L</td>
+<td>Chicken</td>
+<td>4.0</td>
+<td>83.00</td>
+<td>Chicken, Artichoke, ...</td>
+<td>20.75</td>
+<td>day</td>
+</tr>
+<tr>
+<th>2</th>
+<td>19/05</td>
+<td>12</td>
+<td>big</td>
+<td>S</td>
+<td>Classic</td>
+<td>4.0</td>
+<td>48.00</td>
+<td>Bacon, Pepperoni, ...</td>
+<td>12.00</td>
+<td>day</td>
+</tr>
+<tr>
+<th>3</th>
+<td>13/02</td>
+<td>13</td>
+<td>sicilian</td>
+<td>M</td>
+<td>Supreme</td>
+<td>3.0</td>
+<td>48.75</td>
+<td>Coarse Sicilian Salami, ...</td>
+<td>16.25</td>
+<td>day</td>
+</tr>
+<tr>
+<th>4</th>
+<td>01/06</td>
+<td>12</td>
+<td>spicy</td>
+<td>S</td>
+<td>Supreme</td>
+<td>3.0</td>
+<td>37.50</td>
+<td>Capocollo, Tomatoes, ...</td>
+<td>12.50</td>
+<td>day</td>
+</tr>
+<tr>
+<th>...</th>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<th>48615</th>
+<td>01/05</td>
+<td>14</td>
+<td>hawaiian</td>
+<td>S</td>
+<td>Classic</td>
+<td>1.0</td>
+<td>10.50</td>
+<td>Sliced Ham, Pineapple, ...</td>
+<td>10.50</td>
+<td>day</td>
+</tr>
+<tr>
+<th>48616</th>
+<td>01/05</td>
+<td>14</td>
+<td>spicy</td>
+<td>S</td>
+<td>Supreme</td>
+<td>1.0</td>
+<td>12.50</td>
+<td>Capocollo, Tomatoes, ...</td>
+<td>12.50</td>
+<td>day</td>
+</tr>
+<tr>
+<th>48617</th>
+<td>01/05</td>
+<td>14</td>
+<td>veggie</td>
+<td>S</td>
+<td>Veggie</td>
+<td>1.0</td>
+<td>12.00</td>
+<td>Mushrooms, Tomatoes, ...</td>
+<td>12.00</td>
+<td>day</td>
+</tr>
+<tr>
+<th>48618</th>
+<td>01/05</td>
+<td>14</td>
+<td>hawaiian</td>
+<td>L</td>
+<td>Classic</td>
+<td>1.0</td>
+<td>16.50</td>
+<td>Sliced Ham, Pineapple, ...</td>
+<td>16.50</td>
+<td>day</td>
+</tr>
+<tr>
+<th>48619</th>
+<td>01/05</td>
+<td>13</td>
+<td>five</td>
+<td>L</td>
+<td>Veggie</td>
+<td>1.0</td>
+<td>18.50</td>
+<td>Mozzarella Cheese, ...</td>
+<td>18.50</td>
+<td>day</td>
+</tr>
+        </tbody>
+        </table>
+        </div>
+
+    <p>
+        К примеру, можно проверить, что функция действительно сработала, сделав фильтрацию, и таким образом найти все вечерние заказы (<em>evening</em>; <strong>order_timeofday</strong>):
+    </p>
+    <pre class="line-numbers"><code class="language-python">df[df['order_timeofday'] == 'evening']</code></pre>
+    <div class="scrollable-table">    
+    <table border="1" class="dataframe">
+        <thead>
+        <tr style="text-align: right;">
+            <th></th>
+            <th>order_date</th>
+            <th>order_hour</th>
+            <th>pizza_name_id</th>
+            <th>pizza_size</th>
+            <th>pizza_category</th>
+            <th>quantity</th>
+            <th>total_price</th>
+            <th>pizza_ingredients</th>
+            <th>unit_price</th>
+            <th>order_timeofday</th>
+        </tr>
+        </thead>
+        <tbody>
+<tr>
+<th>20</th>
+<td>03/10</td>
+<td>21</td>
+<td>hawaiian</td>
+<td>L</td>
+<td>Classic</td>
+<td>3.0</td>
+<td>49.50</td>
+<td>Sliced Ham, Pineapple, ...</td>
+<td>16.50</td>
+<td>evening</td>
+</tr>
+<tr>
+<th>23</th>
+<td>04/05</td>
+<td>18</td>
+<td>big</td>
+<td>S</td>
+<td>Classic</td>
+<td>3.0</td>
+<td>36.00</td>
+<td>Bacon, Pepperoni, ...</td>
+<td>12.00</td>
+<td>evening</td>
+</tr>
+<tr>
+<th>25</th>
+<td>21/05</td>
+<td>17</td>
+<td>big</td>
+<td>S</td>
+<td>Classic</td>
+<td>2.0</td>
+<td>24.00</td>
+<td>Bacon, Pepperoni, ...</td>
+<td>12.00</td>
+<td>evening</td>
+</tr>
+<tr>
+<th>39</th>
+<td>08/01</td>
+<td>17</td>
+<td>ital</td>
+<td>L</td>
+<td>Classic</td>
+<td>2.0</td>
+<td>41.00</td>
+<td>Capocollo, Red Peppers, ...</td>
+<td>20.50</td>
+<td>evening</td>
+</tr>
+<tr>
+<th>50</th>
+<td>04/10</td>
+<td>18</td>
+<td>southw</td>
+<td>L</td>
+<td>Chicken</td>
+<td>2.0</td>
+<td>41.50</td>
+<td>Chicken, Tomatoes, ...</td>
+<td>20.75</td>
+<td>evening</td>
+</tr>
+<tr>
+<th>...</th>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<th>48562</th>
+<td>30/04</td>
+<td>22</td>
+<td>the</td>
+<td>XL</td>
+<td>Classic</td>
+<td>1.0</td>
+<td>25.50</td>
+<td>Kalamata Olives, ...</td>
+<td>25.50</td>
+<td>evening</td>
+</tr>
+<tr>
+<th>48571</th>
+<td>30/04</td>
+<td>21</td>
+<td>five</td>
+<td>L</td>
+<td>Veggie</td>
+<td>1.0</td>
+<td>18.50</td>
+<td>Mozzarella Cheese, ...</td>
+<td>18.50</td>
+<td>evening</td>
+</tr>
+<tr>
+<th>48592</th>
+<td>01/05</td>
+<td>17</td>
+<td>bbq</td>
+<td>L</td>
+<td>Chicken</td>
+<td>1.0</td>
+<td>20.75</td>
+<td>Barbecued Chicken, ...</td>
+<td>20.75</td>
+<td>evening</td>
+</tr>
+<tr>
+<th>48593</th>
+<td>01/05</td>
+<td>17</td>
+<td>green</td>
+<td>S</td>
+<td>Veggie</td>
+<td>1.0</td>
+<td>12.00</td>
+<td>Spinach, Mushrooms, ...</td>
+<td>12.00</td>
+<td>evening</td>
+</tr>
+<tr>
+<th>48594</th>
+<td>01/05</td>
+<td>17</td>
+<td>pepperoni</td>
+<td>L</td>
+<td>Classic</td>
+<td>1.0</td>
+<td>15.25</td>
+<td>Mozzarella Cheese, Pepperoni</td>
+<td>15.25</td>
+<td>evening</td>
+</tr>
+<tr>
+<td></td>
+</tr>
+        </tbody>
+        </table>
+        </div>
+</section>
+
+<section>
+    <div style="height: 50px;"></div>
+    <h2 id="chapter3-3">3.3 Что такое анонимная функция?</h2>
+    <p>Именованная функция удобна, когда у нас 3 условия и более. Однако когда условий меньше, проще использовать <strong>анонимную</strong> функцию, которая реализуется с помощью оператора <span class="code-chip">lambda</span>. Она удобна тем, что ее можно <strong>сразу применить</strong> без предварительного создания:</p>
+    <p class="fake-code">
+<span class="code-line">датафрейм['новый признак'] = датафрейм['признак'].apply(lambda аргумент: результат 1 if условие else результат 2)</span>
+    </p>
+    <p>или</p>
+    <p class="fake-code">
+<span class="code-line">датафрейм['новый признак'] = датафрейм['признак'].apply(lambda аргумент: инструкция)</span>
+    </p>
+    <p>Например, мы хотим создать новый бинарный признак <strong>unit_price_recoded</strong> по следующему правилу: если цена пиццы (<strong>unit_price</strong>) более 20 долларов, то вернуть 1, иначе 0.</p>
+    <pre class="line-numbers"><code class="language-python">df['unit_price_recoded'] = df['unit_price'].apply(lambda x: 1 if x > 20 else 0)
+df</code></pre>
+<p><span class="code-chip">df['unit_price_recoded']</span> - создаем новый признак <strong>unit_price_recoded</strong></p>
+<p><span class="code-chip">df['unit_price']</span> - источник данных для функции</p>
+<p><span class="code-chip">.apply()</span> - применяем функцию</p>
+<p><span class="code-chip">lambda x:</span> - создаем анонимную функцию с аргументом <span class="code-chip">x</span></p>
+<p><span class="code-chip">1 if x > 20 else 0</span> - вернуть <span class="code-chip">1</span> если <strong>unit_price</strong> больше 20, иначе вернуть <span class="code-chip">0</span></p>
+
+<div class="scrollable-table">
+    <table border="1" class="dataframe">
+        <thead>
+        <tr style="text-align: right;">
+            <th></th>
+            <th>order_date</th>
+            <th>order_hour</th>
+            <th>pizza_name_id</th>
+            <th>pizza_size</th>
+            <th>pizza_category</th>
+            <th>quantity</th>
+            <th>total_price</th>
+            <th>pizza_ingredients</th>
+            <th>unit_price</th>
+            <th>order_timeofday</th>
+            <th>unit_price_recoded</th>
+        </tr>
+        </thead>
+        <tbody>
+<tr>
+<th>20</th>
+<td>03/10</td>
+<td>21</td>
+<td>hawaiian</td>
+<td>L</td>
+<td>Classic</td>
+<td>3.0</td>
+<td>49.50</td>
+<td>Sliced Ham, Pineapple, ...</td>
+<td>16.50</td>
+<td>evening</td>
+<td>0</td>
+</tr>
+<tr>
+<th>23</th>
+<td>04/05</td>
+<td>18</td>
+<td>big</td>
+<td>S</td>
+<td>Classic</td>
+<td>3.0</td>
+<td>36.00</td>
+<td>Bacon, Pepperoni, ...</td>
+<td>12.00</td>
+<td>evening</td>
+<td>1</td>
+</tr>
+<tr>
+<th>25</th>
+<td>21/05</td>
+<td>17</td>
+<td>big</td>
+<td>S</td>
+<td>Classic</td>
+<td>2.0</td>
+<td>24.00</td>
+<td>Bacon, Pepperoni, ...</td>
+<td>12.00</td>
+<td>evening</td>
+<td>0</td>
+</tr>
+<tr>
+<th>39</th>
+<td>08/01</td>
+<td>17</td>
+<td>ital</td>
+<td>L</td>
+<td>Classic</td>
+<td>2.0</td>
+<td>41.00</td>
+<td>Capocollo, Red Peppers, ...</td>
+<td>20.50</td>
+<td>evening</td>
+<td>0</td>
+</tr>
+<tr>
+<th>50</th>
+<td>04/10</td>
+<td>18</td>
+<td>southw</td>
+<td>L</td>
+<td>Chicken</td>
+<td>2.0</td>
+<td>41.50</td>
+<td>Chicken, Tomatoes, ...</td>
+<td>20.75</td>
+<td>evening</td>
+<td>0</td>
+</tr>
+<tr>
+<th>...</th>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<th>48562</th>
+<td>30/04</td>
+<td>22</td>
+<td>the</td>
+<td>XL</td>
+<td>Classic</td>
+<td>1.0</td>
+<td>25.50</td>
+<td>Kalamata Olives, ...</td>
+<td>25.50</td>
+<td>evening</td>
+<td>0</td>
+</tr>
+<tr>
+<th>48571</th>
+<td>30/04</td>
+<td>21</td>
+<td>five</td>
+<td>L</td>
+<td>Veggie</td>
+<td>1.0</td>
+<td>18.50</td>
+<td>Mozzarella Cheese, ...</td>
+<td>18.50</td>
+<td>evening</td>
+<td>0</td>
+</tr>
+<tr>
+<th>48592</th>
+<td>01/05</td>
+<td>17</td>
+<td>bbq</td>
+<td>L</td>
+<td>Chicken</td>
+<td>1.0</td>
+<td>20.75</td>
+<td>Barbecued Chicken, ...</td>
+<td>20.75</td>
+<td>evening</td>
+<td>0</td>
+</tr>
+<tr>
+<th>48593</th>
+<td>01/05</td>
+<td>17</td>
+<td>green</td>
+<td>S</td>
+<td>Veggie</td>
+<td>1.0</td>
+<td>12.00</td>
+<td>Spinach, Mushrooms, ...</td>
+<td>12.00</td>
+<td>evening</td>
+<td>0</td>
+</tr>
+<tr>
+<th>48594</th>
+<td>01/05</td>
+<td>17</td>
+<td>pepperoni</td>
+<td>L</td>
+<td>Classic</td>
+<td>1.0</td>
+<td>15.25</td>
+<td>Mozzarella Cheese, Pepperoni</td>
+<td>15.25</td>
+<td>evening</td>
+<td>0</td>
+</tr>
+<tr>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</section>
+
+<section>
+    <p>Для создания новых признаков могут быть полезны операторы, функции и методы строк:</p>
+    <div class="table-container">
+    <table border="1" class="dataframe_new" style="width: 100%;">
+        <thead>
+        <tr style="text-align: right; width: 100%">
+            <th>МЕТОД/ФУНКЦИЯ/ОПЕРАТОРЫ</th>
+            <th>ОПИСАНИЕ</th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="code-chip">'строка' in x</span></th>
+                <td>наличие 'строки' в объекте x</td>
+            </tr>
+            <tr>
+                <th><span class="code-chip">x.count('строка')</span></th>
+                <td>подсчет количества вхождение 'строки' в объект x</td>
+            </tr>
+            <tr>
+                <th><span class="code-chip">len(x)</span></th>
+                <td>длина объекта x</td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+
+    <p>
+        Например, мы хотим узнать, есть ли среди ингредиентов (<strong>pizza_ingredients</strong>) перец (<em>Pepper</em>). Другими словами, нужно проверить наличие <em>Pepper</em> в каждом значении признака <strong>pizza_ingredients</strong>. Если признак есть, вернуть 1, а иначе 0. Создадим для этого новый столбец <strong>pepper_check</strong>:
+    </p>
+        <pre class="line-numbers"><code class="language-python">df['pepper_check'] = df['pizza_ingredients'].apply(lambda x: 1 if 'Pepper' in x else 0)
+df  # выводим датафрейм</code></pre>
+    <p><span class="code-chip">df['pepper_check']</span> - создаем новый признак <strong>pepper_check</strong></p>
+    <p><span class="code-chip">df['pizza_ingredients']</span> - источник данных для функции</p>
+    <p><span class="code-chip">.apply()</span> - применяем функцию</p>
+    <p><span class="code-chip">lambda x:</span> - создаем анонимную функцию с аргументом <span class="code-chip">x</span></p>
+    <p><span class="code-chip">1 if 'Pepper' in x else 0</span> - вернуть <span class="code-chip">1</span> если <span class="code-chip">'Pepper'</span> в <strong>pizza_ingredients</strong>, иначе вернуть <span class="code-chip">0</span></p>
+<div class="scrollable-table">
+        <table border="1" class="dataframe">
+        <thead>
+        <tr style="text-align: right;">
+            <th></th>
+            <th>order_date</th>
+            <th>order_hour</th>
+            <th>pizza_name_id</th>
+            <th>pizza_size</th>
+            <th>pizza_category</th>
+            <th>quantity</th>
+            <th>total_price</th>
+            <th>pizza_ingredients</th>
+            <th>unit_price</th>
+            <th>order_timeofday</th>
+            <th>unit_price_recoded</th>
+            <th>pepper_check</th>
+        </tr>
+        </thead>
+        <tbody>
+<tr>
+<th>20</th>
+<td>03/10</td>
+<td>21</td>
+<td>hawaiian</td>
+<td>L</td>
+<td>Classic</td>
+<td>3.0</td>
+<td>49.50</td>
+<td>Sliced Ham, Pineapple, ...</td>
+<td>16.50</td>
+<td>evening</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<th>23</th>
+<td>04/05</td>
+<td>18</td>
+<td>big</td>
+<td>S</td>
+<td>Classic</td>
+<td>3.0</td>
+<td>36.00</td>
+<td>Bacon, Pepperoni, ...</td>
+<td>12.00</td>
+<td>evening</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<th>25</th>
+<td>21/05</td>
+<td>17</td>
+<td>big</td>
+<td>S</td>
+<td>Classic</td>
+<td>2.0</td>
+<td>24.00</td>
+<td>Bacon, Pepperoni, ...</td>
+<td>12.00</td>
+<td>evening</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<th>39</th>
+<td>08/01</td>
+<td>17</td>
+<td>ital</td>
+<td>L</td>
+<td>Classic</td>
+<td>2.0</td>
+<td>41.00</td>
+<td>Capocollo, Red Peppers, ...</td>
+<td>20.50</td>
+<td>evening</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<th>50</th>
+<td>04/10</td>
+<td>18</td>
+<td>southw</td>
+<td>L</td>
+<td>Chicken</td>
+<td>2.0</td>
+<td>41.50</td>
+<td>Chicken, Tomatoes, ...</td>
+<td>20.75</td>
+<td>evening</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<th>...</th>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<th>48562</th>
+<td>30/04</td>
+<td>22</td>
+<td>the</td>
+<td>XL</td>
+<td>Classic</td>
+<td>1.0</td>
+<td>25.50</td>
+<td>Kalamata Olives, ...</td>
+<td>25.50</td>
+<td>evening</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<th>48571</th>
+<td>30/04</td>
+<td>21</td>
+<td>five</td>
+<td>L</td>
+<td>Veggie</td>
+<td>1.0</td>
+<td>18.50</td>
+<td>Mozzarella Cheese, ...</td>
+<td>18.50</td>
+<td>evening</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<th>48592</th>
+<td>01/05</td>
+<td>17</td>
+<td>bbq</td>
+<td>L</td>
+<td>Chicken</td>
+<td>1.0</td>
+<td>20.75</td>
+<td>Barbecued Chicken, ...</td>
+<td>20.75</td>
+<td>evening</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<th>48593</th>
+<td>01/05</td>
+<td>17</td>
+<td>green</td>
+<td>S</td>
+<td>Veggie</td>
+<td>1.0</td>
+<td>12.00</td>
+<td>Spinach, Mushrooms, ...</td>
+<td>12.00</td>
+<td>evening</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<th>48594</th>
+<td>01/05</td>
+<td>17</td>
+<td>pepperoni</td>
+<td>L</td>
+<td>Classic</td>
+<td>1.0</td>
+<td>15.25</td>
+<td>Mozzarella Cheese, Pepperoni</td>
+<td>15.25</td>
+<td>evening</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p>Если мы хотим посчитать количество ингредиентов (<strong>pizza_ingredients</strong>) в каждой пицце, нам в этом поможет метод <span class="code-chip">.count()</span>. Можно заметить, что ингредиенты перечислены через запятую с пробелом:</p>
+<div class="scrollable-table">    
+<table border="1" class="dataframe">
+        <thead>
+        <tr style="text-align: right;">
+            <th>pizza_ingredients</th>
+            <th>КОЛИЧЕСТВО ИНГРЕДИЕНТОВ</th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>ингредиент</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td>ингредиент1, ингредиент2</td>
+                <td>2</td>
+            </tr>
+            <tr>
+                <td>ингредиент1, ингредиент2, ингредиент3</td>
+                <td>3</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+    <p>Если в значении нет запятых с пробелом, то вернуть 1, если есть одна запятая с пробелом, то вернуть 2 и т.д. Другими словами посчитать количество запятых с пробелом и прибавить 1 (<span class="code-chip">x.count(', ') + 1</span>). Создадим новый признак <strong>ingr_count</strong> по этой логике:</p>
+    <pre class="line-numbers"><code class="language-python">df['ingr_count'] = df['pizza_ingredients'].apply(lambda x: x.count(', ') + 1)
+df  # выводим датафрейм</code></pre>
+
+<p><span class="code-chip">df['ingr_count']</span> - создаем новый признак <strong>ingr_count</strong></p>
+<p><span class="code-chip">df['pizza_ingredients']</span> - источник данных для функции</p>
+<p><span class="code-chip">.apply()</span> - применяем функцию</p>
+<p><span class="code-chip">lambda x:</span> - создаем анонимную функцию с аргументом <span class="code-chip">x</span></p>
+<p><span class="code-chip">x.count(', ') + 1</span> - вернет количество <span class="code-chip">', '</span> + 1 в значениях признака <strong>pizza_ingredients</strong></p>
+<div class="scrollable-table">
+        <table border="1" class="dataframe">
+        <thead>
+        <tr style="text-align: right;">
+            <th></th>
+            <th>order_date</th>
+            <th>order_hour</th>
+            <th>pizza_name_id</th>
+            <th>pizza_size</th>
+            <th>pizza_category</th>
+            <th>quantity</th>
+            <th>total_price</th>
+            <th>pizza_ingredients</th>
+            <th>unit_price</th>
+            <th>order_timeofday</th>
+            <th>unit_price_recoded</th>
+            <th>pepper_check</th>
+            <th>ingr_count</th>
+        </tr>
+        </thead>
+        <tbody>
+<tr>
+<th>20</th>
+<td>03/10</td>
+<td>21</td>
+<td>hawaiian</td>
+<td>L</td>
+<td>Classic</td>
+<td>3.0</td>
+<td>49.50</td>
+<td>Sliced Ham, Pineapple, ...</td>
+<td>16.50</td>
+<td>evening</td>
+<td>0</td>
+<td>1</td>
+<td>4</td>
+</tr>
+<tr>
+<th>23</th>
+<td>04/05</td>
+<td>18</td>
+<td>big</td>
+<td>S</td>
+<td>Classic</td>
+<td>3.0</td>
+<td>36.00</td>
+<td>Bacon, Pepperoni, ...</td>
+<td>12.00</td>
+<td>evening</td>
+<td>1</td>
+<td>1</td>
+<td>7</td>
+</tr>
+<tr>
+<th>25</th>
+<td>21/05</td>
+<td>17</td>
+<td>big</td>
+<td>S</td>
+<td>Classic</td>
+<td>2.0</td>
+<td>24.00</td>
+<td>Bacon, Pepperoni, ...</td>
+<td>12.00</td>
+<td>evening</td>
+<td>0</td>
+<td>1</td>
+<td>4</td>
+</tr>
+<tr>
+<th>39</th>
+<td>08/01</td>
+<td>17</td>
+<td>ital</td>
+<td>L</td>
+<td>Classic</td>
+<td>2.0</td>
+<td>41.00</td>
+<td>Capocollo, Red Peppers, ...</td>
+<td>20.50</td>
+<td>evening</td>
+<td>0</td>
+<td>0</td>
+<td>6</td>
+</tr>
+<tr>
+<th>50</th>
+<td>04/10</td>
+<td>18</td>
+<td>southw</td>
+<td>L</td>
+<td>Chicken</td>
+<td>2.0</td>
+<td>41.50</td>
+<td>Chicken, Tomatoes, ...</td>
+<td>20.75</td>
+<td>evening</td>
+<td>0</td>
+<td>0</td>
+<td>6</td>
+</tr>
+<tr>
+<th>...</th>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<th>48562</th>
+<td>30/04</td>
+<td>22</td>
+<td>the</td>
+<td>XL</td>
+<td>Classic</td>
+<td>1.0</td>
+<td>25.50</td>
+<td>Kalamata Olives, ...</td>
+<td>25.50</td>
+<td>evening</td>
+<td>0</td>
+<td>0</td>
+<td>3</td>
+</tr>
+<tr>
+<th>48571</th>
+<td>30/04</td>
+<td>21</td>
+<td>five</td>
+<td>L</td>
+<td>Veggie</td>
+<td>1.0</td>
+<td>18.50</td>
+<td>Mozzarella Cheese, ...</td>
+<td>18.50</td>
+<td>evening</td>
+<td>0</td>
+<td>0</td>
+<td>6</td>
+</tr>
+<tr>
+<th>48592</th>
+<td>01/05</td>
+<td>17</td>
+<td>bbq</td>
+<td>L</td>
+<td>Chicken</td>
+<td>1.0</td>
+<td>20.75</td>
+<td>Barbecued Chicken, ...</td>
+<td>20.75</td>
+<td>evening</td>
+<td>0</td>
+<td>1</td>
+<td>8</td>
+</tr>
+<tr>
+<th>48593</th>
+<td>01/05</td>
+<td>17</td>
+<td>green</td>
+<td>S</td>
+<td>Veggie</td>
+<td>1.0</td>
+<td>12.00</td>
+<td>Spinach, Mushrooms, ...</td>
+<td>12.00</td>
+<td>evening</td>
+<td>0</td>
+<td>0</td>
+<td>3</td>
+</tr>
+<tr>
+<th>48594</th>
+<td>01/05</td>
+<td>17</td>
+<td>pepperoni</td>
+<td>L</td>
+<td>Classic</td>
+<td>1.0</td>
+<td>15.25</td>
+<td>Mozzarella Cheese, Pepperoni</td>
+<td>15.25</td>
+<td>evening</td>
+<td>0</td>
+<td>0</td>
+<td>6</td>
+</tr>
+<tr>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p>Когда нужно просто посчитать количество символов в строке, достаточно будет воспользоваться функцией <span class="code-chip">len()</span>. Посчитаем длину значений признака <strong>pizza_ingredients</strong>, а результат сохраним в новый столбец <strong>len_ingr</strong></p>
+    <pre class="line-numbers"><code class="language-python">df['len_ingr'] = df['pizza_ingredients'].apply(lambda x: len(x))
+df  # выводим датафрейм</code></pre>
+
+<p><span class="code-chip">df['len_ingr']</span> - создаем новый признак <strong>ingr_count</strong></p>
+<p><span class="code-chip">df['pizza_ingredients']</span> - источник данных для функции</p>
+<p><span class="code-chip">.apply()</span> - применяем функцию</p>
+<p><span class="code-chip">lambda x:</span> - создаем анонимную функцию с аргументом <span class="code-chip">x</span></p>
+<p><span class="code-chip">len(x)</span> - вернет количество символов в значениях признака <strong>pizza_ingredients</strong></p>
+
+
+<div class="scrollable-table">
+        <table border="1" class="dataframe table-container">
+        <thead>
+        <tr style="text-align: right;">
+            <th></th>
+            <th>order_date</th>
+            <th>order_hour</th>
+            <th>pizza_name_id</th>
+            <th>pizza_size</th>
+            <th>pizza_category</th>
+            <th>quantity</th>
+            <th>total_price</th>
+            <th>pizza_ingredients</th>
+            <th>unit_price</th>
+            <th>order_timeofday</th>
+            <th>unit_price_recoded</th>
+            <th>pepper_check</th>
+            <th>ingr_count</th>
+            <th>len_ingr</th>
+        </tr>
+        </thead>
+        <tbody>
+<tr>
+<th>20</th>
+<td>03/10</td>
+<td>21</td>
+<td>hawaiian</td>
+<td>L</td>
+<td>Classic</td>
+<td>3.0</td>
+<td>49.50</td>
+<td>Sliced Ham, Pineapple, ...</td>
+<td>16.50</td>
+<td>evening</td>
+<td>0</td>
+<td>1</td>
+<td>4</td>
+<td>50</td>
+</tr>
+<tr>
+<th>23</th>
+<td>04/05</td>
+<td>18</td>
+<td>big</td>
+<td>S</td>
+<td>Classic</td>
+<td>3.0</td>
+<td>36.00</td>
+<td>Bacon, Pepperoni, ...</td>
+<td>12.00</td>
+<td>evening</td>
+<td>1</td>
+<td>1</td>
+<td>7</td>
+<td>83</td>
+</tr>
+<tr>
+<th>25</th>
+<td>21/05</td>
+<td>17</td>
+<td>big</td>
+<td>S</td>
+<td>Classic</td>
+<td>2.0</td>
+<td>24.00</td>
+<td>Bacon, Pepperoni, ...</td>
+<td>12.00</td>
+<td>evening</td>
+<td>0</td>
+<td>1</td>
+<td>4</td>
+<td>50</td>
+</tr>
+<tr>
+<th>39</th>
+<td>08/01</td>
+<td>17</td>
+<td>ital</td>
+<td>L</td>
+<td>Classic</td>
+<td>2.0</td>
+<td>41.00</td>
+<td>Capocollo, Red Peppers, ...</td>
+<td>20.50</td>
+<td>evening</td>
+<td>0</td>
+<td>0</td>
+<td>6</td>
+<td>80</td>
+</tr>
+<tr>
+<th>50</th>
+<td>04/10</td>
+<td>18</td>
+<td>southw</td>
+<td>L</td>
+<td>Chicken</td>
+<td>2.0</td>
+<td>41.50</td>
+<td>Chicken, Tomatoes, ...</td>
+<td>20.75</td>
+<td>evening</td>
+<td>0</td>
+<td>0</td>
+<td>6</td>
+<td>71</td>
+</tr>
+<tr>
+<th>...</th>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<th>48562</th>
+<td>30/04</td>
+<td>22</td>
+<td>the</td>
+<td>XL</td>
+<td>Classic</td>
+<td>1.0</td>
+<td>25.50</td>
+<td>Kalamata Olives, ...</td>
+<td>25.50</td>
+<td>evening</td>
+<td>0</td>
+<td>0</td>
+<td>3</td>
+<td>40</td>
+</tr>
+<tr>
+<th>48571</th>
+<td>30/04</td>
+<td>21</td>
+<td>five</td>
+<td>L</td>
+<td>Veggie</td>
+<td>1.0</td>
+<td>18.50</td>
+<td>Mozzarella Cheese, ...</td>
+<td>18.50</td>
+<td>evening</td>
+<td>0</td>
+<td>0</td>
+<td>6</td>
+<td>71</td>
+</tr>
+<tr>
+<th>48592</th>
+<td>01/05</td>
+<td>17</td>
+<td>bbq</td>
+<td>L</td>
+<td>Chicken</td>
+<td>1.0</td>
+<td>20.75</td>
+<td>Barbecued Chicken, ...</td>
+<td>20.75</td>
+<td>evening</td>
+<td>0</td>
+<td>1</td>
+<td>8</td>
+<td>86</td>
+</tr>
+<tr>
+<th>48593</th>
+<td>01/05</td>
+<td>17</td>
+<td>green</td>
+<td>S</td>
+<td>Veggie</td>
+<td>1.0</td>
+<td>12.00</td>
+<td>Spinach, Mushrooms, ...</td>
+<td>12.00</td>
+<td>evening</td>
+<td>0</td>
+<td>0</td>
+<td>3</td>
+<td>40</td>
+</tr>
+<tr>
+<th>48594</th>
+<td>01/05</td>
+<td>17</td>
+<td>pepperoni</td>
+<td>L</td>
+<td>Classic</td>
+<td>1.0</td>
+<td>15.25</td>
+<td>Mozzarella Cheese, Pepperoni</td>
+<td>15.25</td>
+<td>evening</td>
+<td>0</td>
+<td>0</td>
+<td>6</td>
+<td>92</td>
+</tr>
+<tr>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+
+<section><a href="https://google.com" target="_blank" rel="noopener noreferrer"><button class="check_yourself">Самоопроверка</button></a>&nbsp;<a href="https://edu.hse.ru/mod/quiz/view.php?id=1606511" target="_blank" rel="noopener noreferrer"><button class="check">Практика</button></a>&nbsp;<a href="https://edu.hse.ru/course/view.php?id=236211)" target="_blank" rel="noopener noreferrer"><button class="back_to_course">Вернуться к курсу</button></a>
+    <div style="height: 50px;"></div>
+</section>
+    </div>
+</div>
+<script>
+    const toggleNav = document.getElementById('toggleNav');
+    const sideNav = document.getElementById('sideNav');
+
+    toggleNav.addEventListener('click', () => {
+        sideNav.classList.toggle('open');
+    });
+</script>
+
+<script>
+    document.querySelectorAll('.accordion-button').forEach(button => {
+        button.addEventListener('click', () => {
+            button.classList.toggle('active');
+            const content = button.nextElementSibling;
+
+            if (button.classList.contains('active')) {
+                content.style.maxHeight = content.scrollHeight + 'px';
+            } else {
+                content.style.maxHeight = '0';
+            }
+        });
+    });
+</script>
