@@ -252,8 +252,8 @@ a {
     color: black;
     font-family: 'Hack', monospace;
     font-size: 15px;             /* читаемый размер */
-    padding: 4px 8px;            /* МЕНЬШЕ отступов → тоньше блок */
-    line-height: 1.1;            /* МЕНЬШЕ межстрочное расстояние */
+    padding: 0px 8px;            /* МЕНЬШЕ отступов → тоньше блок */
+    line-height: 1.5;            /* МЕНЬШЕ межстрочное расстояние */
     border-radius: 4px;
     width: 100%;
     max-width: 100%;
