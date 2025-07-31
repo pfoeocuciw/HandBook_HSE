@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="https://fonts.googleapis.com/css2?family=Hack&display=swap" rel="stylesheet">
+    <title>Глава 5</title>
+    <link rel="stylesheet" href="chapter_1.css">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/pyodide"></script>
+    <script src="libs/prism.js"></script>
+
+</head>
+<div class="horizontal-accordion-wrapper">
+    <div class="accordion-left">
+        <button id="toggleNav" class="accordion-button-left" style="color: white; border-color: white;">☰</button>
+    </div>
+    <div id="sideNav" class="accordion-panel-right_2">
+        <a href="#chapter5"><strong>Глава 5</strong></a>
+        <a href="#chapter5-1">5.1 Агрегирование данных</a>
+        <a href="#chapter5-2">5.2 Сводная таблица</a>
+    </div>
+    <div class="main-content">
+        <div class="logo-wrapper">
+            <img src="picture/logo.svg" class="logo-top-right" alt="Логотип">
+        </div>
+        <section>
+        <h1 style="font-size: 30px;" id="chapter5">Глава 5. Агрегирование данных. Сводные таблицы</h1>
+        <h2 id="chapter5-1">5.1 Что такое агрегирование данных?</h2>
+        <p>В этом разделе мы познакомимся с важным инструментом анализа данных — агрегированием.</p>
+        <div class="definition-card">
+            <div class="definition-text">
+                <strong>Агрегирование данных</strong> — это процесс преобразования множества отдельных значений в единые итоговые показатели путем расчета общих характеристик, таких как среднее, сумма и т.д.
+            </div>
+        </div>
+        <p>Чтобы применить <strong>метод</strong> к <strong>признаку</strong> в <strong>датафрейме</strong>(<span class="code-chip">DataFrame</span>), нужно написать:</p>
+        <p class="fake-code">
+<span class="code-line">датафрейм['признак'].метод()</span>
+        </p>
+        <p>Если вы работаете с <strong>серией</strong>(<span class="code-chip">Series</span>):</p>
+        <p class="fake-code">
+<span class="code-line">серия.метод()</span>
+        </p>
+            <p style="font-size: 25px;"><strong>Методы агрегирования</strong></p>
+        <p>Представим, что мы недавно открыли свою пиццерию и хотим проанализировать
+            заказы клиентов за прошедший год, чтобы оптимизировать ассортимент и
+            маркетинговую стратегию, и в итоге повысить прибыльность бизнеса. Для этого
+            у нас есть набор данных pizza.csv</a>, включающий информацию о заказах пиццы за этот период:</p>
+        <div class="scrollable-table">
+            <table border="1" class="dataframe_new" style="width: 100%;">
+                <thead>
+                <tr>
+                    <th>Признак</th>
+                    <th>Описание</th>
+                    <th>Формат данных(.dtypes)</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th>order_date</th>
+                    <td>дата заказа (день/месяц)</td>
+                    <td>object</td>
+                </tr>
+                <tr>
+                    <th>order_hour</th>
+                    <td>час дня, в который сделан заказ</td>
+                    <td>int64</td>
+                </tr>
+                <tr>
+                    <th>pizza_name_id</th>
+                    <td>вид пиццы (hawaiian, pepperoni и т.д.)</td>
+                    <td>object</td>
+                </tr>
+                <tr>
+                    <th>pizza_size</th>
+                    <td>размер пиццы (S, M, L и т.д.)</td>
+                    <td>object</td>
+                </tr>
+                <tr>
+                    <th>pizza_category</th>
+                    <td>описание пиццы (Classic, Veggie и т.д.)</td>
+                    <td>object</td>
+                </tr>
+                <tr>
+                    <th>quantity</th>
+                    <td>количество пицц</td>
+                    <td>float64</td>
+                </tr>
+                <tr>
+                    <th>total_price</th>
+                    <td>стоимость заказа ($)</td>
+                    <td>float64</td>
+                </tr>                <tr>
+                    <th>pizza_ingredients</th>
+                    <td>ингредиенты</td>
+                    <td>object</td>
+                </tr>                <tr>
+                    <th>delivery_price</th>
+                    <td>стоимость доставки</td>
+                    <td>float64</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <p>Одно <strong>наблюдение</strong> - это один <strong>заказ</strong>.</p>
+        <pre class="line-numbers"><code class="language-python">import pandas as pd
+df = pd.read_csv('pizza.csv')
+df.head()</code></pre>
+            <div class="scrollable-table">
+                <table border="1" class="dataframe">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>order_date</th>
+                        <th>order_hour</th>
+                        <th>pizza_name_id</th>
+                        <th>pizza_size</th>
+                        <th>pizza_category</th>
+                        <th>quantity</th>
+                        <th>total_price</th>
+                        <th>pizza_ingredients</th>
+                        <th>delivery_price</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th class="index-col">0</th>
+                        <td>30/03</td>
+                        <td>13</td>
+                        <td>big</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>4.0</td>
+                        <td>48.00</td>
+                        <td>Bacon, Pepperoni...</td>
+                        <td>30.86</td>
+                    </tr>
+                    <tr>
+                        <th class="index-col">1</th>
+                        <td>19/09</td>
+                        <td>14</td>
+                        <td>cali</td>
+                        <td>L</td>
+                        <td>Chicken</td>
+                        <td>4.0</td>
+                        <td>83.00</td>
+                        <td>Chicken, Artichoke...</td>
+                        <td>9.33</td>
+                    </tr>
+                    <tr>
+                        <th class="index-col">2</th>
+                        <td>19/05</td>
+                        <td>12</td>
+                        <td>big</td>
+                        <td>S</td>
+                        <td>Classic</td>
+                        <td>4.0</td>
+                        <td>48.00</td>
+                        <td>Bacon, Pepperoni...</td>
+                        <td>33.19</td>
+                    </tr>
+                    <tr>
+                        <th class="index-col">3</th>
+                        <td>13/02</td>
+                        <td>13</td>
+                        <td>sicilian</td>
+                        <td>M</td>
+                        <td>Supreme</td>
+                        <td>3.0</td>
+                        <td>48.75</td>
+                        <td>Coarse Sicilian Salami...</td>
+                        <td>31.06</td>
+                    </tr>
+                    <tr>
+                        <th class="index-col">4</th>
+                        <td>01/06</td>
+                        <td>12</td>
+                        <td>spicy</td>
+                        <td>S</td>
+                        <td>Supreme</td>
+                        <td>3.0</td>
+                        <td>37.50</td>
+                        <td>Capocollo, Tomatoes...</td>
+                        <td>34.19</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>Чтобы посмотреть самый дешевый заказ применим метод <span class="code-chip">.min()</span> к признаку <strong>total_price</strong>:</p>
+            <pre class="line-numbers"><code class="language-python">df['total_price'].min()</code></pre>
+            <div class="print_result">9.75</div>
+            <p>Если нужно узнать стоимость самого дорогого заказа, то применим к этому же признаку метод <span class="code-chip">.max()</span>:</p>
+            <pre class="line-numbers"><code class="language-python">df['total_price'].max()</code></pre>
+            <div class="print_result">83.0</div>
+            <p>Для того чтобы посчитать среднюю стоимость заказа (<strong>total_price</strong>) используем метод <span class="code-chip">.mean()</span>:</p>
+            <pre class="line-numbers"><code class="language-python">df['total_price'].mean()</code></pre>
+            <div class="print_result">np.float64(16.821473673385437)</div>
+            <p>Функция <span class="code-chip">round(число, количество знаков после точки)</span> при необходимости округлит численный результат до нужного количества знаков:</p>
+            <pre class="line-numbers"><code class="language-python">round(df['total_price'].mean(), 2) # округляем среднее до сотых</code></pre>
+            <div class="print_result">np.float64(16.82)</div>
+            <p>В наших данных одно наблюдение - это один заказ. Применив метод <span class="code-chip">.sum()</span> к признаку <strong>quantity</strong>, можно узнать, <em>сколько всего пицц</em> сделала пиццерия за год:</p>
+            <pre class="line-numbers"><code class="language-python">df['quantity'].sum()</code></pre>
+            <div class="print_result">np.float64(49574.0)</div>
+            <p>Чтобы узнать, <em>сколько видов пицц</em> можно заказать, применим метод <span class="code-chip">.nunique()</span> к <strong>pizza_name_id</strong>. Он подсчитывает количество уникальных значений признака</p>
+            <pre class="line-numbers"><code class="language-python">df['pizza_name_id'].nunique()</code></pre>
+            <div class="print_result">28</div>
+            <p>Применив метод <span class="code-chip">.count()</span>, можно узнать количество непропущенных значений (не NaN) признака:</p>
+            <pre class="line-numbers"><code class="language-python">df['pizza_category'].count()</code></pre>
+            <div class="print_result">np.int64(48603)</div>
+            <p>В данных есть описание (<strong>pizza_category</strong>) 48603 заказов. Сравнив это число с <em>общей длиной датафрейма</em> (<span class="code-chip">.shape[0]</span>), можно понять, есть ли в признаке пропуски:</p>
+            <pre class="line-numbers"><code class="language-python">df.shape[0]</code></pre>
+            <div class="print_result">48620</div>
+            <p>Всего за год было сделано 48620 заказов, но описание есть только у 48603 – значит в <strong>pizza_category</strong> 17 пропусков (NaN).</p>
+            <div class="scrollable-table">
+                <table border="1" class="dataframe_new" style="width: 100%;">
+                    <thead>
+                    <tr>
+                        <th>МЕТОД</th>
+                        <th>ОПИСАНИЕ</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th><span class="code-chip">.min()</span></th>
+                        <td>наименьшее значение</td>
+                    </tr>
+                    <tr>
+                        <th><span class="code-chip">.max()</span></th>
+                        <td>наибольшее значение</td>
+                    </tr>
+                    <tr>
+                        <th><span class="code-chip">.mean()</span></th>
+                        <td>среднее арифметическое</td>
+                    </tr>
+                    <tr>
+                        <th><span class="code-chip">.sum()</span></th>
+                        <td>сумма</td>
+                    </tr>
+                    <tr>
+                        <th><span class="code-chip">.nunique()</span></th>
+                        <td>количество уникальных значений</td>
+                    </tr>
+                    <tr>
+                        <th><span class="code-chip">.count()</span></th>
+                        <td>количество непропущенных значений</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>Разумеется, это лишь начальные шаги в мире методов агрегирования данных. Более подробно и полно мы раскроем тему в Главе 6 "Описательные статистики".</p>
+            <p style="font-size: 25px;"><strong>Фильтрация и агрегирование</strong></p>
+            <p>Методы агрегирования можно применить и к отфильтрованным данным. В общем виде это выглядит так:</p>
+            <p class="fake-code">
+<span class="code-line">датафрейм[условие фильтрации]['признак'].метод()</span>
+            </p>
+            <p>До этого мы считали, сколько всего пицц испекли
+                за год (<span class="code-chip">df['quantity'].sum()</span>). Но предположим, теперь нас интересует,
+                сколько конкретно гавайских пицц (<em>hawaiian</em>; <strong>pizza_name_id</strong>) было приготовлено нашим рестораном:</p>
+            <pre class="line-numbers"><code class="language-python">df[df['pizza_name_id'] == 'hawaiian']['quantity'].sum()</code></pre>
+            <div class="print_result">np.float64(2422.0)</div>
+            <p><span class="code-chip">df[df['pizza_name_id'] == 'hawaiian']</span> - фильтруем данные и оставляем заказы только с гавайской пиццей.</p>
+            <p><span class="code-chip">['quantity'].sum()</span> - в отфильтрованных данных обращаемся к признаку quantity и ищем суммарное количество заказанных пицц.</p>
+            <p>Агрегированные значения могут выступать и условием фильтрации. Например, мы хотим посчитать количество заказов, стоимость которых (<strong>total_price</strong>) больше среднего:</p>
+            <pre class="line-numbers"><code class="language-python">df[df['total_price'] > df['total_price'].mean()].shape[0]</code></pre>
+            <div class="print_result">18496</div>
+            <p><span class="code-chip">df[df['total_price'] > df['total_price'].mean()]</span> - фильтруем данные и оставляем заказы, стоимость которых выше среднего (<span class="code-chip">df['total_price'].mean()</span>)</p>
+            <p><span class="code-chip">.shape[0]</span> - считаем количество строк (заказов) после фильтрации.</p>
+            <div style="height: 10px;"></div>
+
+            <h2 id="chapter5-2">5.2 Что такое сводная таблица?</h2>
+            <p>В прошлом разделе мы посмотрели, сколько гавайских пицц
+                (<em>hawaiian</em>; <strong>pizza_name_id</strong>) было приготовлено:</p>
+            <pre class="line-numbers"><code class="language-python">df[df['pizza_name_id'] == 'hawaiian']['quantity'].sum()</code></pre>
+            <div class="print_result">np.float64(2422.0)</div>
+            <p>Но что, если нам нужно посчитать количество пицц каждого вида?
+                Тогда нам придется делать 28 (<span class="code-chip">df['pizza_name_id'].nunique()</span>)
+                фильтраций с агрегированием. Это долго и не очень удобно,
+                гораздо разумнее будет сгруппировать данные с помощью метода <span class="code-chip">.groupby()</span>,
+                который построит <strong>сводную таблицу</strong>, в которой будет посчитано количество пицц
+                (<strong>quantity</strong>) каждого вида (<strong>pizza_name_id</strong>):</p>
+            <pre class="line-numbers"><code class="language-python">df.groupby('pizza_name_id')['quantity'].sum()</code></pre>
+            <div class="scrollable-table">
+                <table border="1" class="dataframe">
+                    <thead>
+                    <tr>
+                        <th>pizza_name_id</th>
+                        <th>quantity</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><strong>bbq</strong></td>
+                        <td>2432.0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>big</strong></td>
+                        <td>1914.0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>brie</strong></td>
+                        <td>490.0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>calabrese</strong></td>
+                        <td>937.0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>cali</strong></td>
+                        <td>2370.0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ckn</strong></td>
+                        <td>1960.0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>classic</strong></td>
+                        <td>2453.0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>five</strong></td>
+                        <td>1409.0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>four</strong></td>
+                        <td>1902.0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>green</strong></td>
+                        <td>997.0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>hawaiian</strong></td>
+                        <td>2422.0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ital</strong></td>
+                        <td>4303.0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>mediterraneo</strong></td>
+                        <td>934.0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>mexicana</strong></td>
+                        <td>1484.0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>napolitana</strong></td>
+                        <td>1464.0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>pep</strong></td>
+                        <td>1359.0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>pepperoni</strong></td>
+                        <td>2418.0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>peppr</strong></td>
+                        <td>1446.0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>prsc</strong></td>
+                        <td>1457.0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>sicilian</strong></td>
+                        <td>1938.0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>soppressata</strong></td>
+                        <td>961.0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>southw</strong></td>
+                        <td>1917.0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>spicy</strong></td>
+                        <td>1924.0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>spin</strong></td>
+                        <td>970.0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>spinach</strong></td>
+                        <td>2396.0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>thai</strong></td>
+                        <td>2371.0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>the</strong></td>
+                        <td>1420.0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>veggie</strong></td>
+                        <td>1526.0</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="definition-card">
+                <div class="definition-text">
+                    <strong>Сводная таблица</strong> — это специализированный инструмент, предназначенный для группировки и агрегирования данных по одному или нескольким признакам (таким как регион, товар, временные периоды и т.д.).
+                </div>
+            </div>
+            <p style="font-size: 25px;"><strong>ПРОСТЕЙШАЯ ГРУППИРОВКА</strong></p>
+            <p>Самый простой вариант группировки – это когда мы хотим разделить данные по категориям одного признака
+                (<span class="code-chip">'столбец группировки'</span>), и для каждой категории агрегируем один признак <br>
+                (<span class="code-chip">'столбец агрегирования'</span>):</p>
+            <p class="fake-code">
+<span class="code-line"> датафрейм.groupby('столбец группировки')['столбец агрегирования'].метод()</span>
+            </p>
+            <p><span class="code-chip">'столбец группировки'</span> - это признак, по которому мы разделяем датафрейм на группы.</p>
+            <p><span class="code-chip">'столбец агрегирования' (столбец интереса)</span> -
+                это признак, значения которого будут подвергнуты дальнейшей обработке внутри каждой группы.</p>
+            <p><span class="code-chip">.метод()</span> - то, как нужно обработать <span class="code-chip">'столбец агрегирования'</span></p>
+            <p>Если нам нужно рассчитать, сколько пицц (<strong>quantity</strong>) разного размера (<strong>pizza_size</strong>) было изготовлено:</p>
+            <pre class="line-numbers"><code class="language-python">df.groupby('pizza_size')['quantity'].sum()</code></pre>
+            <p><span class="code-chip">.groupby('pizza_size'</span>) группирует все данные по размеру пиццы. Это значит, что все пиццы одного размера будут собраны в одну группу.</p>
+            <p>Внутри каждой группы выбирается столбец <span class="code-chip">['quantity']</span>, который содержит количество пицц.</p>
+            <p>Применяя метод <span class="code-chip">.sum()</span>, мы суммируем количество пицц в каждой группе (каждом размере).</p>
+            <div class="scrollable-table">
+                <table border="1" class="dataframe">
+                    <thead>
+                    <tr>
+                        <th>pizza_size</th>
+                        <th>quantity</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>L</td>
+                        <td>18956.0</td>
+                    </tr>
+                    <tr>
+                        <td>M</td>
+                        <td>15635.0</td>
+                    </tr>
+                    <tr>
+                        <td>S</td>
+                        <td>14403.0</td>
+                    </tr>
+                    <tr>
+                        <td>XL</td>
+                        <td>552.0</td>
+                    </tr>
+                    <tr>
+                        <td>XXL</td>
+                        <td>28.0</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>Полученная сводная таблица имеет формат серии (<strong>Series</strong>): индексы - <strong>pizza_size</strong>, значения - <strong>quantity</strong>.</p>
+            <p style="font-size: 25px;"><strong>НЕСКОЛЬКО СТОЛБЦОВ ГРУППИРОВКИ</strong></p>
+            <p>Можно разделить данные по категориям и подкатегории на основании нескольких признаков (<span class="code-chip">'ст. группировки 1'</span> - основная группа, <span class="code-chip">'ст. группировки 2', ...</span> - подгруппы):</p>
+            <p class="fake-code">
+<span class="code-line">датафрейм.groupby(['ст. группировки 1', 'ст. группировки 2', ...])['столбец агрегирования'].метод()</span>
+            </p>
+            <p><span class="code-chip">['ст. группировки 1', 'ст. группировки 2', ...]</span> - это признаки, по котором мы разделяем <span class="code-chip">датафрейм</span> на группы.</p>
+            <p><span class="code-chip">'столбец агрегирования'</span> (столбец интереса) - это признак, значения которого будут подвергнуты дальнейшей обработке внутри каждой группы и подгруппы.</p>
+            <p><span class="code-chip">.метод()</span> - то, как нужно обработать <span class="code-chip">'столбец агрегирования'</span></p>
+            <p>Чтобы выяснить, сколько пицц (<strong>quantity)</strong>) каждого конкретного вида (<strong>pizza_name_id</strong>) и размера (<strong>pizza_size</strong>) было изготовлено, нужно написать следующий код:</p>
+            <pre class="line-numbers"><code class="language-python">df.groupby(['pizza_name_id', 'pizza_size'])['quantity'].sum()</code></pre>
+            <p><span class="code-chip">.groupby(['pizza_name_id', 'pizza_size'])</span> группирует все данные по виду и размеру пиццы</p>
+            <p>Внутри каждой группы выбирается столбец <span class="code-chip">['quantity']</span>, который содержит количество пицц соответствующего вида и размера.</p>
+            <p>Применяя метод <span class="code-chip">.sum()</span>, мы суммируем количество пицц в каждой группе (каждом виде и размере).</p>
+            <div class="scrollable-table">
+                <table border="1" class="dataframe">
+                    <thead>
+                    <tr>
+                        <th>Pizza</th>
+                        <th>Size</th>
+                        <th>Price</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td rowspan="3" class="pizza-name">bbq</td>
+                        <td class="size">L</td>
+                        <td class="price">992.0</td>
+                    </tr>
+                    <tr>
+                        <td class="size">M</td>
+                        <td class="price">956.0</td>
+                    </tr>
+                    <tr>
+                        <td class="size">S</td>
+                        <td class="price">484.0</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">big</td>
+                        <td class="size">S</td>
+                        <td class="price">1914.0</td>
+                    </tr>
+                    <tr>
+                        <td class="pizza-name">brie</td>
+                        <td class="size">S</td>
+                        <td class="price">490.0</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="2" class="pizza-name">the</td>
+                        <td class="size">XL</td>
+                        <td class="price">552.0</td>
+                    </tr>
+                    <tr>
+                        <td class="size">XXL</td>
+                        <td class="price">28.0</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="3" class="pizza-name">veggie</td>
+                        <td class="size">L</td>
+                        <td class="price">427.0</td>
+                    </tr>
+                    <tr>
+                        <td class="size">M</td>
+                        <td class="price">635.0</td>
+                    </tr>
+                    <tr>
+                        <td class="size">S</td>
+                        <td class="price">464.0</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p style="font-size: 25px;"><strong>НЕСКОЛЬКО СТОЛБЦОВ АГРЕГИРОВАНИЯ</strong></p>
+            <p>Для каждой группы можно агрегировать несколько признаков   (<span class="code-chip">'ст. агрегирования N'</span>). Их нужно передать в формате списка:</p>
+            <p class="fake-code">
+<span class="code-line">датафрейм.groupby('столбец группировки')[['ст. агрегирования 1', 'ст. агрегирования 2', ...]].метод()</span>
+            </p>
+            <p><span class="code-chip">'столбец группировки'</span> - это признак, по которому мы разделяем датафрейм на группы.</p>
+            <p><span class="code-chip">['ст. агрегирования 1', 'ст. агрегирования 2', ...]</span> (столбцы интереса) - это признаки, значения которых будут подвергнуты дальнейшей обработке внутри каждой группы.</p>
+            <p><span class="code-chip">.метод()</span> - то, как нужно обработать <span class="code-chip">['ст. агрегирования 1', 'ст. агрегирования 2', ...]</span></p>
+            <p>Если мы хотим создать сводную таблицу, в которой будeт посчитана выручка от всех заказов (сумма по признаку <strong>total_price</strong>)
+                и общее количество приготовленных пицц (<strong>quantity</strong>) каждого размера, то пишем следующий код:</p>
+            <pre class="line-numbers"><code class="language-python">df.groupby('pizza_size')[['total_price', 'quantity']].sum()</code></pre>
+            <p><span class="code-chip">.groupby('pizza_size')</span> группирует все данные по размеру пиццы</p>
+            <p>Внутри каждой группы выбираем столбцы <span class="code-chip">['total_price', 'quantity']</span>, которые содержат информацию стоимости заказа и количество пицц в них.</p>
+            <p>Применяя метод <span class="code-chip">.sum()</span>, мы суммируем значения <strong>total_price</strong> и количество пицц (<strong>quantity</strong>) в каждой группе (<strong>pizza_size</strong>).</p>
+            <div class="scrollable-table">
+                <table border="1" class="dataframe">
+                    <thead>
+                    <tr>
+                        <th>pizza_size</th>
+                        <th>total_price</th>
+                        <th>quantity</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>L</td>
+                        <td>375318.70</td>
+                        <td>18956.0</td>
+                    </tr>
+                    <tr>
+                        <td>M</td>
+                        <td>249382.25</td>
+                        <td>15635.0</td>
+                    </tr>
+                    <tr>
+                        <td>S</td>
+                        <td>178076.50</td>
+                        <td>14403.0</td>
+                    </tr>
+                    <tr>
+                        <td>XL</td>
+                        <td>14076.00</td>
+                        <td>552.0</td>
+                    </tr>
+                    <tr>
+                        <td>XXL</td>
+                        <td>1006.60</td>
+                        <td>28.0</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>Полученная сводная таблица имеет
+                формат датафрейма (<strong>DataFrame</strong>): индексы - <strong>pizza_size</strong>, значения - сумма по <strong>total_price</strong> и <strong>quantity</strong>.</p>
+            <p>Также из нее можно получить дополнительную полезную информацию — сколько в среднем зарабатывает наше заведение на каждой пицце определенного размера. Для этого сохраним сводную таблицу в новой переменной <span class="code-chip">gb1</span>, а затем добавим новый признак <strong>revenue</strong>, который будет
+                рассчитан как отношение общей выручки от заказа (<strong>total_price</strong>) к количеству пицц в заказе (<strong>quantity</strong>):</p>
+            <pre class="line-numbers"><code class="language-python"># Сохраням сводную таблицу в переменную gb
+gb1 = df.groupby('pizza_size')[['total_price', 'quantity']].sum()
+
+# Считаем выручку от одной пиццы в каждом размере
+gb1['revenue'] = gb1['total_price']/gb1['quantity']
+
+# Выводим сводную таблицу
+gb1</code></pre>
+            <div class="scrollable-table">
+                <table border="1" class="dataframe">
+                    <thead>
+                    <tr>
+                        <th>pizza_size</th>
+                        <th>total_price</th>
+                        <th>quantity</th>
+                        <th>revenue</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>L</td>
+                        <td>375318.70</td>
+                        <td>18956.0</td>
+                        <td>19.799467</td>
+                    </tr>
+                    <tr>
+                        <td>M</td>
+                        <td>249382.25</td>
+                        <td>15635.0</td>
+                        <td>15.950256</td>
+                    </tr>
+                    <tr>
+                        <td>S</td>
+                        <td>178076.50</td>
+                        <td>14403.0</td>
+                        <td>12.363848</td>
+                    </tr>
+                    <tr>
+                        <td>XL</td>
+                        <td>14076.00</td>
+                        <td>552.0</td>
+                        <td>25.500000</td>
+                    </tr>
+                    <tr>
+                        <td>XXL</td>
+                        <td>1006.60</td>
+                        <td>28.0</td>
+                        <td>35.950000</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>Мы видим, что в одна пицца размера <em>S</em> приносит,
+                в среднем, выручку в размере <em>12.36</em> долларов. А, например,
+                пицца в размере <em>XXL</em>, в среднем, <em>36.95</em> долларов.</p>
+            <p>При необходимости сводную таблицу (<span class="code-chip">gb1</span>), можно отсортировать по любому
+                признаку с помощью метода <span class="code-chip">.sort_values()</span>. Сделаем это по признаку <strong>revenue</strong>:</p>
+
+            <pre class="line-numbers"><code class="language-python">gb1.sort_values('revenue')</code></pre>
+            <div class="scrollable-table">
+                <table border="1" class="dataframe">
+                    <thead>
+                    <tr>
+                        <th>pizza_size</th>
+                        <th>total_price</th>
+                        <th>quantity</th>
+                        <th>revenue</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>S</td>
+                        <td>178076.50</td>
+                        <td>14403.0</td>
+                        <td>12.363848</td>
+                    </tr>
+                    <tr>
+                        <td>M</td>
+                        <td>249382.25</td>
+                        <td>15635.0</td>
+                        <td>15.950256</td>
+                    </tr>
+                    <tr>
+                        <td>L</td>
+                        <td>375318.70</td>
+                        <td>18956.0</td>
+                        <td>19.799467</td>
+                    </tr>
+                    <tr>
+                        <td>XL</td>
+                        <td>14076.00</td>
+                        <td>552.0</td>
+                        <td>25.500000</td>
+                    </tr>
+                    <tr>
+                        <td>XXL</td>
+                        <td>1006.60</td>
+                        <td>28.0</td>
+                        <td>35.950000</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p style="font-size: 25px;"><strong>НЕСКОЛЬКО МЕТОДОВ АГРЕГИРОВАНИЯ</strong></p>
+            <p>Чтобы во время группировки применить
+                сразу несколько методов агрегирования, нужно воспользоваться методом <span class="code-chip">.agg()</span>:</p>
+            <p class="fake-code">
+<span class="code-line">датафрейм.groupby('столбец группировки')['столбец агрегирования'].agg(['метод 1', 'метод 2', ...])</span>
+            </p>
+            <p><span class="code-chip">'столбец группировки'</span> - это признак, по которому мы разделяем датафрейм на группы.</p>
+            <p><span class="code-chip">'столбец агрегирования'</span> - это признак, значения которого будут подвергнуты дальнейшей обработке внутри каждой группы.</p>
+            <p><span class="code-chip">['метод 1', 'метод 2', ...]</span> - методы, которые нужно применить к <span class="code-chip">'столбцу агрегирования'</span></p>
+            <p>Чтобы узнать стоимость самого дорого и дешевого заказа (<strong>total_price</strong>)
+                для каждого размера пиццы (<strong>pizza_size</strong>), необходимо сделать следующую группировку:</p>
+            <p class="fake-code">
+<span class="code-line">df.groupby('pizza_size')['total_price'].agg(['min', 'max'])</span>
+            </p>
+            <p><span class="code-chip">.groupby('pizza_size')</span> группирует все данные по размеру пиццы.
+                Это значит, что все пиццы одного размера будут собраны в одну группу.</p>
+            <p>Внутри каждой группы выбирается столбец <span class="code-chip">['total_price']</span>, который содержит цену каждого заказа.</p>
+            <p>С помощью <span class="code-chip">.agg(['min', 'max'])</span> находим самую дешевую и дорогую пиццу в каждой группе (каждом размере).</p>
+            <div class="scrollable-table">
+                <table border="1" class="dataframe">
+                    <thead>
+                    <tr>
+                        <th>pizza_size</th>
+                        <th>min_price</th>
+                        <th>max_price</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>L</td>
+                        <td>15.25</td>
+                        <td>83.00</td>
+                    </tr>
+                    <tr>
+                        <td>M</td>
+                        <td>12.50</td>
+                        <td>50.25</td>
+                    </tr>
+                    <tr>
+                        <td>S</td>
+                        <td>9.75</td>
+                        <td>48.00</td>
+                    </tr>
+                    <tr>
+                        <td>XL</td>
+                        <td>25.50</td>
+                        <td>51.00</td>
+                    </tr>
+                    <tr>
+                        <td>XXL</td>
+                        <td>35.95</td>
+                        <td>35.95</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p>Полученная сводная таблица имеет
+                формат датафрейма (<strong>DataFrame)</strong>: индексы - <strong>pizza_size</strong>, значения - <strong>min</strong> и <strong>max</strong> по цене.</p>
+            <a href="https://edu.hse.ru/mod/quiz/view.php?id=1610933" target="_blank" rel="noopener noreferrer"><button class="check_yourself">Самоопроверка</button></a>&nbsp;<a href="https://edu.hse.ru/mod/quiz/view.php?id=1610936" target="_blank" rel="noopener noreferrer"><button class="check">Практика</button></a>&nbsp;<a href="https://edu.hse.ru/course/view.php?id=236211)" target="_blank" rel="noopener noreferrer"><button class="back_to_course">Вернуться к курсу</button></a>
+
+        </section>
+    </div>
+</div>
+<script>
+    const toggleNav = document.getElementById('toggleNav');
+    const sideNav = document.getElementById('sideNav');
+
+    toggleNav.addEventListener('click', () => {
+        sideNav.classList.toggle('open');
+    });
+</script>

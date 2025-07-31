@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link href="https://fonts.googleapis.com/css2?family=Hack&display=swap" rel="stylesheet">
-    <title>Глава 1</title>
+    <title>Глава 2</title>
     <link rel="stylesheet" href="chapter_1.css">
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/pyodide"></script>
@@ -35,7 +35,7 @@
                     <strong>Фильтрация данных</strong> — это процесс выбора нужных данных из большего объема по каким-то установленным правилам или условиям.
                 </div>
             </div>
-            <p>Рассмотрим, как работает фильтрация на данных по заказам пиццы в течение года <a href="https://edu.hse.ru/mod/resource/view.php?id=1610926">pizza.csv</a>:</p>
+            <p>Рассмотрим, как работает фильтрация на данных по заказам пиццы в течение года:</p>
             <div class="scrollable-table">
             <table border="1" class="dataframe_new" style="width: 100%;">
                 <thead>
@@ -82,7 +82,7 @@
                     <td>float64</td>
                 </tr>                <tr>
                     <th>pizza_ingredients</th>
-                    <td>ингридиенты</td>
+                    <td>ингредиенты</td>
                     <td>object</td>
                 </tr>                <tr>
                     <th>delivery_price</th>
@@ -123,7 +123,7 @@ df.head()</code></pre>
                     <td>Classic</td>
                     <td>4.0</td>
                     <td>48.00</td>
-                    <td>Bacon, Pepperoni, Italian Sausage, Chorizo Sau...</td>
+                    <td>Bacon, Italian Sausage...</td>
                     <td>30.86</td>
                 </tr>
                 <tr>
@@ -135,7 +135,7 @@ df.head()</code></pre>
                     <td>Chicken</td>
                     <td>4.0</td>
                     <td>83.00</td>
-                    <td>Chicken, Artichoke, Spinach, Garlic, Jalapeno ...</td>
+                    <td>Chicken, Artichoke...</td>
                     <td>9.33</td>
                 </tr>
                 <tr>
@@ -147,7 +147,7 @@ df.head()</code></pre>
                     <td>Chicken</td>
                     <td>4.0</td>
                     <td>83.00</td>
-                    <td>Chicken, Artichoke, Spinach, Garlic, Jalapeno ...</td>
+                    <td>Chicken, Artichoke...</td>
                     <td>9.33</td>
                 </tr>
                 <tr>
@@ -159,7 +159,7 @@ df.head()</code></pre>
                     <td>Chicken</td>
                     <td>4.0</td>
                     <td>83.00</td>
-                    <td>Chicken, Artichoke, Spinach, Garlic, Jalapeno ...</td>
+                    <td>Chicken, Artichoke...</td>
                     <td>9.33</td>
                 </tr>
                 <tr>
@@ -171,7 +171,7 @@ df.head()</code></pre>
                     <td>Chicken</td>
                     <td>4.0</td>
                     <td>83.00</td>
-                    <td>Chicken, Artichoke, Spinach, Garlic, Jalapeno ...</td>
+                    <td>Chicken, Artichoke...</td>
                     <td>9.33</td>
                 </tr>
                 </tbody>
@@ -221,7 +221,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>3.0</td>
                         <td>49.50</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>30.31</td>
                     </tr>
                     <tr>
@@ -233,7 +233,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>2.0</td>
                         <td>21.00</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>44.61</td>
                     </tr>
                     <tr>
@@ -245,7 +245,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>2.0</td>
                         <td>33.00</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>37.14</td>
                     </tr>
                     <tr>
@@ -257,7 +257,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>2.0</td>
                         <td>21.00</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>46.42</td>
                     </tr>
                     <tr>
@@ -269,7 +269,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>2.0</td>
                         <td>21.00</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>44.50</td>
                     </tr>
                     <tr>
@@ -293,7 +293,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>1.0</td>
                         <td>13.25</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>49.21</td>
                     </tr>
                     <tr>
@@ -305,7 +305,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>1.0</td>
                         <td>13.25</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>52.92</td>
                     </tr>
                     <tr>
@@ -317,7 +317,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>1.0</td>
                         <td>10.50</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>54.59</td>
                     </tr>
                     <tr>
@@ -329,7 +329,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>1.0</td>
                         <td>10.50</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>55.76</td>
                     </tr>
                     <tr>
@@ -341,7 +341,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>1.0</td>
                         <td>16.50</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>51.78</td>
                     </tr>
                     </tbody>
@@ -388,7 +388,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>4.0</td>
                         <td>48.00</td>
-                        <td>Bacon, Pepperoni, Italian Sausage, Chorizo Sau...</td>
+                        <td>Bacon, Italian Sausage,</td>
                         <td>30.86</td>
                     </tr>
                     <tr>
@@ -400,7 +400,7 @@ df.head()</code></pre>
                         <td>Chicken</td>
                         <td>4.0</td>
                         <td>83.00</td>
-                        <td>Chicken, Artichoke, Spinach, Garlic, Jalapeno ...</td>
+                        <td>Chicken, Artichoke...</td>
                         <td>9.33</td>
                     </tr>
                     <tr>
@@ -412,7 +412,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>4.0</td>
                         <td>48.00</td>
-                        <td>Bacon, Pepperoni, Italian Sausage, Chorizo Sau...</td>
+                        <td>Bacon, Pepperoni...</td>
                         <td>33.19</td>
                     </tr>
                     <tr>
@@ -424,7 +424,7 @@ df.head()</code></pre>
                         <td>Supreme</td>
                         <td>3.0</td>
                         <td>48.75</td>
-                        <td>Coarse Sicilian Salami, Tomatoes, Green Olives...</td>
+                        <td>Coarse Sicilian Salami...</td>
                         <td>31.06</td>
                     </tr>
                     <tr>
@@ -436,7 +436,7 @@ df.head()</code></pre>
                         <td>Supreme</td>
                         <td>3.0</td>
                         <td>37.50</td>
-                        <td>Capocollo, Tomatoes, Goat Cheese, Artichokes, ...</td>
+                        <td>Capocollo, Tomatoes...</td>
                         <td>34.19</td>
                     </tr>
                     <tr>
@@ -460,7 +460,7 @@ df.head()</code></pre>
                         <td>Supreme</td>
                         <td>2.0</td>
                         <td>33.00</td>
-                        <td>Spinach, Red Onions, Pepperoni, Tomatoes, Arti...</td>
+                        <td>Spinach, Red Onions...</td>
                         <td>38.94</td>
                     </tr>
                     <tr>
@@ -472,7 +472,7 @@ df.head()</code></pre>
                         <td>Chicken</td>
                         <td>2.0</td>
                         <td>33.50</td>
-                        <td>Chicken, Tomatoes, Red Peppers, Red Onions, Ja...</td>
+                        <td>Chicken, Tomatoes...</td>
                         <td>38.40</td>
                     </tr>
                     <tr>
@@ -484,7 +484,7 @@ df.head()</code></pre>
                         <td>Chicken</td>
                         <td>2.0</td>
                         <td>41.50</td>
-                        <td>Barbecued Chicken, Red Peppers, Green Peppers,...</td>
+                        <td>Barbecued Chicken...</td>
                         <td>35.25</td>
                     </tr>
                     <tr>
@@ -496,7 +496,7 @@ df.head()</code></pre>
                         <td>Veggie</td>
                         <td>2.0</td>
                         <td>24.00</td>
-                        <td>Mushrooms, Tomatoes, Red Peppers, Green Pepper...</td>
+                        <td>Mushrooms, Tomatoes...</td>
                         <td>46.11</td>
                     </tr>
                     <tr>
@@ -508,7 +508,7 @@ df.head()</code></pre>
                         <td>Supreme</td>
                         <td>2.0</td>
                         <td>25.00</td>
-                        <td>Genoa Salami, Capocollo, Pepperoni, Tomatoes, ...</td>
+                        <td>Genoa Salami, Capocollo...</td>
                         <td>43.67</td>
                     </tr>
                     </tbody>
@@ -566,9 +566,11 @@ df.head()</code></pre>
 <span class="code-line">датафрейм[(условие 1) | (условие 2) | ...] # выполняется хотя бы одно условие</span>
                 </li>
             </ul>
-            <img src="picture/illustration3.svg" width="100%" alt="Рисунок 3">
+            <img src="picture/3.svg" width="100%" alt="Рисунок 3">
             <p>Предположим, нам нужно найти заказы только с гавайской пиццей (<em>hawaiian</em>; <strong>pizza_name_id</strong>) и при этом количество пицц в заказе (<strong>quantity</strong>) должно быть больше одной.</p>
-            <img src="picture/illustration4.svg" width="100%" alt="Рисунок 4">
+            <div style="display: flex; justify-content: center;">
+            <img src="picture/4.svg" width="60%" alt="Рисунок 4">
+            </div>
             <p>У нас два условия, которые должны выполняться одновременно, значит используем оператор <span class="code-chip">&</span>&nbsp;:</p>
             <pre class="line-numbers"><code class="language-python">df[(df['pizza_name_id'] == 'hawaiian') & (df['quantity'] > 1)]</code></pre>
             <p><span class="code-chip">df</span>&nbsp;- это датафрейм фильтрации</p>
@@ -610,7 +612,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>4.0</td>
                         <td>48.00</td>
-                        <td>Bacon, Pepperoni, Italian Sausage, Chorizo Sau...</td>
+                        <td>Bacon, Pepperoni...</td>
                         <td>30.86</td>
                     </tr>
                     <tr>
@@ -622,7 +624,7 @@ df.head()</code></pre>
                         <td>Chicken</td>
                         <td>4.0</td>
                         <td>83.00</td>
-                        <td>Chicken, Artichoke, Spinach, Garlic, Jalapeno ...</td>
+                        <td>Chicken, Artichoke...</td>
                         <td>9.33</td>
                     </tr>
                     <tr>
@@ -634,7 +636,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>4.0</td>
                         <td>48.00</td>
-                        <td>Bacon, Pepperoni, Italian Sausage, Chorizo Sau...</td>
+                        <td>Bacon, Pepperoni...</td>
                         <td>33.19</td>
                     </tr>
                     <tr>
@@ -646,7 +648,7 @@ df.head()</code></pre>
                         <td>Supreme</td>
                         <td>3.0</td>
                         <td>48.75</td>
-                        <td>Coarse Sicilian Salami, Tomatoes, Green Olives...</td>
+                        <td>Coarse Sicilian Salami...</td>
                         <td>31.06</td>
                     </tr>
                     <tr>
@@ -658,7 +660,7 @@ df.head()</code></pre>
                         <td>Supreme</td>
                         <td>3.0</td>
                         <td>37.50</td>
-                        <td>Capocollo, Tomatoes, Goat Cheese, Artichokes, ...</td>
+                        <td>Capocollo, Tomatoes...</td>
                         <td>34.19</td>
                     </tr>
                     <tr>
@@ -682,7 +684,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>1.0</td>
                         <td>13.25</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>49.21</td>
                     </tr>
                     <tr>
@@ -694,7 +696,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>1.0</td>
                         <td>13.25</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>52.92</td>
                     </tr>
                     <tr>
@@ -706,7 +708,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>1.0</td>
                         <td>10.50</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>54.59</td>
                     </tr>
                     <tr>
@@ -718,7 +720,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>1.0</td>
                         <td>10.50</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>55.76</td>
                     </tr>
                     <tr>
@@ -730,14 +732,17 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>1.0</td>
                         <td>16.50</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>51.78</td>
                     </tr>
                     </tbody>
                 </table>
             </div>
             <p>Поменяв <span class="code-chip">&</span>&nbsp; на <span class="code-chip">|</span>&nbsp;, мы получим уже другую фильтрацию. Будут выведены все заказы с гавайской пиццей (<em>hawaiian</em>; <strong>pizza_name_id</strong>) и все заказы, где количество пицц (<strong>quantity</strong>) больше одной, не обязательно с гавайской:</p>
-            <img src="picture/illustration5.svg" width="100%" alt="Рисунок 5">
+            <div style="display: flex; justify-content: center;">
+                <img src="picture/5.svg" width="60%" alt="Рисунок 5">
+            </div>
+
             <pre class="line-numbers"><code class="language-python">df[(df['pizza_name_id'] == 'hawaiian') | (df['quantity'] > 1)]</code></pre>
             <p><span class="code-chip">df</span>&nbsp;- это датафрейм фильтрации</p>
             <p><span class="code-chip">(df['pizza_name_id'] == 'hawaiian')|(df['quantity']>1)</span>&nbsp;- это условие фильтрации:</p>
@@ -778,7 +783,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>3.0</td>
                         <td>49.5</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>30.31</td>
                     </tr>
                     <tr>
@@ -790,7 +795,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>2.0</td>
                         <td>21.0</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>44.61</td>
                     </tr>
                     <tr>
@@ -802,7 +807,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>2.0</td>
                         <td>33.0</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>37.14</td>
                     </tr>
                     <tr>
@@ -814,7 +819,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>2.0</td>
                         <td>21.0</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>46.42</td>
                     </tr>
                     <tr>
@@ -826,7 +831,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>2.0</td>
                         <td>21.0</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>44.50</td>
                     </tr>
                     <tr>
@@ -850,7 +855,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>2.0</td>
                         <td>26.5</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>44.90</td>
                     </tr>
                     <tr>
@@ -862,7 +867,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>2.0</td>
                         <td>33.0</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>39.14</td>
                     </tr>
                     <tr>
@@ -874,7 +879,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>2.0</td>
                         <td>21.0</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>49.39</td>
                     </tr>
                     <tr>
@@ -886,7 +891,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>2.0</td>
                         <td>33.0</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>39.97</td>
                     </tr>
                     <tr>
@@ -898,7 +903,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>2.0</td>
                         <td>21.0</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>46.77</td>
                     </tr>
                     </tbody>
@@ -957,7 +962,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>3.0</td>
                         <td>49.50</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>30.31</td>
                     </tr>
                     <tr>
@@ -981,7 +986,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>2.0</td>
                         <td>21.00</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>44.61</td>
                     </tr>
                     <tr>
@@ -993,7 +998,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>2.0</td>
                         <td>33.00</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>37.14</td>
                     </tr>
                     <tr>
@@ -1017,7 +1022,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>1.0</td>
                         <td>13.25</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>52.92</td>
                     </tr>
                     <tr>
@@ -1041,7 +1046,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>1.0</td>
                         <td>10.50</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>54.59</td>
                     </tr>
                     <tr>
@@ -1053,7 +1058,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>1.0</td>
                         <td>10.50</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>55.76</td>
                     </tr>
                     <tr>
@@ -1065,7 +1070,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>1.0</td>
                         <td>16.50</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>51.78</td>
                     </tr>
                     </tbody>
@@ -1081,7 +1086,7 @@ df.head()</code></pre>
 
             <p class="fake-code">
 <span class="code-line">датафрейм[условие/я фильтрации].shape[0]</span>
-            <p>Если мы хотим посчитать количество заказов с гавайской пиццей (hawaiian; pizza_name_id), то напишем:</p>
+            <p>Если мы хотим посчитать количество заказов с <em>гавайской</em> пиццей (hawaiian; pizza_name_id), то напишем:</p>
             <pre class="line-numbers"><code class="language-python">df[df['pizza_name_id'] == 'hawaiian'].shape[0]</code></pre>
             <div class="print_result">2370</div>
             <p>Получается, таких заказов было 2370.</p>
@@ -1198,7 +1203,7 @@ df.head()</code></pre>
                         <td>Supreme</td>
                         <td>1.0</td>
                         <td>62.25</td>
-                        <td>Capocollo, Tomatoes, Goat Cheese, Artichokes, ...</td>
+                        <td>Capocollo, Tomatoes...</td>
                         <td>24.38</td>
                     </tr>
                     <tr>
@@ -1210,7 +1215,7 @@ df.head()</code></pre>
                         <td>Chicken</td>
                         <td>3.0</td>
                         <td>62.25</td>
-                        <td>Barbecued Chicken, Red Peppers, Green Peppers,...</td>
+                        <td>Barbecued Chicken, Red Peppers...</td>
                         <td>21.06</td>
                     </tr>
                     <tr>
@@ -1222,7 +1227,7 @@ df.head()</code></pre>
                         <td>Chicken</td>
                         <td>3.0</td>
                         <td>62.25</td>
-                        <td>Chicken, Pineapple, Tomatoes, Red Peppers, Tha...</td>
+                        <td>Chicken, Pineapple...</td>
                         <td>23.09</td>
                     </tr>
                     <tr>
@@ -1234,7 +1239,7 @@ df.head()</code></pre>
                         <td>Supreme</td>
                         <td>3.0</td>
                         <td>62.25</td>
-                        <td>Prosciutto di San Daniele, Arugula, Mozzarella...</td>
+                        <td>Prosciutto di San Daniele...</td>
                         <td>25.16</td>
                     </tr>
                     <tr>
@@ -1246,7 +1251,7 @@ df.head()</code></pre>
                         <td>Chicken</td>
                         <td>4.0</td>
                         <td>83.00</td>
-                        <td>SChicken, Artichoke, Spinach, Garlic, Jalapeno ...</td>
+                        <td>SChicken, Artichoke...</td>
                         <td>9.33</td>
                     </tr>
                     </tbody>
@@ -1281,7 +1286,7 @@ df.head()</code></pre>
                         <td>Chicken</td>
                         <td>4.0</td>
                         <td>83.00</td>
-                        <td>Chicken, Artichoke, Spinach, Garlic, Jalapeno ...</td>
+                        <td>Chicken, Artichoke...</td>
                         <td>9.33</td>
                     </tr>
                     <tr>
@@ -1293,7 +1298,7 @@ df.head()</code></pre>
                         <td>Supreme</td>
                         <td>3.0</td>
                         <td>62.25</td>
-                        <td>Capocollo, Tomatoes, Goat Cheese, Artichokes, ...</td>
+                        <td>Capocollo, Tomatoes...</td>
                         <td>24.38</td>
                     </tr>
                     <tr>
@@ -1305,7 +1310,7 @@ df.head()</code></pre>
                         <td>Chicken</td>
                         <td>3.0</td>
                         <td>62.25</td>
-                        <td>Chicken, Pineapple, Tomatoes, Red Peppers, Tha...</td>
+                        <td>Chicken, Pineapple...</td>
                         <td>23.09</td>
                     </tr>
                     <tr>
@@ -1317,7 +1322,7 @@ df.head()</code></pre>
                         <td>Chicken</td>
                         <td>3.0</td>
                         <td>62.25</td>
-                        <td>Barbecued Chicken, Red Peppers, Green Peppers,...</td>
+                        <td>Barbecued Chicken...</td>
                         <td>21.06</td>
                     </tr>
                     <tr>
@@ -1329,7 +1334,7 @@ df.head()</code></pre>
                         <td>Supreme</td>
                         <td>3.0</td>
                         <td>62.25</td>
-                        <td>Prosciutto di San Daniele, Arugula, Mozzarella...</td>
+                        <td>Prosciutto di San Daniele...</td>
                         <td>25.16</td>
                     </tr>
                     <tr>
@@ -1432,7 +1437,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>1.0</td>
                         <td>10.5</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>55.76</td>
                     </tr>
                     <tr>
@@ -1444,7 +1449,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>1.0</td>
                         <td>10.5</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>55.57</td>
                     </tr>
                     <tr>
@@ -1456,7 +1461,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>1.0</td>
                         <td>10.5</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>52.79</td>
                     </tr>
                     <tr>
@@ -1468,7 +1473,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>1.0</td>
                         <td>10.5</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>53.16</td>
                     </tr>
                     <tr>
@@ -1480,7 +1485,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>1.0</td>
                         <td>10.5</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>51.92</td>
                     </tr>
                     <tr>
@@ -1492,7 +1497,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>2.0</td>
                         <td>33.0</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>37.47</td>
                     </tr>
                     <tr>
@@ -1504,7 +1509,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>2.0</td>
                         <td>33.0</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>38.30</td>
                     </tr>
                     <tr>
@@ -1516,7 +1521,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>2.0</td>
                         <td>33.0</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>35.29</td>
                     </tr>
                     <tr>
@@ -1528,7 +1533,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>2.0</td>
                         <td>33.0</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>38.96</td>
                     </tr>
                     <tr>
@@ -1540,7 +1545,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>3.0</td>
                         <td>49.5</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple..</td>
                         <td>30.31</td>
                     </tr>
                     </tbody>
@@ -1576,7 +1581,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>3.0</td>
                         <td>49.5</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>30.31</td>
                     </tr>
                     <tr>
@@ -1588,7 +1593,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>2.0</td>
                         <td>33.0</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>42.15</td>
                     </tr>
                     <tr>
@@ -1600,7 +1605,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>2.0</td>
                         <td>33.0</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>40.26</td>
                     </tr>
                     <tr>
@@ -1612,7 +1617,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>2.0</td>
                         <td>33.0</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>37.93</td>
                     </tr>
                     <tr>
@@ -1624,7 +1629,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>2.0</td>
                         <td>33.0</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>39.25</td>
                     </tr>
                     <tr>
@@ -1636,7 +1641,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>1.0</td>
                         <td>10.5</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>55.58</td>
                     </tr>
                     <tr>
@@ -1648,7 +1653,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>1.0</td>
                         <td>10.5</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>53.96</td>
                     </tr>
                     <tr>
@@ -1660,7 +1665,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>1.0</td>
                         <td>10.5</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>53.55</td>
                     </tr>
                     <tr>
@@ -1672,7 +1677,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>1.0</td>
                         <td>10.5</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>50.96</td>
                     </tr>
                     <tr>
@@ -1684,7 +1689,7 @@ df.head()</code></pre>
                         <td>Classic</td>
                         <td>1.0</td>
                         <td>10.5</td>
-                        <td>Sliced Ham, Pineapple, Mozzarella Cheese</td>
+                        <td>Sliced Ham, Pineapple...</td>
                         <td>52.50</td>
                     </tr>
                     </tbody>
@@ -1947,7 +1952,7 @@ pizza</code></pre>
                     </tbody>
                 </table>
             </div>
-            <a href="https://edu.hse.ru/mod/quiz/view.php?id=1575209" target="_blank" rel="noopener noreferrer"><button class="check_yourself">Самоопроверка</button></a>&nbsp;<a href="https://edu.hse.ru/mod/quiz/view.php?id=1574898" target="_blank" rel="noopener noreferrer"><button class="check">Практика</button></a>&nbsp;<a href="https://edu.hse.ru/course/view.php?id=236211)" target="_blank" rel="noopener noreferrer"><button class="back_to_course">Вернуться к курсу</button></a>
+            <a href="https://edu.hse.ru/mod/quiz/view.php?id=1575209" target="_blank" rel="noopener noreferrer"><button class="check_yourself">Самоопроверка</button></a>&nbsp;<a href="https://edu.hse.ru/course/view.php?id=236211)" target="_blank" rel="noopener noreferrer"><button class="back_to_course">Вернуться к курсу</button></a>
             <div style="height: 50px;"></div>
         </section>
     </div>
