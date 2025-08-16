@@ -21,7 +21,7 @@
     <div id="sideNav" class="accordion-panel-right">
         <a href="#chapter6"><strong>Глава 6</strong></a>
         <a href="#chapter6-1">6.1 Описательные статистики</a>
-        <a href="#chapter6-2">6.2 Меры центральной тенденции</a>
+        <a href="#chapter6-2">6.2 МЦТ</a>
         <a href="#chapter6-3">6.3 Квартили</a>
         <a href="#chapter6-4">6.4 Меры вариативности</a>
         <a href="#chapter6-5">6.5 Выбросы</a>
@@ -32,6 +32,7 @@
 
 
 <section>
+    <h1 style="font-size: 15px; text-align: center; color:#1e01da; ">Хэндбук. Анализ данных - базовый уровень</h1>
     <h1 style="font-size: 30px;" id="chapter6">Глава 6. Описательные статистики. Пропуски и выбросы</h1>
     <div style="height: 10px;"></div>
     
@@ -182,7 +183,7 @@ df.head()</code></pre>
 
     <p>Для такого исследования нам потребуются <strong>описательные статистики</strong>. Чтобы охарактеризовать среднестатистический ресторан, будем использовать <strong>меры центральной тенденции</strong>, раскрывающие портрет <em>типичного</em> игрока индустрии. Чтобы изучить <em>разнообразие</em> рынка, рассчитаем <strong>меры вариативности</strong> – они покажут, насколько разнятся заведения по ключевым характеристикам. Наконец, чтобы заглянуть внутрь структуры рынка и <em>выявить слои</em> заведений различного уровня, задействуем <strong>квартили</strong>.</p>
 
-    <img src="picture/chapter6/7.svg" width="70%" alt="Рисунок 1">
+    <img src="picture/chapter6/7.svg" width="100%" alt="Рисунок 1">
 
     <p>Чтобы автоматически рассчитать описательные статистики для столбцов типа <em>int64</em> и <em>float64</em>, нужно применить метод <span class="code-chip">.describe()</span> к нашему датафрейму:</p>
 
@@ -203,11 +204,11 @@ df.head()</code></pre>
         <tbody>
         <tr>
             <th>count</th>
-            <td>6407.000000</td>
-            <td>6370.000000</td>
-            <td>6407.000000</td>
-            <td>6407.000000</td>
-            <td>6407.000000</td>
+            <td>6407.0</td>
+            <td>6370.0</td>
+            <td>6407.0</td>
+            <td>6407.0</td>
+            <td>6407.0</td>
         </tr>
         <tr>
             <th>mean</th>
@@ -227,43 +228,43 @@ df.head()</code></pre>
         </tr>
         <tr>
             <th>min</th>
-            <td>2.000000</td>
-            <td>1.000000</td>
-            <td>40.000000</td>
-            <td>0.000000</td>
-            <td>0.000000</td>
+            <td>2.0</td>
+            <td>1.0</td>
+            <td>40.0</td>
+            <td>0.0</td>
+            <td>0.0</td>
         </tr>
         <tr>
             <th>25%</th>
-            <td>3.300000</td>
-            <td>13.000000</td>
-            <td>300.000000</td>
-            <td>0.000000</td>
-            <td>0.000000</td>
+            <td>3.3</td>
+            <td>13.0</td>
+            <td>300.0</td>
+            <td>0.0</td>
+            <td>0.0</td>
         </tr>
         <tr>
             <th>50%</th>
-            <td>3.600000</td>
-            <td>40.000000</td>
-            <td>400.000000</td>
-            <td>1.000000</td>
-            <td>0.000000</td>
+            <td>3.6</td>
+            <td>40.0</td>
+            <td>400.0</td>
+            <td>1.0</td>
+            <td>0.0</td>
         </tr>
         <tr>
             <th>75%</th>
-            <td>3.900000</td>
-            <td>149.000000</td>
-            <td>650.000000</td>
-            <td>1.000000</td>
-            <td>0.000000</td>
+            <td>3.9</td>
+            <td>149.0</td>
+            <td>650.0</td>
+            <td>1.0</td>
+            <td>0.0</td>
         </tr>
         <tr>
             <th>max</th>
-            <td>4.900000</td>
-            <td>16345.000000</td>
-            <td>6000.000000</td>
-            <td>1.000000</td>
-            <td>1.000000</td>
+            <td>4.9</td>
+            <td>16345.0</td>
+            <td>6000.0</td>
+            <td>1.0</td>
+            <td>1.0</td>
         </tr>
         </tbody>
     </table>
@@ -335,38 +336,41 @@ df.head()</code></pre>
         <li><strong>freq</strong> - частота моды</li>
     </ul>
 
+    <div style="height: 10px;"></div>
     <h2 id="chapter6-2">6.2 Какие бывают меры центральной тенденции?</h2>
 
     <p>Когда перед нами большой объём информации, сложно сразу определить основные особенности или характеристики признаков – в таком случае на помощь приходят <strong>меры центральной тенденции</strong> (МЦТ)</p>
 
     <div class="important-card">
         <div class="important-text">
-        <p><strong>Меры центральной тенденции (МЦТ)</strong> - группа описательных статистик, необходимая для характеристики <em>типичного</em> наблюдения в данных.</p>
+        <strong>Меры центральной тенденции (МЦТ)</strong> - группа описательных статистик, необходимая для характеристики <em>типичного</em> наблюдения в данных.
     </div></div>
 
     <p>Мы рассмотрим три описательных статистики: среднее арифметическое, медиана и мода.</p>
 
     <h3>СРЕДНЕЕ АРИФМЕТИЧЕСКОЕ</h3>
 
-    <p>Среднее арифметическое (также называемое средним значением) является наиболее распространённым способом выражения общей тенденции или основного уровня данных.  В математике среднее обозначается x. Если мы хотим рассчитать среднее для некоторого признака X, нужно найти сумму по нему и разделить на количество наблюдений:
+    <p>Среднее арифметическое (также называемое средним значением) является наиболее распространённым способом выражения общей тенденции или основного уровня данных.  В математике среднее обозначается x̄. Если мы хотим рассчитать среднее для некоторого признака X, нужно найти сумму по нему и разделить на количество наблюдений:
 
-x = (x1 + x2 + ... + xn) / n</p>
+x̄= (x<sub>1</sub> + x<sub>2</sub> + ... + x<sub>n</sub>) / n</p>
 
     <p>Среднее, как правило, рассчитывается для <strong>количественных признаков</strong>. Чтобы рассчитать среднее арифметическое в Python, нужно воспользоваться методом <span class="code-chip">.mean()</span>. Например, мы хотим узнать средний рейтинг ресторанов (<strong>rate</strong>):</p>
 
     <pre class="line-numbers"><code class="language-python">df['rate'].mean()</code></pre>
-
+    <p class="print_result">np.float64(3.5846417980334015)</p>
     <p>Или хотим выяснить средний размер чека (<strong>avg_receipt</strong>):</p>
 
     <pre class="line-numbers"><code class="language-python">df['avg_receipt'].mean()</code></pre>
-
+    <p class="print_result">np.float64(555.8809115030435)</p>
     <p>Помимо оценки количественных признаков, среднее арифметическое применяется к <strong>категориальным бинарным</strong> данным, закодированным в виде 1 и 0. Для таких данных среднее арифметическое показывает долю 1 в данных. В наших данных есть признак <strong>online_order</strong> - идентификатор того, есть ли в ресторане возможность сделать онлайн-заказ. Если такая возможность есть - 1, иначе 0. Если мы хотим найти долю ресторанов, в которых есть опция онлайн-заказа, напишем следующий код:</p>
 
     <pre class="line-numbers"><code class="language-python">df['online_order'].mean()</code></pre>
+    <p class="print_result">np.float64(0.5372249102544092)</p>
 
     <p>Получается, доля ресторанов, в которых есть возможность заказать онлайн, составляет 0.53. Для удобства можно умножить значение на 100, чтобы перевести доли в проценты:</p>
 
     <pre class="line-numbers"><code class="language-python">df['online_order'].mean()*100</code></pre>
+    <p class="print_result">np.float64(53.722491025440924)</p>
 
     <p>Кажется, что среднее арифметическое идеально подходит для описания типичного наблюдения в данных, однако у него есть серьезный недостаток — <strong>чувствительность к выбросам</strong>. <strong>Выбросы</strong> — это крайне высокие или низкие значения, резко отличающиеся от остальных данных. Например, если в вашем наборе данных преобладают недорогие заведения общепита с небольшими средними чеками, но присутствуют несколько элитных ресторанов с гораздо более высокими ценами, то среднее арифметическое размера чека будет заметно увеличено за счет этих дорогих заведений. Из-за этого средняя величина станет завышенной, и получится неверное представление о типичном размере чека в большинстве мест.</p>
 
@@ -374,11 +378,15 @@ x = (x1 + x2 + ... + xn) / n</p>
 
     <p><strong>Медиана</strong> - это мера центральной тенденции, лежащая по центру распределения данных. В отличие от среднего, медиана <strong>к выбросам устойчива</strong>; это связано с методологией ее рассчета, в которой мы берем не все данные, а только те, что лежат посередине:</p>
 
-    <img src="picture/chapter6/8.svg" width="70%" alt="Рисунок 2">
+    <ul>
+        <li>Если количество наблюдений <strong>нечетное</strong>, медиана - это значение, стоящее посередине. Например, в <strong>[1, 2, 3, 4, 5]</strong> медиана равна <strong>3</strong>.</li>
+        <li>Если количество наблюдений <strong>четное</strong>, медиана - это среднее значение двух центральных наблюдений. Например, в <strong>[1, 2, 3, 4]</strong> медиана равна <strong>2.5</strong>.</li>
+    </ul>
 
     <p>Аналогично среднему арифметическому, медиана рассчитывается, как правило, для <strong>количественных признаков</strong>. Если мы хотим рассчитать медиану размера чека (<strong>avg_receipt</strong>), воспользуемся методом <span class="code-chip">.median()</span>:</p>
 
     <pre class="line-numbers"><code class="language-python">df['avg_receipt'].median()</code></pre>
+<p class="print_result">400.0</p>
 
     <p>Получается, в половине ресторанов размер чека меньше 400 у.е., а в другой половине больше</p>
 
@@ -386,7 +394,31 @@ x = (x1 + x2 + ... + xn) / n</p>
 
     <p>Последняя мера центральной тенденции - <strong>мода</strong>. Она показывает <strong>самое частое (популярное) значение</strong> в данных. Если значения среднего и медианы может быть только одно, то мод в данных может быть несколько:</p>
 
-    <img src="picture/chapter6/9.svg" width="70%" alt="Рисунок 3">
+    <p>Данные: <strong>F D A D B C</strong></p>
+    <div class="scrollable-table">
+    <table border="1" class="dataframe">
+    <tr>
+        <th>Значение</th>
+        <th>Частота</th>
+    </tr>
+    <tr>
+        <td>F</td>
+        <td>1</td>
+    </tr>
+    <tr>
+        <td>D</td>
+        <td>2</td>
+    </tr>
+    <tr>
+        <td>A</td>
+        <td>1</td>
+    </tr>
+    <tr>
+        <td>B</td>
+        <td>1</td>
+    </tr>
+</table></div>
+<p><strong>D</strong> встречается чаще всего, значит <strong>D - МОДА</strong>.</p>
 
     <p>Как правило, моду рассчитывают для <strong>категориальных признаков</strong>. Если мы хотим найти, какая кухня (<strong>cuisines_type</strong>) наиболее распространенная в наших данных, воспользуемся методом <span class="code-chip">.mode()</span>:</p>
 
@@ -412,6 +444,7 @@ x = (x1 + x2 + ... + xn) / n</p>
     <p>Этот метод возвращает серию (<strong>Series</strong>). Если бы мод было несколько (какие-то значения встретились одинаково часто), то все они вывелись бы в этой таблице. Чтобы извлечь конкретное значение моды, к нему нужно обратиться по индексу:</p>
 
     <pre class="line-numbers"><code class="language-python">df['cuisines_type'].mode()[0]</code></pre>
+<p class="print_result">North Indian, Chinese</p>
 
     <p>Моду <strong>количественного признака</strong> можно оценить по гистограмме распределения.</p>
 
@@ -475,7 +508,7 @@ x = (x1 + x2 + ... + xn) / n</p>
         </li>
     </ul>
 
-    <img src="picture/chapter6/10.svg" width="70%" alt="Рисунок 10">
+    <img src="picture/chapter6/10.svg" width="100%" alt="Рисунок 10">
 
     <p>Выбросов (они могут находится на хвостах распределения) нет – а если и есть, то они уравновешивают среднее арифметическое слева и справа, и оно остается по центру. Медиана просто делит данные пополам.</p>
 
@@ -485,14 +518,16 @@ x = (x1 + x2 + ... + xn) / n</p>
 
     <p>Построим гистограмму распределения рейтинга ресторанов (<strong>rate</strong>):</p>
 
-    <pre class="line-numbers"><code class="language-python">df['rate'].plot(kind = 'hist', bins = 15)</code></pre>
-    <img src="picture/chapter6/img1.png" width="70%" alt="Рисунок 10">
+    <pre class="line-numbers"><code class="language-python">df['rate'].plot(kind='hist', bins=15)</code></pre>
+    <img src="picture/chapter6/img1.png" width="100%" alt="Рисунок 10">
 
     <p>В целом, полученное распределение практически симметрично. Давайте сравним среднее и медиану для него:</p>
 
     <pre class="line-numbers"><code class="language-python">round(df['rate'].mean(), 1)  # среднее</code></pre>
-
+<p class="print_result">np.float64(3.6)</p>
+    
     <pre class="line-numbers"><code class="language-python">round(df['rate'].median(), 1)  # медиана</code></pre>
+<p class="print_result">3.6</p>
 
     <p>Мы видим, что среднее и медиана совпадают. Если мы мысленно проведем линию на гистограмме признака <strong>rate</strong> на значении 3.6, она окажется по середине графика.</p>
 
@@ -515,7 +550,7 @@ x = (x1 + x2 + ... + xn) / n</p>
         </p></li>
     </ul>
 
-    <img src="picture/chapter6/11.svg" width="70%" alt="Рисунок 11">
+    <img src="picture/chapter6/11.svg" width="100%" alt="Рисунок 11">
 
     <p>Для определения моды мы пользуемся той же логикой, что и в симметричных распределениях: мода - там, где пик. Теперь разберемся со средним и медианой.</p>
     
@@ -529,23 +564,24 @@ x = (x1 + x2 + ... + xn) / n</p>
 
     <p>Построим гистограмму распределения размера чека (<strong>avg_receipt</strong>):</p>
 
-    <pre class="line-numbers"><code class="language-python">df['avg_receipt'].plot(kind = 'hist', bins = 15)</code></pre>
+    <pre class="line-numbers"><code class="language-python">df['avg_receipt'].plot(kind='hist', bins=15)</code></pre>
 
-    <img src="picture/chapter6/img2.png" width="70%" alt="Рисунок 2">
+    <img src="picture/chapter6/img2.png" width="100%" alt="Рисунок 2">
 
     <p>Распределение размера чека асимметричное. В большей части ресторанов чек не превышает 2000 у.е., однако мы видим на гистограмме тяжелый хвост справа, там находятся рестораны с экстремально высоким размером чека. Значит мы можем предположить, что для данного признака среднее значение будет больше, чем медиана. Давайте это предположение проверим:</p>
 
     <pre class="line-numbers"><code class="language-python">round(df['avg_receipt'].mean(), 1)  # среднее</code></pre>
-
+<p class="print_result">np.float64(555.9)</p>
     <pre class="line-numbers"><code class="language-python">round(df['avg_receipt'].median(), 1)  # медиана</code></pre>
-
+<p class="print_result">400.0</p>
     <p>Как мы видим, среднее больше медианы почти на 156 у.е. Значит наши выводы на основе гистограммы оказались верны.</p>
 
+    <div style="height: 10px;"></div>
     <h2 id="chapter6-3">6.3 Какие бывают квартили?</h2>
 
     <div class="important-card">
         <div class="important-text">
-            <p><strong>Квартили</strong> — это специальные величины, позволяющие разделить весь набор данных на четыре равных части.</p>
+            <strong>Квартили</strong> — это специальные величины, позволяющие разделить весь набор данных на четыре равных части.
         </div>
     </div>
 
@@ -558,7 +594,9 @@ x = (x1 + x2 + ... + xn) / n</p>
             <p><strong>Нулевой квартиль (Q₀)</strong></p>
             <p>Это такое значение, меньше которого 0% данных. Это то же самое, что <strong>минимум</strong> в данных. Чтобы рассчитать нулевой квартиль, можно воспользоваться методом <span class="code-chip">.quantile(0)</span> или <span class="code-chip">.min()</span>:</p>
             <pre class="line-numbers"><code class="language-python">df['rate'].quantile(0)</code></pre>
+            <p class="print_result">np.float64(1.8)</p>
             <pre class="line-numbers"><code class="language-python">df['rate'].min()</code></pre>
+            <p class="print_result">1.8</p>
             <p>Самый низкий рейтинг ресторана – 1.8 звезд. Или, другими словами, 100% ресторанов имеют рейтинг не меньше 1.8.</p>
         </li>
         
@@ -567,6 +605,7 @@ x = (x1 + x2 + ... + xn) / n</p>
             <p>Это значение, меньше которого 25% данных, или значение, больше которого 75% данных.</p>
             <p>Для рассчета первого квартиля используется метод <span class="code-chip">.quantile(0.25)</span>:</p>
             <pre class="line-numbers"><code class="language-python">df['rate'].quantile(0.25)</code></pre>
+            <p class="print_result">3.3</p>
             <p>25% ресторанов имеют рейтинг менее 3.3 звезд. Эти 25% ресторанов можно отнести к худшим ресторанам с самым низким рейтингом. У остальных 75% ресторанов рейтинг более 3.3 звезд.</p>
         </li>
         
@@ -575,7 +614,9 @@ x = (x1 + x2 + ... + xn) / n</p>
             <p>Это то же самое, что <strong>медиана</strong>. Второй квартиль делит данные пополам: меньше него 50% данных и больше него тоже 50%.</p>
             <p>Для рассчета этого значения используется либо метод <span class="code-chip">.quantile(0.5)</span>, либо <span class="code-chip">.median()</span>:</p>
             <pre class="line-numbers"><code class="language-python">df['rate'].quantile(0.5)</code></pre>
+            <p class="print_result">np.float64(3.6)</p>
             <pre class="line-numbers"><code class="language-python">df['rate'].median()</code></pre>
+            <p class="print_result">3.6</p>
             <p>50% ресторанов имеют рейтинг менее (более) 3.6 звезд, или медиана рейтинга ресторана составляет 3.6 звезд</p>
         </li>
         
@@ -584,6 +625,7 @@ x = (x1 + x2 + ... + xn) / n</p>
             <p>Это значение, меньше которого 75% данных. Или значение, больше которого 25% данных.</p>
             <p>Для рассчета третьего квартиля используется метод <span class="code-chip">.quantile(0.75)</span>:</p>
             <pre class="line-numbers"><code class="language-python">df['rate'].quantile(0.75)</code></pre>
+            <p class="print_result">np.float64(3.9)</p>
             <p>25% ресторанов имеют рейтинг более 3.9 звезд. Это сегмент ресторанов с самым высоким рейтингом. У остальных 75% ресторанов рейтинг меньше этого значения.</p>
         </li>
         
@@ -592,11 +634,13 @@ x = (x1 + x2 + ... + xn) / n</p>
             <p>Это то же самое, что <strong>максимум</strong> данных. То есть, это такое значение, больше которого 0% данных.</p>
             <p>Для рассчета этого значения используется либо метод <span class="code-chip">.quantile(1)</span>, либо <span class="code-chip">.max()</span>:</p>
             <pre class="line-numbers"><code class="language-python">df['rate'].quantile(1)</code></pre>
+            <p class="print_result">np.float64(4.9)</p>
             <pre class="line-numbers"><code class="language-python">df['rate'].max()</code></pre>
+            <p class="print_result">4.9</p>
         </li>
     </ul>
 
-    <img src="picture/chapter6/12.svg" width="70%" alt="Рисунок 12">
+    <img src="picture/chapter6/12.svg" width="100%" alt="Рисунок 12">
 <div class="scrollable-table">
     <table border="1" class="dataframe_new" style="width: 100%;">
         <tr>
@@ -657,6 +701,7 @@ x = (x1 + x2 + ... + xn) / n</p>
         </tr>
     </table>
 </div>
+<div style="height: 10px;"></div>
     <h2 id="chapter6-4">6.4 Какие бывают меры вариативности?</h2>
 
     <p>Мы описали типичный ресторан с помощью мер центральной тенденции. Затем мы провели сегментацию ресторанов по уровням популярности, используя квартили, выделяя верхние и нижние слои по качеству обслуживания и привлекательности для клиентов.</p>
@@ -665,7 +710,7 @@ x = (x1 + x2 + ... + xn) / n</p>
 
     <div class="important-card">
         <div class="important-text">
-            <p><strong>Меры вариативности</strong> - это группа описательных статистик, которые используются для оценки <em>степени разброса</em> значений признака.</p>
+        <strong>Меры вариативности</strong> - это группа описательных статистик, которые используются для оценки <em>степени разброса</em> значений признака.
         </div>
     </div>
 
@@ -673,62 +718,67 @@ x = (x1 + x2 + ... + xn) / n</p>
 
     <p>Если мы хотим узнать <em>амплитуду разброса</em> <strong>количественного признака</strong>, можно рассчитать <strong>размах</strong>. Чтобы его рассчитать, нужно найти разницу между максимальным и минимальным значением. Например, мы хотим найти размах размера чека (<strong>avg_receipt</strong>):</p>
 
-    <pre class="line-numbers"><code class="language-python">df['avg_receipt'].max()-df['avg_receipt'].min()</code></pre>
-
+    <pre class="line-numbers"><code class="language-python">df['avg_receipt'].max() - df['avg_receipt'].min()</code></pre>
+<p class="print_result">5960.0</p>
     <p>Размер чека в местах общественного питания меняется в диапазоне 5960 у.е.. Это довольно большое число, говорящие о разнообразии мест, которые представленны в наших данных: у нас есть скромные места с небольшим чеком, но представлены и более изысканные дорогие заведения.</p>
 
     <p>У размаха есть большой недостаток – он <strong>не устойчив к экстремальным значениям</strong> (выбросам). То есть, если в данных только один дорогой ресторан, где средний размер чека составляет, к примеру, 7000 у.е., а во всех остальных ресторанах чек около 1000 у.е., по итоговому числу может показаться, что дорогих ресторанов очень много – это приведет к искажению общего понимания рынка.</p>
 
     <p>Этот недостаток связан с тем, что для рассчета размаха берутся крайние значения признака (максимум и минимум), а они зачастую могут оказаться выбросами, единичными искажениями в данных.</p>
 
-    <img src="picture/chapter6/13.svg" width="70%" alt="Рисунок 13">
+    <img src="picture/chapter6/13.svg" width="100%" alt="Рисунок 13">
 
     <h3>ИНТЕРКВАРТИЛЬНЫЙ РАЗМАХ (IQR)</h3>
 
     <p>Если мы хотим оценить, в каком диапазоне меняется значение, но при этом нам нужна мера вариативности, устойчивая к выбросам, можно рассчитать <strong>интерквартильный размах</strong> (межквартильный диапазон). Довольно часто его сокращают как IQR (Interquartile Range). Чтобы его рассчитать, нужно из третьего квартиля (Q₃) вычесть первый квартиль (Q₁):</p>
 
-    <pre class="line-numbers"><code class="language-python">df['avg_receipt'].quantile(0.75)-df['avg_receipt'].quantile(0.25)</code></pre>
-
+    <pre class="line-numbers"><code class="language-python">df['avg_receipt'].quantile(0.75) - df['avg_receipt'].quantile(0.25)</code></pre>
+<p class="print_result">np.float64(300.0)</p>
     <p>Устойчивость к выбросам этой метрики обусловлена способом ее расчета: берутся не крайние значения, которые могут оказаться выбросами, а Q₁ и Q₃, расположенные ближе к центру распределения. Между этими эти квартилями находится 50% наблюдений (в нашем случае – ресторанов), поэтому мы можем сказать, что диапазон разброса центральных 50% наблюдений по размеру чека составляет 300 у.е.</p>
 
-    <img src="picture/chapter6/14.svg" width="70%" alt="Рисунок 14">
+    <img src="picture/chapter6/14.svg" width="100%" alt="Рисунок 14">
 
     <h3>ДИСПЕРСИЯ</h3>
 
     <p>Еще одна мера, позволяющая оценить разброс данных, это <strong>дисперсия</strong>. В математике она обозначается греческой буква сигма в квадрате -  σ2 . Это мера показывает <em>усредненный квадрат отклонений</em> <strong>количественного</strong> признака от среднего арифметического:</p>
 
-    <p>σ2=(x1−x¯)2+(x2−x¯)2+...+(xn−x¯)2n</p>
-    <p>x1,x2,...,xn  - каждое наблюдение количественного признака</p>
-    <p>x¯  - среднее арифметическое</p>
-    <p>(xn−x¯)2  - квадрат отклонения данных от среднего арифметического. Квадрат берется, чтобы не появился минус, так как отклонение может быть как в большую, так и в меньшую сторону от среднего.</p>
+    <p>σ2=((x1−x̄)<sup>2</sup>+(x2−x̄)<sup>2</sup>+...+(xn−x̄)<sup>2</sup>) / n</p>
+    <p>x<sub>1</sub>,x<sub>2</sub>,...,x<sub>n</sub>  - каждое наблюдение количественного признака</p>
+    <p>x̄  - среднее арифметическое</p>
+    <p>(x<sub>n</sub>−x̄)<sup>2</sup>  - квадрат отклонения данных от среднего арифметического. Квадрат берется, чтобы не появился минус, так как отклонение может быть как в большую, так и в меньшую сторону от среднего.</p>
     <p>n  - количество наблюдений. Делим на число наблюдений, чтобы найти усредненное значение.</p>
 
 
     <p>Для того чтобы рассчитать дисперсию в Python, нам не нужна формула, нужно лишь воспользоваться методом <span class="code-chip">.var()</span> (от слова variance, – англ. <em>дисперсия</em>)</p>
 
     <pre class="line-numbers"><code class="language-python">df['avg_receipt'].var()</code></pre>
+<p class="print_result">224698.25283148492</p>
 
     <p>Недостатком дисперсии как меры вариативности является ее зависимость от среднего арифметического, вследствие чего она <strong>крайне восприимчива к наличию выбросов</strong>. Более того, поскольку расчет основан на квадратах отклонений, итоговая величина оказывается неудобной для интуитивного осмысления, так как представляет собой квадратную меру первоначальной единицы измерения.</p>
     <p>Тем не менее, попробовать выразить смысл полученного результата можно следующим образом: усредненное квадратичное отклонение размера чека от среднего значения составило 224698.25  у.е2 .</p>
     <p>Мы можем использовать дисперсию для сравнения степени разброса нескольких наборов данных. Чем больше дисперсия, тем больше разброс данных, и тем менее плотно наши данные собраны вокруг среднего и больше растянуты по числовой оси. С точки зрения гистограммы распределения это выглядит так:</p>
-    <img src="picture/chapter6/15.svg" width="70%" alt="Рисунок 15">
+    <img src="picture/chapter6/15.svg" width="100%" alt="Рисунок 15">
 
     <h3>СТАНДАРТНОЕ ОТКЛОНЕНИЕ</h3>
     <p>Чтобы избавиться от квадрата в дисперсии, можно взять <em>корень</em>. Такая мера вариативности называется <strong>стандартным отклонением</strong> и обозначется  σ , но уже без квадрата:</p>
 
+    <p>σ = sqrt(((x<sub>1</sub>−x̄)<sup>2</sup>+(x<sub>2</sub>−x̄)<sup>2</sup>+...+(x<sub>n</sub>−x̄)<sup>2</sup>) / n)</p>
+
     <p>Чтобы рассчитать стандартное отклонение, воспользуемся методом <span class="code-chip">.std()</span> от англ. <em>standard deviation:</em></p>
 
     <pre class="line-numbers"><code class="language-python">df['avg_receipt'].std()</code></pre>
+<p class="print_result">474.02347286973554</p>
 
     <p>Стандартное отклонение также <strong>чувствительно к выбросам</strong>, но гораздо удобнее в интерпретации: в среднем размер чека отличается от среднего арифметического на 474.02 у.е..</p>
     <p>Стандартное отклонение также можно использовать для сравнения разброса нескольких наборов данных. Логика такая же, как и с дисперсией: чем больше стандартное отклонение, тем больше вариативность данных, и тем больше данные растянуты по оси:</p>
-    <img src="picture/chapter6/16.svg" width="70%" alt="Рисунок 16">
+    <img src="picture/chapter6/16.svg" width="100%" alt="Рисунок 16">
 
     <h3>КОЛИЧЕСТВО УНИКАЛЬНЫХ ЗНАЧЕНИЙ</h3>
 
     <p>Меры вариативности, которые мы рассмотрели выше, используется только для количественных признаков. Если мы хотим оценить разнообразие <strong>категориального признака</strong>, можно рассчитать количество уникальных значений с помощью метода <span class="code-chip">.nunique()</span>:</p>
 
     <pre class="line-numbers"><code class="language-python">df['cuisines_type'].nunique()</code></pre>
+<p class="print_result">2045</p>
 
     <p>Другими словами, в вашем датасете содержится 2045 различных типов кухни.</p>
     <div class="scrollable-table">
@@ -793,14 +843,14 @@ x = (x1 + x2 + ... + xn) / n</p>
     </div>
 
 <a href="https://edu.hse.ru/mod/quiz/view.php?id=1610938" target="_blank" rel="noopener noreferrer"><button class="check_yourself">Самоопроверка</button></a>
-
+<div style="height: 10px;"></div>
     <h2 id="chapter6-5">6.5 Как искать выбросы в данных?</h2>
 
     <p>В прошлых разделах мы уже затронули тему выбросов. А сейчас поговорим о них чуть подробнее.</p>
 
     <div class="important-card">
         <div class="important-text">
-            <p><strong>Выбросы</strong> — это крайне высокие или низкие значения, резко отличающиеся от остальных данных.</p>
+            <strong>Выбросы</strong> — это крайне высокие или низкие значения, резко отличающиеся от остальных данных.
         </div>
     </div>
 
@@ -832,7 +882,7 @@ x = (x1 + x2 + ... + xn) / n</p>
     <p>А если, наоборот, нужны только выбросы, делаем следующую фильтрацию:</p>
     <p class="fake-code"><span class="code-line">outliers = df[(датафрейм['признак'] < left) | (датафрейм['признак'] > right)]</span></p>
 
-    <img src="picture/chapter6/17.svg" width="70%" alt="Рисунок 17">
+    <img src="picture/chapter6/17.svg" width="100%" alt="Рисунок 17">
 
     <p>Давайте рассчитаем границы выбросов для размера чека (<strong>avg_receipt</strong>). Будем считать, что выбросы – это все рестораны, в которых размер чека отличается от среднего более чем на 2 стандартных отклонения:</p>
 
@@ -846,10 +896,13 @@ right = avg + 2*std</code></pre>
 
     <pre class="line-numbers"><code class="language-python">df_clean = df[(df['avg_receipt'] >= left) & (df['avg_receipt'] <= right)]
 df_clean.shape[0]</code></pre>
+<p class="print_result">5825</p>
 
     <p>В данных осталось 5825 ресторанов.</p>
     <p>Если мы хотим посчитать количество выбросов, сделаем обратную фильтрацию:</p>
     <pre class="line-numbers"><code class="language-python">df[(df['avg_receipt'] < left) | (df['avg_receipt'] > right)].shape[0]</code></pre>
+    <p class="print_result">582</p>
+
     <p>Выбросами по размеру чека оказались 582 ресторана.</p>
 
     <h3>МЕТОД 1.5 ИНТЕРКВАРТИЛЬНЫХ РАЗМАХОВ (IQR)</h3>
@@ -874,7 +927,7 @@ df_clean.shape[0]</code></pre>
         </li>
     </ol>
 
-    <img src="picture/chapter6/18.svg" width="70%" alt="Рисунок 18">
+    <img src="picture/chapter6/18.svg" width="100%" alt="Рисунок 18">
 
     <p>Теперь давайте рассчитаем границы выбросов размера чека (<strong>avg_receipt</strong>) методом 1.5*IQR:</p>
 
@@ -888,10 +941,14 @@ right = q3 + 1.5*iqr</code></pre>
     <p>Сделаем фильтрацию и посчитаем, сколько ресторанов согласно этому методу не будут считаться выбросами:</p>
 
     <pre class="line-numbers"><code class="language-python">df[(df['avg_receipt'] >= left) & (df['avg_receipt'] <= right)].shape[0]</code></pre>
-    
+
+    <p class="print_result">5825</p>
+
     <p>Для нахождения количества выбросов сделаем следующую фильтрацию:</p>
 
     <pre class="line-numbers"><code class="language-python">df[(df['avg_receipt'] < left) | (df['avg_receipt'] > right)].shape[0]</code></pre>
+
+    <p class="print_result">582</p>
 
     <p>Количество выбросов и чистых данных для обоих методов совпали, но на практике они могут отличаться, и это нормально.</p>
 
@@ -903,7 +960,7 @@ right = q3 + 1.5*iqr</code></pre>
 
     <p><strong>Левая граница</strong> ящика - это <strong>первый квартиль</strong> (Q₁), а <strong>правая граница</strong> - это <strong>третий квартиль</strong> (Q₃). Линия <strong>посередине</strong> - <strong>медиана</strong> (второй квартиль, Q₂)</p>
 
-    <img src="picture/chapter6/19.svg" width="70%" alt="Рисунок 19">
+    <img src="picture/chapter6/19.svg" width="100%" alt="Рисунок 19">
 
     <p>Ящик всегда показывает квартили, а вот границы "усов" могут рассчитываться по разному в зависимости от того, есть в данных выбросы или нет.</p>
 
@@ -925,17 +982,17 @@ right = q3 + 1.5*iqr</code></pre>
         <li><p>Правая граница: <strong>максимум</strong></p></li>
     </ul>
 
-    <img src="picture/chapter6/20.svg" width="70%" alt="Рисунок 20">
+    <img src="picture/chapter6/20.svg" width="100%" alt="Рисунок 20">
 
     <div class="important-card">
         <div class="important-text">
-            <p>На ящике с усами нет среднего арифметического, но мы можем оценить его положение. Если в данных есть экстремально низкие значения, то среднее будет левее медианы, а если в данных есть экстремально высокие значения, то среднее будет правее медианы.</p>
+            На ящике с усами нет среднего арифметического, но мы можем оценить его положение. Если в данных есть экстремально низкие значения, то среднее будет левее медианы, а если в данных есть экстремально высокие значения, то среднее будет правее медианы.
         </div>
     </div>
 
     <p>Давайте построим ящик с усами для рейтинга ресторанов (<strong>rate</strong>):</p>
 
-    <pre class="line-numbers"><code class="language-python">df['rate'].plot(kind = 'box', vert = False)</code></pre>
+    <pre class="line-numbers"><code class="language-python">df['rate'].plot(kind='box', vert=False)</code></pre>
 
     <img src="picture/chapter6/img3.png" width="70%" alt="Рисунок 3">
     
@@ -944,64 +1001,77 @@ right = q3 + 1.5*iqr</code></pre>
     <p>Самые крайние кружочки – это минимум и максимум:</p>
 
     <pre class="line-numbers"><code class="language-python">df['rate'].min()  # левый кружок</code></pre>
+<p class="print_result">2.0</p>
 
     <pre class="line-numbers"><code class="language-python">df['rate'].max()  # правый кружок</code></pre>
+<p class="print_result">4.9</p>
 
     <p>Линия посередине ящика - это медиана:</p>
+        <pre class="line-numbers"><code class="language-python">df['rate'].median()</code></pre>
+<p class="print_result">3.6</p>
 
     <p>Левая граница ящика - это первый квартиль (<span class="code-chip">q1</span>), а правая граница - третий квартиль (<span class="code-chip">q3</span>):</p>
 
     <pre class="line-numbers"><code class="language-python">q1 = df['rate'].quantile(0.25)  # левая граница коробки
 q1</code></pre>
+<p class="print_result">np.float64(3.3)</p>
 
     <pre class="line-numbers"><code class="language-python">q3 = df['rate'].quantile(0.75)  # правая граница коробки
 q3</code></pre>
+<p class="print_result">np.float64(3.9)</p>
 
     <p>Теперь рассчитаем интерквартильный размах (<span class="code-chip">IQR</span>):</p>
     <pre class="line-numbers"><code class="language-python">iqr = q3 - q1
 iqr</code></pre>
+<p class="print_result">np.float64(0.6000000000000001)</p>
 
     <p>Теперь можем рассчитать значение левого и правого усов:</p>
 
     <pre class="line-numbers"><code class="language-python">q1 - 1.5*iqr  # левый ус</code></pre>
+<p class="print_result">np.float64(2.3999999999999995)</p>
 
     <pre class="line-numbers"><code class="language-python">q3 + 1.5*iqr  # правый ус</code></pre>
-
-
+<p class="print_result">np.float64(4.8)</p>
 
     <p>А теперь построим ящик с усами для среднего размера чека в ресторанах (<strong>avg_receipt</strong>):</p>
 
-    <pre class="line-numbers"><code class="language-python">df['avg_receipt'].plot(kind = 'box', vert = False)</code></pre>
+    <pre class="line-numbers"><code class="language-python">df['avg_receipt'].plot(kind='box', vert=False)</code></pre>
 
     <img src="picture/chapter6/img4.png" width="70%" alt="Рисунок 4">
 
     <p>У данного признака нет экстремально низких значений, значит левый ус - это минимум, а самая крайна правая точка - это максимум:</p>
 
     <pre class="line-numbers"><code class="language-python">df['avg_receipt'].min()  # левый ус</code></pre>
+<p class="print_result">40.0</p>
 
     <pre class="line-numbers"><code class="language-python">df['avg_receipt'].max()  # крайная правая точка</code></pre>
+<p class="print_result">6000.0</p>
 
     <p>Ящик интерпретируется точно также: линия посередине - это медиана, левая граница - первый квартиль (<span class="code-chip">q1</span>), правая граница - третий квартиль (<span class="code-chip">q3</span>):</p>
 
     <pre class="line-numbers"><code class="language-python">df['avg_receipt'].median()  # линия по середине коробки</code></pre>
+<p class="print_result">400.0</p>
 
     <p>На ящике с усами нет среднего арифметического, но мы можем оценить, какое оно. В данных есть экстремально высокие значения, среднее тянется к выбросам и будет ближе к ним, чем медиана, значит среднее арифметическое будет больше чем 400.</p>
 
     <pre class="line-numbers"><code class="language-python">q1 = df['avg_receipt'].quantile(0.25)  # левая граница коробки
 q1</code></pre>
+<p class="print_result">np.float64(300.0)</p>
 
     <pre class="line-numbers"><code class="language-python">q3 = df['avg_receipt'].quantile(0.75)  # правая граница коробки
 q3</code></pre>
+<p class="print_result">np.float64(650.0)</p>
 
     <p>Правый "ус" - это граница выбросов:</p>
 
     <pre class="line-numbers"><code class="language-python">iqr = q3 - q1  # интерквартильный размах
 q3 + 1.5*iqr  # правый ус</code></pre>
+<p class="print_result">np.float64(1175.0)</p>
 
 
 
     <a href="https://edu.hse.ru/mod/quiz/view.php?id=1610939" target="_blank" rel="noopener noreferrer"><button class="check_yourself">Самопроверка</button></a>
-
+<div style="height: 10px;"></div>
     <h2 id="chapter6-6">6.6 Как обрабатывать пропуски в данных?</h2>
 
     <p>Теперь обсудим, как работать с пропусками в данных. Пропуск - это отсутствие информации, которое в Pandas обозначается как <span class="code-chip">NaN</span>.</p>
@@ -1240,7 +1310,7 @@ q3 + 1.5*iqr  # правый ус</code></pre>
         <tbody>
         <tr>
             <th>name</th>
-            <td>0.000000</td>
+            <td>0.0</td>
         </tr>
         <tr>
             <th>restaurant_type</th>
@@ -1248,7 +1318,7 @@ q3 + 1.5*iqr  # правый ус</code></pre>
         </tr>
         <tr>
             <th>rate</th>
-            <td>0.000000</td>
+            <td>0.0</td>
         </tr>
         <tr>
             <th>votes</th>
@@ -1256,23 +1326,23 @@ q3 + 1.5*iqr  # правый ус</code></pre>
         </tr>
         <tr>
             <th>avg_receipt</th>
-            <td>0.000000</td>
+            <td>0.0</td>
         </tr>
         <tr>
             <th>online_order</th>
-            <td>0.000000</td>
+            <td>0.0</td>
         </tr>
         <tr>
             <th>table_booking</th>
-            <td>0.000000</td>
+            <td>0.0</td>
         </tr>
         <tr>
             <th>cuisines_type</th>
-            <td>0.000000</td>
+            <td>0.0</td>
         </tr>
         <tr>
             <th>area</th>
-            <td>0.000000</td>
+            <td>0.0</td>
         </tr>
         </tbody>
     </table>
@@ -1297,7 +1367,7 @@ q3 + 1.5*iqr  # правый ус</code></pre>
         <tbody>
         <tr>
             <th>name</th>
-            <td>0.000000</td>
+            <td>0.0</td>
         </tr>
         <tr>
             <th>restaurant_type</th>
@@ -1305,7 +1375,7 @@ q3 + 1.5*iqr  # правый ус</code></pre>
         </tr>
         <tr>
             <th>rate</th>
-            <td>0.000000</td>
+            <td>0.0</td>
         </tr>
         <tr>
             <th>votes</th>
@@ -1313,23 +1383,23 @@ q3 + 1.5*iqr  # правый ус</code></pre>
         </tr>
         <tr>
             <th>avg_receipt</th>
-            <td>0.000000</td>
+            <td>0.0</td>
         </tr>
         <tr>
             <th>online_order</th>
-            <td>0.000000</td>
+            <td>0.0</td>
         </tr>
         <tr>
             <th>table_booking</th>
-            <td>0.000000</td>
+            <td>0.0</td>
         </tr>
         <tr>
             <th>cuisines_type</th>
-            <td>0.000000</td>
+            <td>0.0</td>
         </tr>
         <tr>
             <th>area</th>
-            <td>0.000000</td>
+            <td>0.0</td>
         </tr>
         </tbody>
     </table>

@@ -27,6 +27,7 @@
             <img src="picture/logo.svg" class="logo-top-right" alt="Логотип">
         </div>
         <section>
+            <h1 style="font-size: 15px; text-align: center; color:#1e01da; ">Хэндбук. Анализ данных - базовый уровень</h1>
             <h1 style="font-size: 30px;" id="chapter2">Глава 2. Фильтрация и сортировка</h1>
             <h2 id="chapter2-1">2.1 Как сделать фильтрацию в DataFrame?</h2>
             <p>Часто при работе с большими наборами данных необходимо сконцентрировать внимание только на конкретных наблюдениях, обладающих определенными характеристиками. Такой инструмент анализа называется фильтрацией.</p>
@@ -1777,7 +1778,7 @@ df.head()</code></pre>
             <p>Если бы мы применили метод <span class="code-chip">.loс[0]</span>&nbsp; в коде выше, мы бы не получили необходимый результат. Код бы вернул ингредиенты в заказе под иском индексом 0, а не первом заказе после сортировки по возрастанию цены:</p>
             <pre class="line-numbers"><code class="language-python">df.sort_values('total_price').loc[0]['pizza_ingredients']</code></pre>
             <div class="print_result">Bacon, Pepperoni, Italian Sausage, Chorizo Sausage</div>
-            <a href="https://edu.hse.ru/mod/quiz/view.php?id=1574901" target="_blank" rel="noopener noreferrer"><button class="check_yourself">Самоопроверка</button></a>&nbsp;<a href="https://edu.hse.ru/mod/quiz/view.php?id=1574898" target="_blank" rel="noopener noreferrer"><button class="check">Практика</button></a>&nbsp;<a href="https://edu.hse.ru/course/view.php?id=236211)" target="_blank" rel="noopener noreferrer"><button class="back_to_course">Вернуться к курсу</button></a>
+            <a href="https://edu.hse.ru/mod/quiz/view.php?id=1574901" target="_blank" rel="noopener noreferrer"><button class="check_yourself">Самоопроверка</button></a>&nbsp;<a href="https://edu.hse.ru/mod/quiz/view.php?id=1574898" target="_blank" rel="noopener noreferrer"><button class="check">Практика</button></a>&nbsp;<a href="https://edu.hse.ru/course/view.php?id=236211" target="_blank" rel="noopener noreferrer"><button class="back_to_course">Вернуться к курсу</button></a>
             <div style="height: 50px;"></div>
             <h2 id="chapter2-4">2.4 Как сделать фильтрацию или сортировку в Series?</h2>
             <p>В предыдущих разделах мы изучили, как выполнять фильтрацию и сортировку данных в объектах типа <span class="code-chip">DataFrame</span>&nbsp;. Но аналогичные операции нередко нужны и для одиночных столбцов (<span class="code-chip">Series</span>&nbsp;). Хотя в целом подходы идентичны, имеются небольшие различия в синтаксисе.</p>

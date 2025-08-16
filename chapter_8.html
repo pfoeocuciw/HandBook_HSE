@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="https://fonts.googleapis.com/css2?family=Hack&display=swap" rel="stylesheet">
+    <title>Глава 8</title>
+    <link rel="stylesheet" href="chapter_1.css">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/pyodide"></script>
+    <script src="libs/prism.js"></script>
+
+</head>
+<div class="horizontal-accordion-wrapper">
+    <div class="accordion-left">
+        <button id="toggleNav" class="accordion-button-left" style="color: white; border-color: white;">☰</button>
+    </div>
+    <div id="sideNav" class="accordion-panel-right_2">
+        <a href="#chapter8"><strong>Глава 8</strong></a>
+        <a href="#chapter8-1">8.1 Что такое регрессия?</a>
+        <a href="#chapter8-2">8.2 Обучение линейной регрессии</a>
+        <a href="#chapter8-3">8.3 Интерпретация линейной регрессии</a>
+        <a href="#chapter8-4">8.4 Оценка линейной регрессии</a>
+    </div>
+    <div class="main-content">
+        <div class="logo-wrapper">
+            <img src="picture/logo.svg" class="logo-top-right" alt="Логотип">
+        </div>
+        <section>
+            <h1 style="font-size: 15px; text-align: center; color:#1e01da; ">Хэндбук. Анализ данных - базовый уровень</h1>
+            <h1 style="font-size: 30px; "id="chapter8">Глава 8. Линейная регрессия</h1>
+            <h2 id="chapter8-1">8.1 Что такое регрессия?</h2>
+            <p>Регрессия представляет собой мощный статистический инструмент, позволяющий выявлять и анализировать взаимосвязи между явлениями. Эта методика незаменима, когда необходимо установить, каким образом изменение одной величины влияет на другую величину. Регрессия помогает исследователю строить прогнозы, оценивать последствия различных воздействий и находить скрытые закономерности в данных. Применение регрессионного анализа широко востребовано в маркетинге, социологии и многих других областях науки и практики, обеспечивая глубокое понимание сложных процессов и принятие обоснованных решений.</p>
+            <div class="definition-card">
+                <div class="definition-text">
+                    <strong>Регрессия </strong> - уравнение, которое показывает как один или несколько факторов оказывают влияние на другой целевой признак.
+                </div>
+            </div>
+
+            <p>Предположим, у нас есть выборка по семи ресторанам. Про каждый из этих ресторанов нам известен средний размер чека (<strong>avg_receipt</strong>), рейтинг (<strong>rate</strong>) и местоположение (<strong>area</strong>; <em>0</em> - центр, <em>1</em> - не центр):</p>
+
+    <pre class="line-numbers"><code class="language-python">import pandas as pd
+
+df = pd.DataFrame()
+df['avg_receipt'] = [50, 100, 200, 200, 150, 350, 350]
+df['rate'] = [0.5, 1.5, 1.5, 2.5, 3.5, 3.5, 4.5]
+df['area'] = [1, 1, 0, 0, 0, 0, 0]
+df</code></pre>
+
+
+<div class="scrollable-table">
+        <table border="1" class="dataframe">
+        <thead>
+        <tr style="text-align: right;">
+            <th></th>
+            <th>avg_receipt</th>
+            <th>rate</th>
+            <th>area</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>0</th>
+            <td>50</td>
+            <td>0.5</td>
+            <td>1</td>
+        </tr>
+        <tr>
+            <th>1</th>
+            <td>100</td>
+            <td>1.5</td>
+            <td>1</td>
+        </tr>
+        <tr>
+            <th>2</th>
+            <td>200</td>
+            <td>1.5</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <th>3</th>
+            <td>200</td>
+            <td>2.5</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <th>4</th>
+            <td>150</td>
+            <td>3.5</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <th>5</th>
+            <td>350</td>
+            <td>3.5</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <th>6</th>
+            <td>350</td>
+            <td>4.5</td>
+            <td>0</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<p><strong>РИС 27</strong></p>
+
+
+
+
+
+<p>Мы хотим выяснить, как рейтинг ресторана (<strong>rate</strong>) влияет на средний размер чека (<strong>avg_receipt</strong>) в нем. Запишем это в чуть более математической форме:</p>
+
+<p>avg_receipt = w<sub>0</sub> + w<sub>1</sub> * rate</p>
+
+<p>Мы хотим предсказать размер чека (<strong>avg_receipt</strong>). С точки зрения регрессии этот признак называется <strong>целевой</strong> или <strong>зависимой переменной</strong>. В уравнении линейной регрессии целевой переменной может выступать только <strong>количественный признак</strong>.</p>
+
+<p>Рейтинг ресторана (<strong>rate</strong>) - фактор, оказывающий влияние на размер чека (<strong>avg_receipt</strong>). В модели регрессии рейтинг (<strong>rate</strong>) - это <strong>предиктор</strong> или <strong>независимая переменная</strong>. В отличие от целевой, предиктором может быть выступать и количественный, и категориальный признак.</p>
+
+<p>На вопрос, <em>как</em> рейтинг (<strong>rate</strong>) влияет на размер чека (<strong>avg_receipt</strong>), отвечают параметры (коэффициенты) регрессии w<sub>0</sub> и w<sub>1</sub>. w<sub>0</sub> называют <strong>свободным коэффициентом</strong>. Он стоит в одиночестве, без пары, в отличие от w<sub>1</sub> - <strong>коэффициента независимой переменной</strong>.</p>
+
+<p>Регрессия, в которой только один предиктор (в нашем случае это рейтинг (<strong>rate</strong>)), называется <strong>однофакторной</strong>.</p>
+
+<p>Но мы понимаем, что в реальной жизни не только рейтинг (<strong>rate</strong>) влияет на размер чека (<strong>avg_receipt</strong>). На него может влиять тип кухни, количество сотрудников и многое другое. Такая регрессия, с более чем одним предиктором, называется <strong>многофакторной</strong>. В наших данных, помимо рейтинга, есть еще местоположение (<strong>area</strong>). Если мы хотим добавить этот фактор в модель, то с точки зрения математики регрессию можно записать так:</p>
+
+<p>avg_receipt = w<sub>0</sub> + w<sub>1</sub> * rate + w<sub>2</sub> * area</p>
+
+<p><strong>rate</strong>, <strong>area</strong> - это независимые переменные регрессии.</p>
+
+<p>w<sub>1</sub>, w<sub>2</sub> - коэффициенты независимых переменных</p>
+
+<p>w<sub>0</sub> - свободный коэффициент</p>
+
+<div class="scrollable-table">
+<table border="1" class="dataframe_new" style="width: 100%;">
+    <tr>
+        <th></th>
+        <th>ОДНОФАКТОРНАЯ</th>
+        <th>МНОГОФАКТОРНАЯ</th>
+    </tr>
+    <tr>
+        <td><strong>Уравнение регрессии</strong></td>
+        <td>Ŷ = w<sub>0</sub> + w<sub>1</sub> * X</td>
+        <td>Ŷ = w<sub>0</sub> + w<sub>1</sub> * X<sub>1</sub> + ... + w<sub>k</sub> * X<sub>k</sub></td>
+    </tr>
+    <tr>
+        <td><strong>Целевая (зависимая) переменная</strong> <br> <em>только количественная</em></td>
+        <td>Ŷ</td>
+        <td>Ŷ</td>
+    </tr>
+    <tr>
+        <td><strong>Предикторы/независмые переменные</strong></td>
+        <td>X</td>
+        <td>X<sub>1</sub>, ..., X<sub>k</sub></td>
+    </tr>
+    <tr>
+        <td colspan="3">Параметры:</td>
+    </tr>
+    <tr>
+        <td><strong>Коэффициенты независимой <br> переменной</strong></td>
+        <td>w<sub>1</sub></td>
+        <td>w<sub>1</sub>, ..., w<sub>k</sub></td>
+    </tr>
+    <tr>
+        <td><strong>Свободный коэффициент</strong></td>
+        <td>w<sub>0</sub></td>
+        <td>w<sub>0</sub></td>
+    </tr>
+</table>
+</div>
+<div style="height: 30px;"></div>
+<h2 id="chapter8-2">8.2 Как обучить линейную регрессию?</h2>
+
+<p>После формализации модели нужно обучить ее. <strong>Обучить модель</strong> - значит рассчитать её параметры (w<sub>0</sub>, ..., w<sub>k</sub>). Параметры модели вычисляются по формулам, выведенным из <strong>метода наименьших квадратов (МНК)</strong>, или на английском ordinary least squares (OLS).</p>
+
+<p><strong>Формулы метода наименьших квадратов</strong></p>
+
+<p>Коэффициент независимой переменной (w<sub>1</sub>):</p>
+
+<p>w<sub>1</sub> = ((x<sub>1</sub>-x̄)*(y<sub>1</sub>-ȳ)+...+(x<sub>n</sub>-x̄)*(y<sub>n</sub>-ȳ)) / ((x<sub>1</sub>-x̄)<sup>2</sup>+...+(x<sub>n</sub>-x̄)<sup>2</sup>)</p>
+
+<p><strong>x<sub>1</sub>, ... x<sub>n</sub></strong> - каждое из значений предиктора</p>
+
+<p><strong>x̄</strong> - среднее арифметическое предиктора</p>
+
+<p><strong>y<sub>1</sub>, ... y<sub>n</sub></strong> - каждое значение целевой переменной</p>
+
+<p><strong>ȳ</strong> - среднее арифметическое целевой переменной</p>
+
+<p><strong>n</strong> - количество наблюдений (в наших данных 7 наблюдений)</p>
+
+<p>Свободный коэффициент (w<sub>0</sub>):</p>
+
+<p>w<sub>0</sub> = ȳ - w<sub>1</sub> * x̄</p>
+
+<p><strong>ȳ</strong> - среднее арифметическое целевой переменной</p>
+
+<p><strong>w<sub>1</sub></strong> - коэффициент независимой переменной</p>
+
+<p><strong>x̄</strong> - среднее арифметическое предиктора</p>
+
+<p>Мы сконцертируемся на том, как обучить модель с помощью библиотеки <span class="code-chip">statsmodels.api</span>. Первое, что нам нужно сделать - импортировать библиотеку; при импорте дадим ей короткий псеводним <span class="code-chip">sm</span>:</p>
+
+<pre class="line-numbers"><code class="language-python">import statsmodels.api as sm
+</code></pre>
+
+<div class="important-card">
+    <div class="important-text">
+    <p><strong>Ошибка</strong> <span class="code-chip">ModuleNotFoundError: No module named 'statsmodels'</span></p>
+    <p>Если при запуске кода вышла такая ошибка, это значит, что модуль Statsmodels еще не установлен на компьютере. Чтобы его установить, нужно перед импортом добавить строку:</p>
+            <p class="fake-code"><span class="code-line">!pip install statsmodels</span></p>
+</div></div>
+
+<p>В эту библиотеку уже зашиты формулы метода наименьших квадратов, поэтому нам не придется их учить, а нужно будет лишь написать несколько несложных команд, чтобы найти значения параметров:</p>
+
+<ol>
+    <li>Обозначаем целевую переменную:
+        <p class="fake-code"><span class="code-line">Y = df['целевая']</span></p>
+    </li>
+    <li>Обозначем предиктор(ы) и добавляем константный признак с помощью функции <span class="code-chip">sm.add_constant()</span> для корректного рассчета коэффициентов регрессии:
+        <p class="fake-code"><span class="code-line">X = sm.add_constant(df['предиктор'])  # однофакторная</span></p>
+        или
+        <p class="fake-code"><span class="code-line">X = sm.add_constant(df[['предиктор 1', 'предиктор 2', ...]]) # многофакторная</span></p>
+    </li>
+    <li>Обучаем (<span class="code-chip">.fit()</span>) линейную регрессию с помощью метода наименьших квадратов (<span class="code-chip">sm.OLS()</span>):
+        <p class="fake-code"><span class="code-line">модель = sm.OLS(Y, X).fit()</span></p>
+    </li>
+    <li>Выводим параметры регрессии с помощью атрибута <span class="code-chip">.params</span>:
+        <p class="fake-code"><span class="code-line">модель.params</span></p>
+    </li>
+</ol>
+
+<div class="scrollable-table">
+<table border="1" class="dataframe_new" style="width: 100%;">
+    <tr>
+        <th></th>
+        <th>0</th>
+        <th></th>
+    </tr>
+    <tr>
+        <td><strong>const</strong></td>
+        <td>w<sub>0</sub></td>
+        <td>свободный коэффициент</td>
+    </tr>
+    <tr>
+        <td><strong>предиктор 1</strong></td>
+        <td>w<sub>1</sub></td>
+        <td>коэффициент независимой переменной</td>
+    </tr>
+    <tr>
+        <td><strong>предиктор 2</strong></td>
+        <td>w<sub>2</sub></td>
+        <td>коэффициент независимой переменной</td>
+    </tr>
+    <tr>
+        <td>...</td>
+        <td>...</td>
+        <td>...</td>
+    </tr>
+</table>
+</div>
+
+<p>Для начала обучим однофакторную модель, которая только на основе рейтинга ресторана (<strong>rate</strong>) будет предсказывать средний размер чека (<strong>avg_receipt</strong>):</p>
+
+<p>avg_receipt = w<sub>0</sub> + w<sub>1</sub> * rate</p>
+
+<pre class="line-numbers"><code class="language-python">Y = df['avg_receipt']  # целевая перемменая
+X1 = sm.add_constant(df['rate'])  # предиктор
+
+model1 = sm.OLS(Y, X1).fit()  #обучаем модель
+model1.params  # выводим параметры</code></pre>
+
+<div class="scrollable-table">
+        <table border="1" class="dataframe">
+        <thead>
+        <tr style="text-align: right;">
+            <th></th>
+            <th>0</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>const</th>
+            <td>33.333333</td>
+        </tr>
+        <tr>
+            <th>rate</th>
+            <td>66.666667</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<p>avg_receipt = 33.33 + 66.67 * rate</p>
+
+<p>Для обучения многофакторной регрессии, которая предскажет размер чека (<strong>avg_receipt</strong>) не только на основе рейтинга ресторана (<strong>rate</strong>), но и по местоположению (<strong>area</strong>), нужно написать следующий код:</p>
+
+<p>avg_receipt = w<sub>0</sub> + w<sub>1</sub> * rate + w<sub>2</sub> * area</p>
+
+<pre class="line-numbers"><code class="language-python">Y = df['avg_receipt']  # целевая перемменая
+X2 = sm.add_constant(df[['rate', 'area']])  # предикторы
+
+model2 = sm.OLS(Y, X2).fit()  #обучаем модель
+model2.params  # выводим параметры
+</code></pre>
+
+<div class="scrollable-table">
+        <table border="1" class="dataframe">
+        <thead>
+        <tr style="text-align: right;">
+            <th></th>
+            <th>0</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>const</th>
+            <td>100.438596</td>
+        </tr>
+        <tr>
+            <th>rate</th>
+            <td>48.245614</td>
+        </tr>
+        <tr>
+            <th>area</th>
+            <td>-73.684211</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<p>avg_receipt = 100.44 + 48.25 * rate - 73.68 * area</p>
+
+<div style="height: 30px;"></div>
+<h2 id="chapter8-3">8.3 Как интерпретировать линейную регрессию?</h2>
+
+<p>В прошлом разделе мы обучили линейную регрессию, а теперь нужно выяснить, что значат эти параметры.</p>
+
+<h3>ГЕОМЕТРИЧЕСКАЯ ИНТЕРПРЕТАЦИЯ</h3>
+
+<p>Рассмотрим уравнение однофакторной регрессии:</p>
+
+<p>Ŷ = w<sub>0</sub> + w<sub>1</sub> * X</p>
+<p>avg_receipt = 33.33 + 66.67 * rate</p>
+
+<p>Такая регрессия на самом деле является уравнением прямой, которое вы наверняка проходили в школьном курсе геометрии. Если мы нанесем ее на диаграмму рассеяния, то она будет описывать тренд наших данных:</p>
+
+<img src="picture/chapter8/28.svg" width="100%" alt="Рисунок 28">
+
+<p>Свободный коэффициент w<sub>0</sub> (33.33) - это место, где прямая пересекает ось <strong>Y</strong>, т.е. ось целевой переменной (<strong>avg_receipt</strong>)</p>
+
+<p>Коэффициент независимой переменной w<sub>1</sub> (66.67) регулирует угол наклона прямой. Если он положительный, как в нашем случае, это значит, признаки связаны прямой зависимостью, а если угол отрицательный, то обратной.</p>
+
+<h3>ПРАКТИЧЕСКАЯ ИНТЕРПРЕТАЦИЯ</h3>
+
+<p>Теперь рассмотрим, как можно объяснить практически полученные нами коэффициенты, и как можно интерепретировать регрессию в целом.</p>
+
+<p>Для начала рассмотрим однофакторную регрессию:</p>
+<p>avg_receipt = 33.33 + 66.67 * rate</p>
+
+<ul>
+    <li><p><strong>Интерпретация регрессии</strong></p></li>
+</ul>
+
+<p>Предположим, что в городе появился новый ресторан. Мы знаем, что его рейтинг <em>3.5 балла</em> (<strong>rate</strong>). И нам нужно выяснить, какой там средний размер чека. Все что нам нужно сделать, это вместо <strong>rate</strong> подставить 3.5 и посчитать:</p>
+
+<pre class="line-numbers"><code class="language-python">33.33 + 66.67 * 3.5
+</code></pre>
+<p class="print_result">266.675</p>
+
+<p>Получается, что в ресторане с рейтингом 3.5 (<strong>rate</strong>) средний размер чека (<strong>avg_receipt</strong>) будет составлять 266.675 у.е..</p>
+
+<img src="picture/chapter8/29.svg" width="100%" alt="Рисунок 29">
+
+
+<ul>
+    <li><p><strong>Свободный коэффициент (w<sub>0</sub>)</strong></p></li>
+</ul>
+
+<p>В однофакторной регрессии свободный коэффициент (w<sub>0</sub>) показывает, чему будет равна целевая переменная (Ŷ), если предиктор (X) равен 0. В нашем случае – какой будет размер чека (<strong>avg_receipt</strong>) в ресторане с рейтингом (<strong>rate</strong>) 0. Согласно нашей модели, чек будет в среднем равен 33.33 у.е..</p>
+
+<div class="important-card">
+    <div class="important-text">
+    Свободный коэффициент (w<sub>0</sub>) нельзя интепретировать в двух случачаях:
+    <ul>
+        <li>Если предиктор (X<sub>k</sub>) не может быть 0</li>
+        <li>Если свободный коэффициент (w<sub>0</sub>) принимает недопустимые значения целевой переменной (Y)</li>
+    </ul>
+    <p><em>Пример</em>: Цена блюда = -10 + 0.5 * Вес</p>
+    Вес блюда не может быть равным 0 (тогда блюда просто не будет существовать). Помимо этого, цена блюда не может быть отрицательной (тогда владельцам ресторана придется за него еще и доплачивать клиентам). Поэтому -10 здесь невозможно интерпретировать практически.
+</div></div>
+
+<ul>
+    <li><p><strong>Коэффициент независимой переменной (w<sub>1</sub>)</strong></p></li>
+</ul>
+
+<p>Коэффициент независимой переменной (w<sub>1</sub>) показывает, как будет меняться целевая (Ŷ) при изменении предиктора (X). В нашей модели, предсказывающей размер чека на основе рейтинга, коэффициент независимой переменной равен 66.67. Это значит, что если рейтинг ресторана (<strong>rate</strong>) вырастет на 1 балл, это увеличит средний размер чека (<strong>avg_receipt</strong>) в нем на 66.67 у.е.. Если рейтинг (<strong>rate</strong>) вырастет на 2 балла, размер чека (<strong>avg_receipt</strong>) возрастет на 133.33 у.е., и так далее.</p>
+
+<p>В случае, когда предиктор (X<sub>k</sub>) является <strong>количественным</strong>, как в нашем случае, то можно формализовать интепретацию его коэффициента (w<sub>k</sub>) следующим образом:</p>
+<ul>
+    <li>w<sub>k</sub> > 0
+        <ul>
+            <li>если X<sub>k</sub> увеличивается на n, Ŷ <strong>увеличится</strong> на w<sub>k</sub> * n</li>
+        </ul>
+    </li>
+    <li>w<sub>k</sub> < 0
+        <ul>
+            <li>если X<sub>k</sub> увеличивается на n, Ŷ <strong>уменьшится</strong> на w<sub>k</sub> * n</li>
+        </ul>
+    </li>
+    <li>w<sub>0</sub> = 0
+        <ul>
+            <li>X <strong>не оказывает влияние</strong> на Ŷ</li>
+        </ul>
+    </li>
+</ul>
+
+<p>Интерпретация многофакторной регрессии в целом имеет такую же логику, как и в простом варианте модели, но с несколькими нюансами. Давайте рассмотрим их на основе этой модели:</p>
+
+<p>avg_receipt = 100.44 + 48.25 * rate - 73.68 * area</p>
+
+<ul>
+    <li><p><strong>Интерпретация регрессии</strong></p></li>
+</ul>
+
+<p>Мы знаем, что рейтинг нового ресторана <em>3.5</em>. Теперь нам стало известно, что он расположен не в центре города (<em>1</em>; <strong>area</strong>), тогда можно воспользоваться чуть более сложной моделью, которая даст нам более точный результат:</p>
+
+<pre class="line-numbers"><code class="language-python">100.44 + 48.25 * 3.5 - 73.68 * 1
+</code></pre>
+<p class="print_result">195.635</p>
+
+<p>Средний чек (<strong>avg_receipt</strong>) в ресторане с рейтингом 3.5 (<strong>rate</strong>), который расположен не в центре города (<em>1</em>; <strong>area</strong>), будет, составлять, примерно, 195.636 у.е.</p>
+
+<p><strong>Свободный коэффициент</strong> (w<sub>0</sub>)</p>
+
+<p>В многофакторной регрессии свободный коэффициент (w<sub>0</sub>) показывает, чему будет равна целевая переменная (Ŷ), если все предикторы (X<sub>1</sub>, ..., X<sub>k</sub>) равны 0.</p>
+
+<p>В нашей модели, если рейтинг ресторана (<strong>rate</strong>) равен <em>0</em> и ресторан расположен в центре (<em>0</em>; <strong>area</strong>), то средний размер чека (<strong>avg_receipt</strong>) составляет 100.44 у.е..</p>
+
+<p>Свободный коэффициент в многофакторных моделях также не всегда можно интерпретировать. Делать это можно только если все предикторы одновременно могут быть равны 0, и свободный коэффициент принимает допустимые значения целевой переменной. В нашем случае это возможно.</p>
+
+<p><strong>Коэффициенты независимых переменных</strong> (w<sub>1</sub>, w<sub>2</sub>, ...)</p>
+
+<p>Начнем с коэффициента перед предиктором рейтинг (<strong>rate</strong>), котороый равен 48.25. Рейтинг является <strong>количественной величиной</strong>, значит интерпретация следующая: если рейтинг (<strong>rate</strong>) <strong>увеличится</strong> на 1 балл, размер чека (<strong>avg_receipt</strong>) <strong>вырастет</strong> на 48.25 у.е., при прочих равных.</p>
+
+<p>Второй предиктор модели – это расположение ресторана (<strong>area</strong>). Этот признак является <strong>бинарным</strong> и принимает только два значния: 0 - центр города, 1 - не центр города. Коэффициент перед этим предиктором равен -73.68, значит интепретация следующая: если ресторан расположен не в центре города (<em>1</em>; <strong>area</strong>), это <strong>снижает</strong> размер чека на 73.68 у.е., при прочих равных.</p>
+
+<p>При интерпретации коэффициента (w<sub>k</sub>) <strong>бинарного</strong> предиктора (X<sub>k</sub>), закодированного 0 и 1, нужно пользоваться следущей логикой:</p>
+<ul>
+    <li>w<sub>k</sub> > 0
+        <ul>
+            <li>если X<sub>k</sub> равен 1, Ŷ <strong>увеличится</strong> на w<sub>1</sub></li>
+            <li>если X<sub>k</sub> равен 0, Ŷ <strong>не увеличится</strong> на w<sub>1</sub></li>
+        </ul>
+    </li>
+    <li>w<sub>k</sub> < 0
+        <ul>
+            <li>если X<sub>k</sub> равен 1, Ŷ <strong>уменьшится</strong> на w<sub>1</sub></li>
+            <li>если X<sub>k</sub> равен 0, Ŷ <strong>не уменьшится</strong> на w<sub>1</sub></li>
+        </ul>
+    </li>
+    <li>w<sub>0</sub> = 0
+        <ul>
+            <li>X<sub>k</sub> <strong>не оказывает влияние</strong> на Ŷ</li>
+        </ul>
+    </li>
+</ul>
+
+<p>Если <strong>бинарный</strong> предиктор (X<sub>k</sub>) закодирован не 0 и 1, а например 1 и 2, или какими-то другими двумя числами (назовем их переменными a и b), интерпретация коэффициента (w<sub>k</sub>) немного меняется:</p>
+<ul>
+    <li>w<sub>k</sub> > 0
+        <ul>
+            <li>если X<sub>k</sub> равен a, Ŷ <strong>увеличится</strong> на w<sub>1</sub>*a</li>
+            <li>если X<sub>k</sub> равен b, Ŷ <strong>увеличится</strong> на w<sub>1</sub>*b</li>
+        </ul>
+    </li>
+    <li>w<sub>k</sub> < 0
+        <ul>
+            <li>если X<sub>k</sub> равен a, Ŷ <strong>уменьшится</strong> на w<sub>1</sub>*a</li>
+            <li>если X<sub>k</sub> равен b, Ŷ <strong>уменьшится</strong> на w<sub>1</sub>*b</li>
+        </ul>
+    </li>
+    <li>w<sub>0</sub> = 0
+        <ul>
+            <li>X<sub>k</sub> <strong>не оказывает влияние</strong> на Ŷ</li>
+        </ul>
+    </li>
+</ul>
+
+<div class="scrollable-table">
+        <table border="1" class="dataframe">
+    <tr>
+        <th colspan="3">Ŷ = w<sub>0</sub> + w<sub>1</sub> * X<sub>1</sub> - w<sub>2</sub> * X<sub>2</sub></th>
+    </tr>
+    <tr>
+        <td><strong>Cвободный коэффициент</strong></td>
+        <td>w<sub>0</sub></td>
+        <td>Если все предикторы равны 0, то Ŷ равен w<sub>0</sub>. <br> <em>не всегда можно интерпретировать</em></td>
+    </tr>
+    <tr>
+        <td colspan="3"><strong>Коэффициенты независимых <br> переменных</strong></td>
+    </tr>
+    <tr>
+        <td><em>X<sub>1</sub> количественный</em></td>
+        <td>w<sub>1</sub></td>
+        <td>Если X<sub>1</sub> <strong>увеличится</strong> на n, Ŷ <strong>увеличится</strong> на w<sub>1</sub> * n</td>
+    </tr>
+    <tr>
+        <td><em>X<sub>1</sub> бинарный <br>(принимает значения 0, 1)</em></td>
+        <td>w<sub>1</sub></td>
+        <td>Если X<sub>1</sub> равен 1, Ŷ <strong>увеличится</strong> на w<sub>1</sub>.<br>Если X<sub>1</sub> равен 0, Ŷ <strong>не увеличится</strong> на w<sub>1</sub>.</td>
+    </tr>
+    <tr>
+        <td><em>X<sub>1</sub> бинарный <br>(принимает значения a, b)</em></td>
+        <td>w<sub>1</sub></td>
+        <td>Если X<sub>1</sub> равен a, Ŷ <strong>увеличится</strong> на w<sub>1</sub> * a.<br>Если X<sub>1</sub> равен b, Ŷ <strong>увеличится</strong> на w<sub>1</sub> * b.</td>
+    </tr>
+    <tr>
+        <td><em>X<sub>2</sub> количественный</em></td>
+        <td>-w<sub>2</sub></td>
+        <td>Если X<sub>2</sub> <strong>увеличится</strong> на n, Ŷ <strong>снижается</strong> на w<sub>2</sub> * n</td>
+    </tr>
+    <tr>
+        <td><em>X<sub>2</sub> бинарный <br>(принимает значения 0, 1)</em></td>
+        <td>-w<sub>2</sub></td>
+        <td>Если X<sub>2</sub> равен 1, Ŷ <strong>снижается</strong> на w<sub>2</sub>.<br>Если X<sub>2</sub> равен 0, Ŷ <strong>не снижается</strong> на w<sub>2</sub>.</td>
+    </tr>
+    <tr>
+        <td><em>X<sub>2</sub> бинарный <br>(принимает значения a, b)</em></td>
+        <td>-w<sub>2</sub></td>
+        <td>Если X<sub>2</sub> равен a, Ŷ <strong>снижается</strong> на w<sub>2</sub> * a.<br>Если X<sub>2</sub> равен b, Ŷ <strong>снижается</strong> на w<sub>2</sub> * b.</td>
+    </tr>
+</table>
+</div>
+
+<div style="height: 30px;"></div>
+<h2 id="chapter8-4">8.4 Как оценить качество линейной регрессии?</h2>
+
+<p>Остается последний вопрос: как понять, хорошие модели мы построили или плохие? Чтобы получить ответ, нужно воспользоваться метриками оценки качества моделей. Мы рассмотрим три из них: коэффициент детерминации(R<sup>2</sup>), среднеквадратичную ошибку (MSE) и среднюю абсолютную ошибку (MAE).</p>
+
+<h3>КОЭФФИЦИЕНТ ДЕТЕРМИНАЦИИ (R<sup>2</sup>)</h3>
+
+<p>Это показатель, который демонстрирует, насколько точно построенная модель объясняет поведение интересующей нас переменной.</p>
+
+<p>Представьте ситуацию: вы обучили модель линейной регрессии и наложили ее на диаграмму рассеяния ваших данных. Чем больше точки приближены к этой линии регрессии, тем точнее ваша модель описывает реальность. Именно коэффициент детерминации (R<sup>2</sup>) отражает долю вариации ваших данных, которую можно объяснить моделью.</p>
+
+<p>Коэффициент детерминции меняется в диапазоне от <strong>0 до 1</strong>. Чем он ближе к 1, тем лучше наша модель.</p>
+
+<p>Теоретически, если R<sup>2</sup> равен 1, это означает идеальную точность модели, но на практике это скорее будет свидетельствовать о том, что модель слишком усложнили, или совершили ошибки при ее разработке или обучении. Оптимальным показателем считается величина около 0.7–0.9, которая демонстрирует хорошую прогностическую способность и стабильность модели.</p>
+
+<p>Если коэффициент детерминации получился не больше 0.5, значит построенной модели не стоит доверять, так как она описывает не более 50% изменений нашей целевой переменной.</p>
+
+<img src="picture/chapter8/30.svg" width="100%" alt="Рисунок 30">
+
+
+<p>Чтобы получить коэффициент детерминации (R<sup>2</sup>), нужно обратиться к атрибуту <span class="code-chip">.rsquared</span> обученной модели. Сравним коэффициент детерминации для однофакторной (<span class="code-chip">model1</span>) и многофакторной (<span class="code-chip">model2</span>) регрессий, которые мы построили:</p>
+
+<pre class="line-numbers"><code class="language-python">model1.rsquared
+</code></pre>
+<p class="print_result">np.float64(0.6666666666666667)</p>
+
+<pre class="line-numbers"><code class="language-python">model2.rsquared
+</code></pre>
+<p class="print_result">np.float64(0.712719298245614)</p>
+
+<p>Однофакторная регрессия (<span class="code-chip">model1</span>) описывает 66.67% изменений размера чека (<strong>avg_receipt</strong>) в наших данных.</p>
+
+<p>Многофакторная регрессия (<span class="code-chip">model2</span>) описывает 71.27% изменений размера чека (<strong>avg_receipt</strong>) в наших данных.</p>
+
+<p>Обеим моделям можно доверять, но качество многофакторной регрессии немного лучше.</p>
+
+<h3>СРЕДНЕКВАДРАТИЧНАЯ ОШИБКА (MSE) И СРЕДНЯЯ АБСОЛЮТНАЯ ОШИБКА (MAE)</h3>
+
+<p>Качество модели можно оценить не только через долю данных, которые она описывает, но и через размер ошибки. Ошибкой модели называют отклонение реальных значений целевой переменной (Y) от предсказанных (Ŷ).</p>
+
+<p>Рассмотрим нашу однофакторную регрессию:</p>
+<p>avg_receipt = 33.33 + 66.67 * rate</p>
+
+<p>Реальные значения – это признак <strong>avg_receipt</strong> (Y). Чтобы найти <strong>предсказанные значения</strong> (Ŷ), применим функцию <span class="code-chip">.predict()</span>:</p>
+
+<p class="fake-code"><span class="code-line">модель.predict(предикторы)</span></p>
+
+<pre class="line-numbers"><code class="language-python">df['pred_avg_receipt'] = model1.predict(X1)
+df
+</code></pre>
+
+            <div class="scrollable-table">
+                <table border="1" class="dataframe">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>avg_receipt</th>
+                        <th>rate</th>
+                        <th>area</th>
+                        <th>pred_avg_receipt</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><strong>0</strong></td>
+                        <td>50</td>
+                        <td>0.5</td>
+                        <td>1</td>
+                        <td>66.666667</td>
+                    </tr>
+                    <tr>
+                        <td><strong>1</strong></td>
+                        <td>100</td>
+                        <td>1.5</td>
+                        <td>1</td>
+                        <td>133.333333</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2</strong></td>
+                        <td>200</td>
+                        <td>1.5</td>
+                        <td>0</td>
+                        <td>133.333333</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3</strong></td>
+                        <td>200</td>
+                        <td>2.5</td>
+                        <td>0</td>
+                        <td>200.000000</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4</strong></td>
+                        <td>150</td>
+                        <td>3.5</td>
+                        <td>0</td>
+                        <td>266.666667</td>
+                    </tr>
+                    <tr>
+                        <td><strong>5</strong></td>
+                        <td>350</td>
+                        <td>3.5</td>
+                        <td>0</td>
+                        <td>266.666667</td>
+                    </tr>
+                    <tr>
+                        <td><strong>6</strong></td>
+                        <td>350</td>
+                        <td>4.5</td>
+                        <td>0</td>
+                        <td>333.333333</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+<p>Этот метод взял каждое значение предиктора (<strong>rate</strong>), подставил его в уравнение регрессии (avg_receipt = 33.33 + 66.67 * rate) и нашел для них предсказанное значение целевой переменной (<strong>pred_avg_receipt</strong>).</p>
+
+<p>Теперь мы можем найти <strong>ошибку</strong> на каждом наблюдении, просто найдя разность между реальными и предсказанными значениями целевой переменной:</p>
+<p>e<sub>n</sub> = y - ŷ</p>
+
+<pre class="line-numbers"><code class="language-python">df['error'] = df['avg_receipt'] - df['pred_avg_receipt']
+df
+</code></pre>
+
+            <div class="scrollable-table">
+                <table border="1" class="dataframe">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>avg_receipt</th>
+                        <th>rate</th>
+                        <th>area</th>
+                        <th>pred_avg_receipt</th>
+                        <th>error</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><strong>0</strong></td>
+                        <td>50</td>
+                        <td>0.5</td>
+                        <td>1</td>
+                        <td>66.666667</td>
+                        <td>-16.666667</td>
+                    </tr>
+                    <tr>
+                        <td><strong>1</strong></td>
+                        <td>100</td>
+                        <td>1.5</td>
+                        <td>1</td>
+                        <td>133.333333</td>
+                        <td>-33.333333</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2</strong></td>
+                        <td>200</td>
+                        <td>1.5</td>
+                        <td>0</td>
+                        <td>133.333333</td>
+                        <td>-66.666667</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3</strong></td>
+                        <td>200</td>
+                        <td>2.5</td>
+                        <td>0</td>
+                        <td>200.000000</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4</strong></td>
+                        <td>150</td>
+                        <td>3.5</td>
+                        <td>0</td>
+                        <td>266.666667</td>
+                        <td>-116.666667</td>
+                    </tr>
+                    <tr>
+                        <td><strong>5</strong></td>
+                        <td>350</td>
+                        <td>3.5</td>
+                        <td>0</td>
+                        <td>266.666667</td>
+                        <td>83.333333</td>
+                    </tr>
+                    <tr>
+                        <td><strong>6</strong></td>
+                        <td>350</td>
+                        <td>4.5</td>
+                        <td>0</td>
+                        <td>333.333333</td>
+                        <td>16.666667</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+<img src="picture/chapter8/31.svg" width="100%" alt="Рисунок 31">
+
+
+<p>Расмотрим внимательнее ошибку (<strong>error</strong>):</p>
+<ul>
+    <li>Если e < 0, то реальное значение ниже, чем предсказание модели (модель завысила значение)</li>
+    <li>Если e > 0, то реальное значение выше, чем предсказание модели (модель занизила значение на этом наблюдении)</li>
+    <li>Если e =0, то реальное значение совпадает с предсказанным, то есть модель на этом наблюдении не ошибается</li>
+</ul>
+
+<p>Если мы хотим найти, на сколько в среднем ошибается модель, мы не можем просто сложить все ошибки и разделить на количество наблюдений, так как ошибка бывает положительной и отрицательной. Чтобы избавиться от знаков, можно взять квадрат ошибки или её модуль, и вот эту сумму квадратов или модулей разделить на количество наблюдений. Такие метрики называются <strong>среднеквадратичной ошибкой</strong> (MSE) и <strong>средней абсолютной ошибкой</strong> (MAE):</p>
+
+<p>MSE = ((y<sub>1</sub> - ŷ<sub>1</sub>)<sup>2</sup>+...+(y<sub>n</sub> - ŷ<sub>n</sub>)<sup>2</sup>)/n = ((avg_receipt<sub>1</sub> - avĝ_receipt<sub>1</sub>)<sup>2</sup>+...+(avg_receipt<sub>n</sub> - avĝ_receipt<sub>n</sub>)<sup>2</sup>)/n</p>
+
+<p>MAE = (|y<sub>1</sub> - ŷ<sub>1</sub>|+...+|y<sub>n</sub> - ŷ<sub>n</sub>|)/n = (|avg_receipt<sub>1</sub> - avĝ_receipt<sub>1</sub>|+...+|avg_receipt<sub>n</sub> - avĝ_receipt<sub>n</sub>|)/n</p>
+
+<p>y<sub>n</sub>, avg_receipt<sub>n</sub> - реальные значения целевой переменной</p>
+
+<p>ŷ<sub>n</sub>, avĝ_receipt<sub>n</sub> - предсказанные значения целевой переменной</p>
+
+<p>y<sub>n</sub> - ŷ<sub>n</sub>, avg_receipt<sub>n</sub> - avĝ_receipt<sub>n</sub> - ошибки модели</p>
+
+<p>n - количество наблюдений</p>
+
+<p>Обе эти метрики меняются в диапазоне от <strong>0 до +∞</strong>. Чем меньше значение этих метрик, тем лучше наша модель.</p>
+
+<p>В теории, если оказалось, что MSE и MAE равны 0, это значит, что наша регрессия не ошибается, и мы построили идеальную модель. Но на практике, как и коэффициент детерминации (R<sup>2</sup>) равный 1, это сигнал для нас, что с моделью что-то не так.</p>
+
+<p>При этом в отличии от коэффициента детерминации (R<sup>2</sup>), MSE и MAE не имеют никакой градации, они используются для сравнения моделей между собой. Лучше будет та модель, у которой эти метрики будут меньше.</p>
+
+<img src="picture/chapter8/32.svg" width="100%" alt="Рисунок 32">
+
+
+<p>Теперь рассчитаем среднеквадратичную (MSE) и среднюю абсолютную ошибку (MAE) для нашей модели:</p>
+
+<pre class="line-numbers"><code class="language-python">(df['error']**2).sum() / 7  # MSE
+</code></pre>
+<p class="print_result">np.float64(3809.523809523809)</p>
+
+<p>Усреднный квадрат ошибка модели равен 3809.52 у.е<sup>2</sup></p>
+
+<pre class="line-numbers"><code class="language-python">abs(df['error']).sum() / 7  # MAE
+</code></pre>
+<p class="print_result">np.float64(47.619047619047606)</p>
+
+<p>В среднем, модель ошибается на 47.62 у.е</p>
+
+<p>Для рассчет этих метрик можно воспользоваться функциями из модуля <span class="code-chip">statsmodels.tools.eval_measures</span>. Для начала модуль и функции нужно импортировать:</p>
+
+<pre class="line-numbers"><code class="language-python">from statsmodels.tools.eval_measures import mse, meanabs
+</code></pre>
+
+<p>Чтобы найти среднеквадратичную ошибку (MSE), нужно воспользоваться функцией <span class="code-chip">mse</span> со следующими параметрами:</p>
+<p class="fake-code"><span class="code-line">mse(целевая, предсказанные значения)</span></p>
+
+<p>Сравним среднеквадратичную ошибку (MSE) однофакторной и многофакторной модели:</p>
+
+<pre class="line-numbers"><code class="language-python"># avg_receipt = 33.33 + 66.67 * rate
+mse(Y, df['pred_avg_receipt'])
+</code></pre>
+<p class="print_result">np.float64(3809.523809523809)</p>
+
+<pre class="line-numbers"><code class="language-python"># avg_receipt = 100.44 + 48.25 * rate − 73.68 * area
+y_pred = model2.predict(X2)
+mse(Y, y_pred)
+</code></pre>
+<p class="print_result">np.float64(3283.208020050126)</p>
+
+<p>Как мы видим, среднеквадратичная модель в нашей многофакторной модели ниже, чем в однофакторной. Значит многофакторная модель лучшего качества.</p>
+
+<p>Чтобы рассчитать среднюю абсолютную ошибку (MAE), воспользуемся функцией <span class="code-chip">meanabs</span>:</p>
+
+<p class="fake-code"><span class="code-line">meanabs(целевая, предсказанные значения)</span></p>
+
+<p>Теперь сравним среднюю абсолютную ошибку (MAE) моделей:</p>
+
+<pre class="line-numbers"><code class="language-python"># avg_receipt = 33.33 + 66.67 * rate
+meanabs(Y, df['pred_avg_receipt'])
+</code></pre>
+<p class="print_result">np.float64(47.619047619047606)</p>
+
+<pre class="line-numbers"><code class="language-python"># avg_receipt = 100.44 + 48.25 * rate − 73.68 * area
+y_pred = model2.predict(X2)
+meanabs(Y, y_pred)
+</code></pre>
+<p class="print_result">np.float64(40.35087719298245)</p>
+
+<p>Средняя абсолютная ошибка второй модели, также ниже. Значит вторая модель лучше.</p>
+
+<div class="scrollable-table">
+    <table border="1" class="dataframe">
+    <tr>
+        <th></th>
+        <th>Предсказанные значения</th>
+    </tr>
+    <tr>
+        <td><strong>Обозначение</strong></td>
+        <td>Ŷ, ŷ<sub>i</sub></td>
+    </tr>
+    <tr>
+        <td><strong>Рассчет</strong></td>
+        <td><span class="code-chip">модель.predict(предиктор)*</span></td>
+    </tr>
+</table>
+</div>
+
+
+<div style="height: 50px;"></div>
+
+
+<div class="scrollable-table">
+    <table border="1" class="dataframe">
+    <tr>
+        <th></th>
+        <th>Коэффициент детерминации</th>
+        <th>Среднеквадратичная ошибка</th>
+        <th>Средняя абсолютная ошибка</th>
+    </tr>
+    <tr>
+        <td><strong>Обозначение</strong></td>
+        <td>R<sup>2</sup></td>
+        <td>MSE</td>
+        <td>MAE</td>
+    </tr>
+    <tr>
+        <td><strong>Формула</strong></td>
+        <td>1-((y<sub>1</sub> - ŷ<sub>1</sub>)<sup>2</sup> + ... + (y<sub>n</sub> - ŷ<sub>n</sub>)<sup>2</sup>) / ((y<sub>1</sub> - ȳ<sub>1</sub>)<sup>2</sup> + ... + (y<sub>n</sub> - ȳ<sub>n</sub>)<sup>2</sup>)</td>
+        <td>((y<sub>1</sub> - ŷ<sub>1</sub>)<sup>2</sup> + ... + (y<sub>n</sub> - ŷ<sub>n</sub>)<sup>2</sup>)/n</td>
+        <td>(|y<sub>1</sub> - ŷ<sub>1</sub>| + ... + |y<sub>n</sub> - ŷ<sub>n</sub>|)/n</td>
+    </tr>
+    <tr>
+        <td><strong>Диапазон значений</strong></td>
+        <td>от 0 до 1</td>
+        <td>от 0 до +∞</td>
+        <td>от 0 до +∞</td>
+    </tr>
+    <tr>
+        <td><strong>Интерпретация</strong></td>
+        <td>Чем ближе к 1, тем лучше</td>
+        <td>Чем ближе к 0, тем лучше</td>
+        <td>Чем ближе к 0, тем лучше</td>
+    </tr>
+    <tr>
+        <td><strong>Расчет</strong></td>
+        <td><span class="code-chip">модель.rsquared*</span></td>
+        <td><span class="code-chip">mse(целевая, предсказанные значения)**</span></td>
+        <td><span class="code-chip">meanabs(целевая, предсказанные значения)**</span></td>
+    </tr>
+</table>
+</div>
+
+<p>* для использования импортируйте <span class="code-chip">import statsmodels.api as sm</span></p>
+<p>** для использования импортируйте <span class="code-chip">from statsmodels.tools.eval_measures import mse, meanabs</span></p>
+
+<h4>УЛУЧШЕНИЕ КАЧЕСТВА МОДЕЛИ</h4>
+
+<p>Довольно часто, при работе с реальными данными, качество регрессии может быть настолько низким, что результатам моделирования просто нельзя верить. Тогда аналитику приходится проделать ряд шагов, чтобы улучшить модель. Для начала он <strong>удалит выбросы и заменит пропуски</strong>. Затем ему нужно понять какие предикторы стоит взять в модель. У него не так много наблюдений, а он знает, что <strong>каждый предиктор должен быть обеспечен минимум 100 наблюдениями</strong>. То есть для построения однофакторной модели хватит 100 наблюдений, но например если в модели 500 наблюдений в модель можно взять не более 5 предикторов. Чтобы понять какие предикторы стоит взять, он постоит гистограммы распределения и выделит <strong>унимодальные симметричные распределения</strong>. После чего он рассчитает корреляцию Пирсона для количественный данных и Спирмана для категориальных, выделив какие из признаков имеют <strong>самую сильную корреляцию с целевой переменной</strong>. При этом эти <strong>между самими предикторами</strong>, отобранными в модель, <strong>корреляция не должна превышать 0.7</strong>. Проделав эти шаги, качество регрессии, которую строит аналитик, будет значительно выше.</p>
+
+
+
+
+
+
+<a href="https://edu.hse.ru/mod/quiz/view.php?id=1610943" target="_blank" rel="noopener noreferrer"><button class="check_yourself">Самоопроверка</button></a>&nbsp;<a href="https://edu.hse.ru/mod/quiz/view.php?id=1610944" target="_blank" rel="noopener noreferrer"><button class="check">Практика</button></a>&nbsp;<a href="https://edu.hse.ru/course/view.php?id=236211" target="_blank" rel="noopener noreferrer"><button class="back_to_course">Вернуться к курсу</button></a>
+
+        </section>
+        <script>
+            const toggleNav = document.getElementById('toggleNav');
+            const sideNav = document.getElementById('sideNav');
+
+            toggleNav.addEventListener('click', () => {
+                sideNav.classList.toggle('open');
+            });
+        </script>
+        <script>
+            document.querySelectorAll('.accordion-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    button.classList.toggle('active');
+                    const content = button.nextElementSibling;
+
+                    if (button.classList.contains('active')) {
+                        content.style.maxHeight = content.scrollHeight + 'px';
+                    } else {
+                        content.style.maxHeight = '0';
+                    }
+                });
+            });
+        </script>
+    </div>
+</div>
