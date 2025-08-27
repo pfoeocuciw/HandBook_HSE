@@ -17,17 +17,17 @@
     </div>
     <div id="sideNav" class="accordion-panel-right_2">
         <a href="#chapter8"><strong>Глава 8</strong></a>
-        <a href="#chapter8-1">8.1 Что такое регрессия?</a>
+        <a href="#chapter8-1">8.1 Термины линейной регрессии</a>
         <a href="#chapter8-2">8.2 Обучение линейной регрессии</a>
         <a href="#chapter8-3">8.3 Интерпретация линейной регрессии</a>
         <a href="#chapter8-4">8.4 Оценка линейной регрессии</a>
     </div>
-    <div class="main-content">
+    <div class="main-content" style="padding-top: 10px;">
         <div class="logo-wrapper">
             <img src="picture/logo.svg" class="logo-top-right" alt="Логотип">
         </div>
         <section>
-            <h1 style="font-size: 15px; text-align: center; color:#1e01da; ">Хэндбук. Анализ данных. Начальный уровень</h1>
+            <h1 style="font-size: 15px; text-align: center; color:#1e01da; ">Хендбук. Анализ данных. Начальный уровень</h1>
             <h1 style="font-size: 30px; "id="chapter8">Глава 8. Линейная регрессия</h1>
             <h2 id="chapter8-1">8.1 Что такое регрессия?</h2>
             <p>Регрессия представляет собой мощный статистический инструмент, позволяющий выявлять и анализировать взаимосвязи между явлениями. Эта методика незаменима, когда необходимо установить, каким образом изменение одной величины влияет на другую величину. Регрессия помогает исследователю строить прогнозы, оценивать последствия различных воздействий и находить скрытые закономерности в данных. Применение регрессионного анализа широко востребовано в маркетинге, социологии и многих других областях науки и практики, обеспечивая глубокое понимание сложных процессов и принятие обоснованных решений.</p>
@@ -139,8 +139,8 @@ df</code></pre>
     </tr>
     <tr>
         <td><strong>Уравнение регрессии</strong></td>
-        <td>Ŷ = w<sub>0</sub> + w<sub>1</sub> * X</td>
-        <td>Ŷ = w<sub>0</sub> + w<sub>1</sub> * X<sub>1</sub> + ... + w<sub>k</sub> * X<sub>k</sub></td>
+        <td>Ŷ=w<sub>0</sub>+w<sub>1</sub>*X</td>
+        <td>Ŷ=w<sub>0</sub>+w<sub>1</sub>*X<sub>1</sub>+...+w<sub>k</sub>*X<sub>k</sub></td>
     </tr>
     <tr>
         <td><strong>Целевая (зависимая) переменная</strong> <br> <em>только количественная</em></td>
@@ -172,11 +172,54 @@ df</code></pre>
 
 <p>После формализации модели нужно обучить ее. <strong>Обучить модель</strong> - значит рассчитать её параметры (w<sub>0</sub>, ..., w<sub>k</sub>). Параметры модели вычисляются по формулам, выведенным из <strong>метода наименьших квадратов (МНК)</strong>, или на английском ordinary least squares (OLS).</p>
 
-<p><strong>Формулы метода наименьших квадратов</strong></p>
-
+<div class="accordion-container">
+    <div class="accordion-item">
+        <button class="accordion-button" style="width: 800px;">Формулы метода наименьших квадратов&nbsp;</button>
+        <div class="accordion-content">
+            
 <p>Коэффициент независимой переменной (w<sub>1</sub>):</p>
-
-<p>w<sub>1</sub> = ((x<sub>1</sub>-x̄)*(y<sub>1</sub>-ȳ)+...+(x<sub>n</sub>-x̄)*(y<sub>n</sub>-ȳ)) / ((x<sub>1</sub>-x̄)<sup>2</sup>+...+(x<sub>n</sub>-x̄)<sup>2</sup>)</p>
+<p>
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>w</mi><msub>1</msub>
+  <mo>=</mo>
+  <mfrac>
+    <mrow>
+      <mrow>
+        <mo>(</mo>
+        <mi>x</mi><msub>1</msub><mo>-</mo><mover><mi>x</mi><mo>¯</mo></mover>
+        <mo>)</mo>
+        <mo>⁢</mo>
+        <mo>(</mo>
+        <mi>y</mi><msub>1</msub><mo>-</mo><mover><mi>y</mi><mo>¯</mo></mover>
+        <mo>)</mo>
+        <mo>+</mo>
+        <mo>…</mo>
+        <mo>+</mo>
+        <mo>(</mo>
+        <mi>x</mi><msub>n</msub><mo>-</mo><mover><mi>x</mi><mo>¯</mo></mover>
+        <mo>)</mo>
+        <mo>⁢</mo>
+        <mo>(</mo>
+        <mi>y</mi><msub>n</msub><mo>-</mo><mover><mi>y</mi><mo>¯</mo></mover>
+        <mo>)</mo>
+      </mrow>
+    </mrow>
+    <mrow>
+      <mrow>
+        <mo>(</mo>
+        <mi>x</mi><msub>1</msub><mo>-</mo><mover><mi>x</mi><mo>¯</mo></mover>
+        <mo>)</mo>
+        <mo>+</mo>
+        <mo>…</mo>
+        <mo>+</mo>
+        <mo>(</mo>
+        <mi>x</mi><msub>n</msub><mo>-</mo><mover><mi>x</mi><mo>¯</mo></mover>
+        <mo>)</mo>
+      </mrow>
+    </mrow>
+  </mfrac>
+</math>
+</p>
 
 <p><strong>x<sub>1</sub>, ... x<sub>n</sub></strong> - каждое из значений предиктора</p>
 
@@ -197,18 +240,26 @@ df</code></pre>
 <p><strong>w<sub>1</sub></strong> - коэффициент независимой переменной</p>
 
 <p><strong>x̄</strong> - среднее арифметическое предиктора</p>
+        </div>
+    </div>
+</div>
+
 
 <p>Мы сконцертируемся на том, как обучить модель с помощью библиотеки <span class="code-chip">statsmodels.api</span>. Первое, что нам нужно сделать - импортировать библиотеку; при импорте дадим ей короткий псеводним <span class="code-chip">sm</span>:</p>
 
 <pre class="line-numbers"><code class="language-python">import statsmodels.api as sm
 </code></pre>
 
-<div class="important-card">
-    <div class="important-text">
-    <p><strong>Ошибка</strong> <span class="code-chip">ModuleNotFoundError: No module named 'statsmodels'</span></p>
-    <p>Если при запуске кода вышла такая ошибка, это значит, что модуль Statsmodels еще не установлен на компьютере. Чтобы его установить, нужно перед импортом добавить строку:</p>
-            <p class="fake-code"><span class="code-line">!pip install statsmodels</span></p>
-</div></div>
+        <div class="accordion-container">
+            <div class="accordion-item">
+                <button class="accordion-button" style="width: 800px;">Ошибка <span class="code-chip" style="color: black;">ModuleNotFoundError: No module named 'statsmodels'</span>&nbsp;</button>
+                <div class="accordion-content">
+                    <p>Если при запуске кода вышла такая ошибка, это значит, что модуль Statsmodels еще не установлен на компьютере. Чтобы его установить, нужно перед импортом добавить строку:</p>
+                    <pre class="line-numbers"><code class="language-python">!pip install statsmodels</code></pre>
+                </div>
+            </div>
+        </div>
+
 
 <p>В эту библиотеку уже зашиты формулы метода наименьших квадратов, поэтому нам не придется их учить, а нужно будет лишь написать несколько несложных команд, чтобы найти значения параметров:</p>
 
@@ -230,7 +281,7 @@ df</code></pre>
 </ol>
 
 <div class="scrollable-table">
-<table border="1" class="dataframe_new" style="width: 100%;">
+<table border="1" class="dataframe" style="width: 100%;">
     <tr>
         <th></th>
         <th>0</th>
@@ -239,25 +290,23 @@ df</code></pre>
     <tr>
         <td><strong>const</strong></td>
         <td>w<sub>0</sub></td>
-        <td>свободный коэффициент</td>
     </tr>
     <tr>
         <td><strong>предиктор 1</strong></td>
         <td>w<sub>1</sub></td>
-        <td>коэффициент независимой переменной</td>
     </tr>
     <tr>
         <td><strong>предиктор 2</strong></td>
         <td>w<sub>2</sub></td>
-        <td>коэффициент независимой переменной</td>
     </tr>
     <tr>
-        <td>...</td>
         <td>...</td>
         <td>...</td>
     </tr>
 </table>
 </div>
+
+<p>Где w<sub>0</sub> - свободный коэффициент, а остальное - коэффициент независимой переменной</p>
 
 <p>Для начала обучим однофакторную модель, которая только на основе рейтинга ресторана (<strong>rate</strong>) будет предсказывать средний размер чека (<strong>avg_receipt</strong>):</p>
 
@@ -692,7 +741,7 @@ df
                         <td>1.5</td>
                         <td>0</td>
                         <td>133.333333</td>
-                        <td>-66.666667</td>
+                        <td>66.666667</td>
                     </tr>
                     <tr>
                         <td><strong>3</strong></td>
@@ -742,9 +791,124 @@ df
 
 <p>Если мы хотим найти, на сколько в среднем ошибается модель, мы не можем просто сложить все ошибки и разделить на количество наблюдений, так как ошибка бывает положительной и отрицательной. Чтобы избавиться от знаков, можно взять квадрат ошибки или её модуль, и вот эту сумму квадратов или модулей разделить на количество наблюдений. Такие метрики называются <strong>среднеквадратичной ошибкой</strong> (MSE) и <strong>средней абсолютной ошибкой</strong> (MAE):</p>
 
-<p>MSE = ((y<sub>1</sub> - ŷ<sub>1</sub>)<sup>2</sup>+...+(y<sub>n</sub> - ŷ<sub>n</sub>)<sup>2</sup>)/n = ((avg_receipt<sub>1</sub> - avĝ_receipt<sub>1</sub>)<sup>2</sup>+...+(avg_receipt<sub>n</sub> - avĝ_receipt<sub>n</sub>)<sup>2</sup>)/n</p>
+<!-- MSE -->
+<p>
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>MSE</mi>
+  <mo>=</mo>
+  <mfrac>
+    <mrow>
+      <mo>(</mo>
+      <msup>
+        <mrow>
+          <mo>(</mo>
+          <msub><mi>y</mi><mn>1</mn></msub>
+          <mo>-</mo>
+          <msub><mover><mi>y</mi><mo>^</mo></mover><mn>1</mn></msub>
+          <mo>)</mo>
+        </mrow>
+        <mn>2</mn>
+      </msup>
+      <mo>+</mo>
+      <mo>…</mo>
+      <mo>+</mo>
+      <msup>
+        <mrow>
+          <mo>(</mo>
+          <msub><mi>y</mi><mi>n</mi></msub>
+          <mo>-</mo>
+          <msub><mover><mi>y</mi><mo>^</mo></mover><mi>n</mi></msub>
+          <mo>)</mo>
+        </mrow>
+        <mn>2</mn>
+      </msup>
+      <mo>)</mo>
+    </mrow>
+    <mi>n</mi>
+  </mfrac>
+  <mo>=</mo>
+  <mfrac>
+    <mrow>
+      <mo>(</mo>
+      <msup>
+        <mrow>
+          <mo>(</mo>
+          <msub><mi>avg_receipt</mi><mn>1</mn></msub>
+          <mo>-</mo>
+          <msub><mover><mi>avg_receipt</mi><mo>^</mo></mover><mn>1</mn></msub>
+          <mo>)</mo>
+        </mrow>
+        <mn>2</mn>
+      </msup>
+      <mo>+</mo>
+      <mo>…</mo>
+      <mo>+</mo>
+      <msup>
+        <mrow>
+          <mo>(</mo>
+          <msub><mi>avg_receipt</mi><mi>n</mi></msub>
+          <mo>-</mo>
+          <msub><mover><mi>avg_receipt</mi><mo>^</mo></mover><mi>n</mi></msub>
+          <mo>)</mo>
+        </mrow>
+        <mn>2</mn>
+      </msup>
+      <mo>)</mo>
+    </mrow>
+    <mi>n</mi>
+  </mfrac>
+</math>
+</p>
 
-<p>MAE = (|y<sub>1</sub> - ŷ<sub>1</sub>|+...+|y<sub>n</sub> - ŷ<sub>n</sub>|)/n = (|avg_receipt<sub>1</sub> - avĝ_receipt<sub>1</sub>|+...+|avg_receipt<sub>n</sub> - avĝ_receipt<sub>n</sub>|)/n</p>
+
+<!-- MAE -->
+ <p>
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>MAE</mi>
+  <mo>=</mo>
+  <mfrac>
+    <mrow>
+      <mo>(</mo>
+      <mo>|</mo>
+      <msub><mi>y</mi><mn>1</mn></msub>
+      <mo>-</mo>
+      <msub><mover><mi>y</mi><mo>^</mo></mover><mn>1</mn></msub>
+      <mo>|</mo>
+      <mo>+</mo>
+      <mo>…</mo>
+      <mo>+</mo>
+      <mo>|</mo>
+      <msub><mi>y</mi><mi>n</mi></msub>
+      <mo>-</mo>
+      <msub><mover><mi>y</mi><mo>^</mo></mover><mi>n</mi></msub>
+      <mo>|</mo>
+      <mo>)</mo>
+    </mrow>
+    <mi>n</mi>
+  </mfrac>
+  <mo>=</mo>
+  <mfrac>
+    <mrow>
+      <mo>(</mo>
+      <mo>|</mo>
+      <msub><mi>avg_receipt</mi><mn>1</mn></msub>
+      <mo>-</mo>
+      <msub><mover><mi>avg_receipt</mi><mo>^</mo></mover><mn>1</mn></msub>
+      <mo>|</mo>
+      <mo>+</mo>
+      <mo>…</mo>
+      <mo>+</mo>
+      <mo>|</mo>
+      <msub><mi>avg_receipt</mi><mi>n</mi></msub>
+      <mo>-</mo>
+      <msub><mover><mi>avg_receipt</mi><mo>^</mo></mover><mi>n</mi></msub>
+      <mo>|</mo>
+      <mo>)</mo>
+    </mrow>
+    <mi>n</mi>
+  </mfrac>
+</math>
+</p>
 
 <p>y<sub>n</sub>, avg_receipt<sub>n</sub> - реальные значения целевой переменной</p>
 
@@ -819,6 +983,13 @@ meanabs(Y, y_pred)
 
 <p>Средняя абсолютная ошибка второй модели, также ниже. Значит вторая модель лучше.</p>
 
+
+
+
+
+
+
+
 <div class="scrollable-table">
     <table border="1" class="dataframe">
     <tr>
@@ -831,7 +1002,7 @@ meanabs(Y, y_pred)
     </tr>
     <tr>
         <td><strong>Рассчет</strong></td>
-        <td><span class="code-chip">модель.predict(предиктор)*</span></td>
+        <td><span class="code-chip">модель.predict(предиктор)<sup>*</sup></span></td>
     </tr>
 </table>
 </div>
@@ -856,9 +1027,131 @@ meanabs(Y, y_pred)
     </tr>
     <tr>
         <td><strong>Формула</strong></td>
-        <td>1-((y<sub>1</sub> - ŷ<sub>1</sub>)<sup>2</sup> + ... + (y<sub>n</sub> - ŷ<sub>n</sub>)<sup>2</sup>) / ((y<sub>1</sub> - ȳ<sub>1</sub>)<sup>2</sup> + ... + (y<sub>n</sub> - ȳ<sub>n</sub>)<sup>2</sup>)</td>
-        <td>((y<sub>1</sub> - ŷ<sub>1</sub>)<sup>2</sup> + ... + (y<sub>n</sub> - ŷ<sub>n</sub>)<sup>2</sup>)/n</td>
-        <td>(|y<sub>1</sub> - ŷ<sub>1</sub>| + ... + |y<sub>n</sub> - ŷ<sub>n</sub>|)/n</td>
+        <td>
+                <!-- 1-я формула: 1 - (RSS / TSS) -->
+                <math xmlns="http://www.w3.org/1998/Math/MathML">
+                <mn>1</mn>
+                <mo>-</mo>
+                <mfrac>
+                    <mrow>
+                    <mo>(</mo>
+                    <msup>
+                        <mrow>
+                        <mo>(</mo>
+                        <msub><mi>y</mi><mn>1</mn></msub>
+                        <mo>-</mo>
+                        <msub><mover><mi>y</mi><mo>^</mo></mover><mn>1</mn></msub>
+                        <mo>)</mo>
+                        </mrow>
+                        <mn>2</mn>
+                    </msup>
+                    <mo>+</mo>
+                    <mo>…</mo>
+                    <mo>+</mo>
+                    <msup>
+                        <mrow>
+                        <mo>(</mo>
+                        <msub><mi>y</mi><mi>n</mi></msub>
+                        <mo>-</mo>
+                        <msub><mover><mi>y</mi><mo>^</mo></mover><mi>n</mi></msub>
+                        <mo>)</mo>
+                        </mrow>
+                        <mn>2</mn>
+                    </msup>
+                    <mo>)</mo>
+                    </mrow>
+                    <mrow>
+                    <mo>(</mo>
+                    <msup>
+                        <mrow>
+                        <mo>(</mo>
+                        <msub><mi>y</mi><mn>1</mn></msub>
+                        <mo>-</mo>
+                        <msub><mover><mi>y</mi><mo>¯</mo></mover><mn>1</mn></msub>
+                        <mo>)</mo>
+                        </mrow>
+                        <mn>2</mn>
+                    </msup>
+                    <mo>+</mo>
+                    <mo>…</mo>
+                    <mo>+</mo>
+                    <msup>
+                        <mrow>
+                        <mo>(</mo>
+                        <msub><mi>y</mi><mi>n</mi></msub>
+                        <mo>-</mo>
+                        <msub><mover><mi>y</mi><mo>¯</mo></mover><mi>n</mi></msub>
+                        <mo>)</mo>
+                        </mrow>
+                        <mn>2</mn>
+                    </msup>
+                    <mo>)</mo>
+                    </mrow>
+                </mfrac>
+                </math>
+
+        </td><td>
+
+                <!-- 2-я формула: MSE -->
+                <math xmlns="http://www.w3.org/1998/Math/MathML">
+                <mfrac>
+                    <mrow>
+                    <mo>(</mo>
+                    <msup>
+                        <mrow>
+                        <mo>(</mo>
+                        <msub><mi>y</mi><mn>1</mn></msub>
+                        <mo>-</mo>
+                        <msub><mover><mi>y</mi><mo>^</mo></mover><mn>1</mn></msub>
+                        <mo>)</mo>
+                        </mrow>
+                        <mn>2</mn>
+                    </msup>
+                    <mo>+</mo>
+                    <mo>…</mo>
+                    <mo>+</mo>
+                    <msup>
+                        <mrow>
+                        <mo>(</mo>
+                        <msub><mi>y</mi><mi>n</mi></msub>
+                        <mo>-</mo>
+                        <msub><mover><mi>y</mi><mo>^</mo></mover><mi>n</mi></msub>
+                        <mo>)</mo>
+                        </mrow>
+                        <mn>2</mn>
+                    </msup>
+                    <mo>)</mo>
+                    </mrow>
+                    <mi>n</mi>
+                </mfrac>
+                </math>
+
+        </td><td>
+
+                <!-- 3-я формула: MAE -->
+                <math xmlns="http://www.w3.org/1998/Math/MathML">
+                <mfrac>
+                    <mrow>
+                    <mo>(</mo>
+                    <mo>|</mo>
+                    <msub><mi>y</mi><mn>1</mn></msub>
+                    <mo>-</mo>
+                    <msub><mover><mi>y</mi><mo>^</mo></mover><mn>1</mn></msub>
+                    <mo>|</mo>
+                    <mo>+</mo>
+                    <mo>…</mo>
+                    <mo>+</mo>
+                    <mo>|</mo>
+                    <msub><mi>y</mi><mi>n</mi></msub>
+                    <mo>-</mo>
+                    <msub><mover><mi>y</mi><mo>^</mo></mover><mi>n</mi></msub>
+                    <mo>|</mo>
+                    <mo>)</mo>
+                    </mrow>
+                    <mi>n</mi>
+                </mfrac>
+                </math>    
+        </td>
     </tr>
     <tr>
         <td><strong>Диапазон значений</strong></td>
@@ -874,23 +1167,25 @@ meanabs(Y, y_pred)
     </tr>
     <tr>
         <td><strong>Расчет</strong></td>
-        <td><span class="code-chip">модель.rsquared*</span></td>
-        <td><span class="code-chip">mse(целевая, предсказанные значения)**</span></td>
-        <td><span class="code-chip">meanabs(целевая, предсказанные значения)**</span></td>
+        <td><span class="code-chip">модель.rsquared<sup>*</sup></span></td>
+        <td><span class="code-chip">mse(целевая, предсказанные значения)<sup>**</sup></span></td>
+        <td><span class="code-chip">meanabs(целевая, предсказанные значения)<sup>**</sup></span></td>
     </tr>
 </table>
 </div>
 
-<p>* для использования импортируйте <span class="code-chip">import statsmodels.api as sm</span></p>
-<p>** для использования импортируйте <span class="code-chip">from statsmodels.tools.eval_measures import mse, meanabs</span></p>
+<p><sup>*</sup> для использования импортируйте <span class="code-chip">import statsmodels.api as sm</span></p>
+<p><sup>**</sup> для использования импортируйте <span class="code-chip">from statsmodels.tools.eval_measures import mse, meanabs</span></p>
 
-<h4>УЛУЧШЕНИЕ КАЧЕСТВА МОДЕЛИ</h4>
+<h3>УЛУЧШЕНИЕ КАЧЕСТВА МОДЕЛИ</h3>
+
+
+
+
+
+
 
 <p>Довольно часто, при работе с реальными данными, качество регрессии может быть настолько низким, что результатам моделирования просто нельзя верить. Тогда аналитику приходится проделать ряд шагов, чтобы улучшить модель. Для начала он <strong>удалит выбросы и заменит пропуски</strong>. Затем ему нужно понять какие предикторы стоит взять в модель. У него не так много наблюдений, а он знает, что <strong>каждый предиктор должен быть обеспечен минимум 100 наблюдениями</strong>. То есть для построения однофакторной модели хватит 100 наблюдений, но например если в модели 500 наблюдений в модель можно взять не более 5 предикторов. Чтобы понять какие предикторы стоит взять, он постоит гистограммы распределения и выделит <strong>унимодальные симметричные распределения</strong>. После чего он рассчитает корреляцию Пирсона для количественный данных и Спирмана для категориальных, выделив какие из признаков имеют <strong>самую сильную корреляцию с целевой переменной</strong>. При этом эти <strong>между самими предикторами</strong>, отобранными в модель, <strong>корреляция не должна превышать 0.7</strong>. Проделав эти шаги, качество регрессии, которую строит аналитик, будет значительно выше.</p>
-
-
-
-
 
 
 <a href="https://edu.hse.ru/mod/quiz/view.php?id=1610943" target="_blank" rel="noopener noreferrer"><button class="check_yourself">Самоопроверка</button></a>&nbsp;<a href="https://edu.hse.ru/mod/quiz/view.php?id=1610944" target="_blank" rel="noopener noreferrer"><button class="check">Практика</button></a>&nbsp;<a href="https://edu.hse.ru/course/view.php?id=236211" target="_blank" rel="noopener noreferrer"><button class="back_to_course">Вернуться к курсу</button></a>
