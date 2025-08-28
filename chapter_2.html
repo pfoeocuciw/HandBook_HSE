@@ -179,9 +179,7 @@ df.head()</code></pre>
             </table>
             </div>
             <p style="font-size: 25px;"><strong>ФИЛЬТРАЦИЯ С ОДНИМ УСЛОВИЕМ</strong></p>
-            <p class="fake-code">
-<span class="code-line">датафрейм[условие фильтрации]</span>
-            </p>
+            <p class="fake-code"><span class="code-line">датафрейм[условие фильтрации]</span></p>
             <p>В датафрейме есть колонка <strong>pizza_name_id</strong>, в которой прописано, какую пиццу заказал клиент.
                 Если нам нужно найти заказы только с гавайской пиццей (<em>hawaiian</em>; <strong>pizza_name_id</strong>), сделаем следующую фильтрацию:</p>
             <pre class="line-numbers"><code class="language-python">df[df['pizza_name_id'] == 'hawaiian']</code></pre>
@@ -552,19 +550,17 @@ df.head()</code></pre>
             </table>
             <p style="font-size: 25px"><strong>ФИЛЬТРАЦИЯ ПО НЕСКОЛЬКИМ УСЛОВИЯМ</strong></p>
             <p>Довольно часто фильтрацию нужно сделать по нескольким признакам. Тогда каждое из условий нужно прописывать в круглых скобках, а между круглыми скобками должен стоять оператор:</p>
-            <p class="fake-code">
-<span class="code-line">датафрейм[(условие 1) оператор (условие 2) оператор ...]</span>
+            <p class="fake-code"><span class="code-line">датафрейм[(условие 1) оператор (условие 2) оператор ...]</span>
+                
             <p>На месте <span class="code-chip">оператора</span>&nbsp; может стоять <span class="code-chip">&</span>&nbsp; или <span class="code-chip">|</span>&nbsp;:</p>
             <ul>
                 <li>
                     <span class="code-chip">&</span>&nbsp; - оператор "И". Используйте его, если нужно, чтобы все прописанные условия выполнялись одновременно:
-                    <p class="fake-code">
-<span class="code-line">датафрейм[(условие 1)  & (условие 2) & ...] # одновременное выполнение всех условий</span>
+                    <p class="fake-code"><span class="code-line">датафрейм[(условие 1)  & (условие 2) & ...] # одновременное выполнение всех условий</span>
                 </li>
                 <li>
                     <span class="code-chip">|</span>&nbsp; - оператор "ИЛИ". Его мы используем, когда хотим найти наблюдения, которые соответствуют хотя бы одному из прописанных условий.
-                    <p class="fake-code">
-<span class="code-line">датафрейм[(условие 1) | (условие 2) | ...] # выполняется хотя бы одно условие</span>
+                    <p class="fake-code"><span class="code-line">датафрейм[(условие 1) | (условие 2) | ...] # выполняется хотя бы одно условие</span>
                 </li>
             </ul>
             <img src="picture/3.svg" width="100%" alt="Рисунок 3">

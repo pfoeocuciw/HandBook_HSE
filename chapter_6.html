@@ -519,7 +519,7 @@ x̄= (x<sub>1</sub> + x<sub>2</sub> + ... + x<sub>n</sub>) / n</p>
     <p>Построим гистограмму распределения рейтинга ресторанов (<strong>rate</strong>):</p>
 
     <pre class="line-numbers"><code class="language-python">df['rate'].plot(kind='hist', bins=15)</code></pre>
-    <img src="picture/chapter6/img1.png" width="100%" alt="Рисунок 10">
+    <img src="picture/chapter6/img1.png" width="70%" alt="Рисунок 10">
 
     <p>В целом, полученное распределение практически симметрично. Давайте сравним среднее и медиану для него:</p>
 
@@ -566,7 +566,7 @@ x̄= (x<sub>1</sub> + x<sub>2</sub> + ... + x<sub>n</sub>) / n</p>
 
     <pre class="line-numbers"><code class="language-python">df['avg_receipt'].plot(kind='hist', bins=15)</code></pre>
 
-    <img src="picture/chapter6/img2.png" width="100%" alt="Рисунок 2">
+    <img src="picture/chapter6/img2.png" width="70%" alt="Рисунок 2">
 
     <p>Распределение размера чека асимметричное. В большей части ресторанов чек не превышает 2000 у.е., однако мы видим на гистограмме тяжелый хвост справа, там находятся рестораны с экстремально высоким размером чека. Значит мы можем предположить, что для данного признака среднее значение будет больше, чем медиана. Давайте это предположение проверим:</p>
 

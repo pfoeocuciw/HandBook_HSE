@@ -141,16 +141,12 @@
     <p>
         Чтобы создать датафрейм, необходимо воспользоваться функцией <span class="code-chip">pd.DataFrame()</span>&nbsp; из библиотеки <span class="code-chip">Pandas</span>&nbsp;:
     </p>
-    <p class="fake-code">
-<span class="code-line">переменная = pd.DataFrame()</span>
-    </p>
+    <p class="fake-code"><span class="code-line">переменная = pd.DataFrame()</span></p>
 
     <p>Для добавления столбцов мы указываем название <span class="code-chip">переменной</span>&nbsp;, в которой лежит датафрейм,
         затем в квадратных скобках указываем <span class="code-chip">'название столбца'</span>&nbsp; и в него передаем список значений:
     </p>
-    <p class="fake-code">
-<span class="code-line">переменная['название столбца'] = [значение 1, значение 2, ...]</span>
-    </p>
+    <p class="fake-code"><span class="code-line">переменная['название столбца'] = [значение 1, значение 2, ...]</span></p>
     <p>Столбцы могут иметь разные типы данных: числа, тексты, даты и т.д.</p>
     <p>Предположим, мы хотим создать датафрейм с информацией про трех студентов.
         Чтобы его создать, нужно написать следующий код:
@@ -231,9 +227,7 @@ students  # выводим датафрейм на экран    </code></pre>
         Чтобы это сделать, нужно воспользоваться функцией <span class="code-chip">pd.Series()</span>&nbsp; из библиотеки Pandas,
         а внутрь функции передать параметр <span class="code-chip">data</span>&nbsp; со списком значений:
     </p>
-    <p class="fake-code">
-<span class="code-line">переменная = pd.Series(data=[значение 1, значение 2, ...])</span>
-    </p>
+    <p class="fake-code"><span class="code-line">переменная = pd.Series(data=[значение 1, значение 2, ...])</span></p>
     <p>Предположим, у нас есть <em>средний балл</em> трех студентов. Чтобы сохранить эту информацию в серию,
         нужно написать следующий код:</p>
     <pre class="line-numbers"><code class="language-python">gpa = pd.Series(data=[3.55, 8.24, 7.65])  # создаем серию
